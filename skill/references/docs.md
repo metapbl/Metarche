@@ -1,6 +1,6 @@
 # 단계 6 — 문서 (docs)
 
-PRD가 `approved`일 때만 시작한다. 입력: `docs/PRD.md`, `docs/discovery/DECISIONS.md`, (adopt면) 기존 문서.
+PRD가 `approved`일 때만 시작한다. 입력: `docs/PRD.md`, `docs/discovery/DECISIONS.md`, (adopt면) `docs/legacy/`.
 산출물: 루트 `CLAUDE.md`, `docs/PROGRESS.md`, `docs/REFERENCE.md`, `.claude/settings.json`, `.claude/hooks/*.ps1`.
 양식은 `templates/`에 있다. 그대로 복사하지 말고 PRD에 해당 없는 칸은 지운다.
 
@@ -10,6 +10,7 @@ PRD가 `approved`일 때만 시작한다. 입력: `docs/PRD.md`, `docs/discovery
 | 매 세션 필요, 거의 안 바뀜 (명령·구조·프로젝트 규칙) | CLAUDE.md | 항상 로드됨 |
 | 자주 바뀜 (상태·다음 할 일·미해결) | PROGRESS 머리 | 훅이 주입 |
 | 가끔 필요 (근거·외부 사양·함정) | REFERENCE | 검색해 읽음 |
+| 결정과 버린 안 | DECISIONS (계속 씀) | 원장 하나 |
 | 작업 단계 | docs/plans/ | 체크박스 |
 | 반드시 지켜야 함 (위험 명령·관문) | settings.json 권한·훅 | Claude Code가 강제 |
 | 사용자 공통 성향 | ~/.claude/CLAUDE.md | 프로젝트에 다시 쓰지 않음 |
@@ -31,6 +32,7 @@ PRD가 `approved`일 때만 시작한다. 입력: `docs/PRD.md`, `docs/discovery
 
 ## §4 REFERENCE
 - 절 번호 `R§n`으로 참조한다. 전체를 읽지 않고 검색한다.
+- R§3 설계 근거는 `D### — 한 줄 요약` 색인만 둔다. 결정 내용은 DECISIONS에만 쓴다.
 - 함정 대장(`T<n>`)에는 두 번 겪었거나 원인 찾기에 오래 걸린 것만 적는다.
 - 외부 사양에는 버전과 출처 URL을 단다.
 - 약 500줄을 넘으면 `docs/reference/` 아래 주제별로 나누고 REFERENCE는 목차만 남긴다.
@@ -39,13 +41,15 @@ PRD가 `approved`일 때만 시작한다. 입력: `docs/PRD.md`, `docs/discovery
 - `templates/settings.json` → `.claude/settings.json`, `templates/hooks/*.ps1` → `.claude/hooks/`.
 - PRD §6 "위험한 명령"을 ask/deny로 옮긴다. 기본: 커밋·푸시 ask, `.env` 읽기 deny.
 - progress-head.ps1: 세션 시작·재개·/clear·압축 후 PROGRESS 머리 주입.
-- gate.ps1: PRD 미승인이면 docs/·.claude/·CLAUDE.md 밖 Edit/Write 차단. 셸 명령의 쓰기는 못 막으므로 CLAUDE.md 규칙과 함께 쓴다.
+- gate.ps1: PRD 상태가 `approved`가 아니면(draft·changing) docs/·.claude/·CLAUDE.md 밖 Edit/Write를 막는다.
+  - 셸 명령의 쓰기는 못 막으므로 CLAUDE.md 규칙과 함께 쓴다.
+  - 프로젝트 밖 파일(예: `~/.claude/`)도 막힌다. 의도한 동작이다. 필요하면 사용자가 직접 고친다.
 - 개인 설정은 `.claude/settings.local.json` (git 제외).
 
 ## §6 절차
 1. PRD·DECISIONS를 읽고 §1 표에 따라 분류한 목록(파일별 절 제목, 들어갈 항목, 출처 표시)을 보여 준다.
-2. 분류 승인 후 파일을 만들고 각 파일 줄 수를 보고한다.
-3. §7 확인 결과를 증거로 제시한다.
+2. 분류 승인 후 파일을 만든다. REFERENCE R§3에는 설계에 영향을 주는 확정 결정의 색인을 넣는다.
+3. 각 파일 줄 수와 §7 확인 결과를 증거로 제시한다.
 4. 관문.
 
 ## §7 확인

@@ -1,7 +1,7 @@
 # 이관 (adopt) — 기존 프로젝트를 metarche 체계로
 
 코드와 기존 문서가 있는 프로젝트에 쓴다. 이 단계에서는 코드를 고치지 않는다.
-끝나면 discover.md §0으로 넘어간다.
+끝나면 discover.md §0의 4번(OPEN 작성)부터 이어 간다.
 
 ## §1 읽기 (묻기 전에)
 - 기존 지침·진행 문서 (CLAUDE.md, AGENTS.md, progress·worklog 류, README)
@@ -34,4 +34,4 @@
 - 루트 CLAUDE.md는 옮긴 뒤에 docs 단계에서 새로 만든다.
 
 ## §5 다음
-되짚기가 끝나면 PRD 초안이 생긴 상태로 discover 단계 1부터 빈칸만 채운다. 이후는 새 프로젝트와 같다.
+되짚기가 끝나면 PRD 초안이 생긴 상태로 discover.md §0의 4번부터 이어 가며 빈칸만 묻는다. 이후는 새 프로젝트와 같다.

@@ -39,6 +39,7 @@ PRD가 `approved`일 때만 시작한다. 입력: `docs/PRD.md`, `docs/discovery
 
 ## §5 settings.json·훅
 - `templates/settings.json` → `.claude/settings.json`, `templates/hooks/*.ps1` → `.claude/hooks/`.
+  - 이미 있는 파일은 덮어쓰지 않는다. settings.json은 기존 내용에 `permissions`·`hooks` 항목만 더하고, 같은 이름의 훅 파일은 차이를 보인다. 어느 쪽이든 전후를 보이고 승인받은 뒤 적용한다.
 - PRD §6 "위험한 명령"을 ask/deny로 옮긴다. 기본: 커밋·푸시 ask, `.env` 읽기 deny.
 - progress-head.ps1: 세션 시작·재개·/clear·압축 후 PROGRESS 머리 주입.
 - gate.ps1: PRD 상태가 `approved`가 아니면 docs/·.claude/·CLAUDE.md 밖 Edit/Write/NotebookEdit를 막는다.

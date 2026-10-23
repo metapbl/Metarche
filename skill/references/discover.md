@@ -2,12 +2,13 @@
 
 ## §0 탐색 (질문하기 전에)
 
-시작 전에 `templates/`의 `PRD.md`를 `docs/PRD.md`로, `QA_LOG.md`·`DECISIONS.md`·`OPEN.md`를 `docs/discovery/`로 복사한다. 이미 있는 파일은 덮어쓰지 않는다. (new·adopt 공통)
+시작 전에 `templates/`의 `PRD.md`를 `docs/PRD.md`로, `QA_LOG.md`·`DECISIONS.md`를 `docs/discovery/`로 복사한다. 이미 있는 파일은 덮어쓰지 않는다. (new·adopt 공통)
+`OPEN.md`는 여기서 복사하지 않고 4번에서 만든다. OPEN이 있으면 상태 판별이 discover로 가므로, adopt가 끝나기 전에 만들면 재개 때 이관을 건너뛴다.
 
 1. 전역 프로필 `~/.claude/CLAUDE.md`를 읽고, 이미 답이 있는 항목을 표시한다.
 2. 프로젝트 폴더를 훑는다: README, 기존 문서, 의존성 파일, 진입점, 폴더 구조, `git log --oneline -20`.
 3. 알아낸 사실을 `docs/discovery/QA_LOG.md`에 `[X]` 항목으로 적는다. 질문 없이 답만 있는 항목도 Q번호를 받는다.
-4. 첫 `OPEN.md`를 만든다. §2 질문 은행에서 이 프로젝트에 해당하는 질문만 고르고, 탐색으로 답이 나온 것은 빼고, 우선순위를 매긴다.
+4. `templates/OPEN.md`로 첫 `docs/discovery/OPEN.md`를 만든다. §2 질문 은행에서 이 프로젝트에 해당하는 질문만 고르고, 탐색으로 답이 나온 것은 빼고, 우선순위를 매긴다.
 5. 탐색 요약(10줄 이내)과 첫 질문을 보낸다.
 
 - 새 프로젝트면 2·3을 건너뛴다.

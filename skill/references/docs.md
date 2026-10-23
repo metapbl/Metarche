@@ -46,6 +46,9 @@ PRD가 `approved`일 때만 시작한다. 입력: `docs/PRD.md`, `docs/discovery
   - 훅은 PRD 승인 뒤인 이 단계에서 설치되므로 실제로 막는 때는 PRD 변경 중(`changing`)뿐이다. 승인 전(draft)은 철칙 1로 지킨다.
   - 셸 명령의 쓰기는 못 막으므로 CLAUDE.md 규칙과 함께 쓴다.
   - 프로젝트 밖 파일(예: `~/.claude/`)과 `.claude/worktrees/` 아래 파일도 막힌다. 의도한 동작이다. 필요하면 사용자가 직접 고친다.
+- check.ps1: 파일을 고칠 때마다 확장자별 검사(린터·타입 검사)를 돌리고, 실패하면 출력을 Claude에게 돌려줘 바로 고치게 한다.
+  - 스크립트 맨 위 `$checks` 표를 PRD §6 "편집 때 자동 검사"대로 채운다. 고친 파일 하나만 검사하는 명령으로 둔다 (전체 테스트는 넣지 않는다).
+  - 검사 도구가 설치돼 있어야 한다. 없으면 훅이 매번 "검사 도구 없음"을 돌려준다.
 - 개인 설정은 `.claude/settings.local.json` (git 제외).
 
 ## §6 절차
@@ -62,6 +65,7 @@ PRD가 `approved`일 때만 시작한다. 입력: `docs/PRD.md`, `docs/discovery
 - PROGRESS 머리 40줄 이내
 - `/hooks`에 SessionStart·PreToolUse 표시, `/clear` 직후 머리가 컨텍스트에 들어옴
 - `/permissions`에 ask·deny 규칙 표시
+- check 훅: `$checks`의 도구마다 `Get-Command {도구}`가 성공하고, 일부러 검사에 걸리는 파일을 하나 써 보면 오류가 돌아온 뒤 그 파일을 지운다
 
 ## 관문
 > [관문] 문서 구성(CLAUDE.md·PROGRESS·REFERENCE·settings·훅)을 승인하시겠습니까? 승인 전에는 작업 계획과 코드를 만들지 않습니다. 고칠 곳이 있으면 번호로 알려 주십시오.

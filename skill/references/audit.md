@@ -23,7 +23,7 @@
 (Get-Content docs/REFERENCE.md).Count
 if (Test-Path docs/plans) { Select-String -Path docs/plans/*.md -Pattern '^상태: active' } else { "plans 없음" }
 Get-Content .claude/settings.json -Raw | ConvertFrom-Json | Out-Null; "settings OK"
-Test-Path .claude/hooks/progress-head.ps1, .claude/hooks/gate.ps1
+Test-Path .claude/hooks/progress-head.ps1, .claude/hooks/gate.ps1, .claude/hooks/check.ps1
 git log -1 --format='%h %s'
 ~~~
 

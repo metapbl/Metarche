@@ -18,6 +18,7 @@ if (-not $cmds) { exit 0 }
 Set-Location $root
 $failed = foreach ($cmd in @($cmds)) {
     $exe, $args_ = -split $cmd
+    $args_ = @($args_)   # 인자가 하나면 문자열이 되고, 문자열 splat 은 종료 코드를 잃는다
     if (-not (Get-Command $exe)) { "[metarche] 검사 도구 없음: $exe. 설치하거나 .claude/hooks/check.ps1에서 빼십시오."; continue }
     $out = & $exe @args_ $full 2>&1
     if ($LASTEXITCODE -ne 0) { "[metarche] 검사 실패: $cmd $full"; $out | Select-Object -First 30 }

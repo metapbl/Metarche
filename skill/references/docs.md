@@ -17,7 +17,7 @@ PRD가 `approved`일 때만 시작한다. 입력: `docs/PRD.md`, `docs/discovery
 | 서식 | 포매터·린터 설정 | 문서에 적지 않음 |
 
 ## §2 CLAUDE.md
-- 첫 줄 `<!-- metarche -->` (상태 판별용). 60줄 이내, 넘치면 REFERENCE로 내린다.
+- 첫 줄은 `<!-- metarche:draft -->`로 만들고, 관문 승인 뒤 `<!-- metarche -->`로 바꾼다 (상태 판별용). 60줄 이내, 넘치면 REFERENCE로 내린다.
 - 명령은 복사해 바로 실행되는 형태로 적는다.
 - 규칙은 어기면 실제로 문제가 나는 것만, 근거(D###·R§n)를 단다. 일반 원칙은 쓰지 않는다.
 - 코드 위치는 줄 번호 대신 `파일 > 함수`.
@@ -41,7 +41,8 @@ PRD가 `approved`일 때만 시작한다. 입력: `docs/PRD.md`, `docs/discovery
 - `templates/settings.json` → `.claude/settings.json`, `templates/hooks/*.ps1` → `.claude/hooks/`.
 - PRD §6 "위험한 명령"을 ask/deny로 옮긴다. 기본: 커밋·푸시 ask, `.env` 읽기 deny.
 - progress-head.ps1: 세션 시작·재개·/clear·압축 후 PROGRESS 머리 주입.
-- gate.ps1: PRD 상태가 `approved`가 아니면(draft·changing) docs/·.claude/·CLAUDE.md 밖 Edit/Write를 막는다.
+- gate.ps1: PRD 상태가 `approved`가 아니면 docs/·.claude/·CLAUDE.md 밖 Edit/Write/NotebookEdit를 막는다.
+  - 훅은 PRD 승인 뒤인 이 단계에서 설치되므로 실제로 막는 때는 PRD 변경 중(`changing`)뿐이다. 승인 전(draft)은 철칙 1로 지킨다.
   - 셸 명령의 쓰기는 못 막으므로 CLAUDE.md 규칙과 함께 쓴다.
   - 프로젝트 밖 파일(예: `~/.claude/`)도 막힌다. 의도한 동작이다. 필요하면 사용자가 직접 고친다.
 - 개인 설정은 `.claude/settings.local.json` (git 제외).
@@ -51,9 +52,12 @@ PRD가 `approved`일 때만 시작한다. 입력: `docs/PRD.md`, `docs/discovery
 2. 분류 승인 후 파일을 만든다. REFERENCE R§3에는 설계에 영향을 주는 확정 결정의 색인을 넣는다.
 3. 각 파일 줄 수와 §7 확인 결과를 증거로 제시한다.
 4. 관문.
+5. 승인되면 CLAUDE.md 첫 줄을 `<!-- metarche -->`로 바꾼다.
+
+재개할 때 CLAUDE.md 첫 줄이 `<!-- metarche:draft -->`면 파일을 다시 만들지 않고 3번부터 한다.
 
 ## §7 확인
-- CLAUDE.md 60줄 이내, 첫 줄 `<!-- metarche -->`
+- CLAUDE.md 60줄 이내, 첫 줄 `<!-- metarche:draft -->` (승인 후 `<!-- metarche -->`)
 - PROGRESS 머리 40줄 이내
 - `/hooks`에 SessionStart·PreToolUse 표시, `/clear` 직후 머리가 컨텍스트에 들어옴
 - `/permissions`에 ask·deny 규칙 표시

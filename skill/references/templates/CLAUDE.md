@@ -1,4 +1,4 @@
-<!-- metarche -->
+<!-- metarche:draft -->
 # {프로젝트명}
 
 {한 줄: 무엇을, 누구를 위해. 상세는 docs/PRD.md}
@@ -26,7 +26,7 @@
 - 작업을 끝내면 계획 파일의 체크박스를 갱신한다. 세션을 마칠 때 docs/PROGRESS.md 머리 부분을 갱신하고 /metarche wrap을 제안한다.
 - 관련 없는 작업으로 넘어갈 때는 /clear를 제안한다.
 - 새 결정은 `docs/discovery/DECISIONS.md`에, 반복된 실수의 원인은 REFERENCE 함정 대장에 적는다.
-- PRD 승인 전에는 docs/ 밖을 수정하지 않는다 (훅이 막는다).
+- PRD 변경 중(`상태: changing`)에는 docs/ 밖을 수정하지 않는다 (훅이 막는다).
 
 ## 압축 시 보존
 - 압축할 때는 진행 중인 계획 파일 경로, 수정한 파일 목록, 확인 명령을 보존한다.

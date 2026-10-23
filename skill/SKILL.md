@@ -23,14 +23,15 @@ disable-model-invocation: true
 ## 시작: 상태 판별
 
 인자가 있으면 그 모드로 간다. 없으면 아래 표를 위에서부터 확인해 먼저 맞는 모드로 간다.
+인자가 판별 결과와 어긋나면(예: 비어 있지 않은 폴더에서 `new`) 진행하지 않고 차이를 알린 뒤 어느 모드로 갈지 묻는다.
 판별 결과와 다음 행동을 한 줄로 알리고 확인을 받는다.
 
 | 조건 | 모드 |
 |---|---|
 | `docs/discovery/OPEN.md` 있음, `docs/PRD.md` 상태가 `approved` 아님 | discover (이어서) |
-| PRD `approved`, 루트 `CLAUDE.md`에 `<!-- metarche -->` 표시 없음 | docs |
-| metarche `CLAUDE.md` 있음, `docs/plans/`에 진행 중 계획 없음 | plan |
-| `docs/PROGRESS.md`와 진행 중 계획 있음 | build |
+| PRD `approved`, 루트 `CLAUDE.md` 첫 줄이 `<!-- metarche -->`가 아님 (파일 없음 또는 `<!-- metarche:draft -->`) | docs |
+| 첫 줄이 `<!-- metarche -->`인 `CLAUDE.md` 있음, `docs/plans/`에 `상태: active` 계획 없음 | plan |
+| `docs/PROGRESS.md`와 `상태: active` 계획 있음 | build |
 | 코드나 문서는 있으나 위 파일이 없음 | adopt |
 | 폴더가 비어 있음 | new |
 
@@ -81,7 +82,7 @@ disable-model-invocation: true
 
 단계를 진행하는 동안 모든 응답 끝에 한 줄 상태를 붙인다.
 
-`[metarche] 단계 3 기능 · 미결 7개 · 다음: Q041~Q045 묶음 질문`
+`[metarche] 단계 3 기능 · 미결 7개 · 다음: 화면·단축키 질문 5개`
 
 ## 출처
 

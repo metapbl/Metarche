@@ -2,6 +2,8 @@
 
 ## §0 탐색 (질문하기 전에)
 
+시작 전에 `templates/`의 `PRD.md`를 `docs/PRD.md`로, `QA_LOG.md`·`DECISIONS.md`·`OPEN.md`를 `docs/discovery/`로 복사한다. 이미 있는 파일은 덮어쓰지 않는다. (new·adopt 공통)
+
 1. 전역 프로필 `~/.claude/CLAUDE.md`를 읽고, 이미 답이 있는 항목을 표시한다.
 2. 프로젝트 폴더를 훑는다: README, 기존 문서, 의존성 파일, 진입점, 폴더 구조, `git log --oneline -20`.
 3. 알아낸 사실을 `docs/discovery/QA_LOG.md`에 `[X]` 항목으로 적는다. 질문 없이 답만 있는 항목도 Q번호를 받는다.

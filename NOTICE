@@ -2,12 +2,12 @@ metarche
 Copyright (c) 2026 META PUBLIC
 Licensed under the MIT License (see LICENSE).
 
-이 스킬은 아래 프로젝트의 작동 방식을 참고하거나, 일부를 요약·번역해 포함한다.
+이 스킬은 아래 프로젝트와 글의 작동 방식을 참고하거나, 일부를 요약·번역해 포함한다.
 
 1. superpowers — https://github.com/obra/superpowers
    MIT License, Copyright (c) 2025 Jesse Vincent
-   참고: brainstorming(승인 관문, 한 번에 한 질문, 방안 비교, 출처 구분),
-         writing-plans(계획 형식, 자체 검토, 실행 방식 선택)
+   참고: brainstorming(승인 관문, 한 번에 한 질문, 방안 비교),
+         writing-plans(계획 파일 형식, 작업 크기, 자가 검토)
 
 2. Everything Claude Code (ECC) — https://github.com/affaan-m/ECC
    MIT License, Copyright (c) 2026 Affaan Mustafa
@@ -19,12 +19,18 @@ Licensed under the MIT License (see LICENSE).
    참고: Think Before Coding, Simplicity First, Surgical Changes, Goal-Driven Execution
 
 4. planning-with-files — https://github.com/OthmanAdi/planning-with-files
-   방식만 참고(파일 기반 상태 보존, 오류 기록). 문장은 포함하지 않음.
+   방식만 참고(파일 기반 상태 보존, 재개). 문장은 포함하지 않음.
 
-5. claude-md-improver (anthropics/claude-plugins-official)
-   점검 기준만 참고. 문장은 포함하지 않음.
+5. claude-md-improver — https://github.com/anthropics/claude-plugins-official
+   점검 절차(보고서 → 승인 → 적용)만 참고. 문장은 포함하지 않음.
 
-6. Claude Code 공식 문서 — https://code.claude.com/docs
+6. claude-md-templates — https://github.com/abhishekray07/claude-md-templates
+   방식만 참고(전역·프로젝트·로컬 3단 구성, CLAUDE.md 길이 기준). 문장은 포함하지 않음.
+
+7. HumanLayer, "Writing a good CLAUDE.md" — https://www.humanlayer.dev/blog/writing-a-good-claude-md
+   방식만 참고(간결성, 점진적 공개, 서식은 도구에 맡김). 문장은 포함하지 않음.
+
+8. Claude Code 공식 문서 — https://code.claude.com/docs
 
 위 1~3의 MIT 허가 문구 전문:
 

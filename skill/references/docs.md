@@ -45,7 +45,7 @@ PRD가 `approved`일 때만 시작한다. 입력: `docs/PRD.md`, `docs/discovery
 - gate.ps1: PRD 상태가 `approved`가 아니면 docs/·.claude/·CLAUDE.md 밖 Edit/Write/NotebookEdit를 막는다.
   - 훅은 PRD 승인 뒤인 이 단계에서 설치되므로 실제로 막는 때는 PRD 변경 중(`changing`)뿐이다. 승인 전(draft)은 철칙 1로 지킨다.
   - 셸 명령의 쓰기는 못 막으므로 CLAUDE.md 규칙과 함께 쓴다.
-  - 프로젝트 밖 파일(예: `~/.claude/`)도 막힌다. 의도한 동작이다. 필요하면 사용자가 직접 고친다.
+  - 프로젝트 밖 파일(예: `~/.claude/`)과 `.claude/worktrees/` 아래 파일도 막힌다. 의도한 동작이다. 필요하면 사용자가 직접 고친다.
 - 개인 설정은 `.claude/settings.local.json` (git 제외).
 
 ## §6 절차

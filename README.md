@@ -28,6 +28,7 @@ Claude Code에서 `/skills`에 metarche가 보이면 끝이다. 갱신은 저장
 | `/metarche docs` · `plan` · `build` | 문서 · 계획 · 구현 단계 |
 | `/metarche wrap` | 세션 마무리 (PROGRESS 갱신) |
 | `/metarche audit` | 문서 점검 보고서 |
+| `/metarche upgrade` | 스킬 개정분을 기존 프로젝트의 훅·설정·문서에 반영 |
 | `/metarche status` | 현재 단계와 미결 수만 보고 |
 
 자동으로 호출되지 않는다(`disable-model-invocation: true`). 직접 불렀을 때만 작동한다.
@@ -44,6 +45,7 @@ skill/
    ├─ audit.md         점검
    ├─ adopt.md         기존 프로젝트 이관
    ├─ security.md      보안 정책 수립 (수준·데이터 등급·신뢰 경계·암호화)
+   ├─ upgrade.md       스킬 개정분을 기존 프로젝트에 반영 (개정 대장)
    └─ templates/       PRD·SECURITY_POLICY·QA_LOG·OPEN·DECISIONS·CLAUDE·PROGRESS·REFERENCE·profile, settings.json, hooks/
 ~~~
 

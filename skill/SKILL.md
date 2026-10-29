@@ -1,7 +1,7 @@
 ---
 name: metarche
-description: "프로젝트의 첫 원리를 세우는 절차. 질의응답으로 PRD를 확정하고, Claude Code용 문서(CLAUDE.md·PROGRESS·REFERENCE)와 작업 계획을 만든 뒤, 승인 관문을 거쳐 구현·검증·기록을 반복한다. 새 프로젝트 착수(new), 기존 프로젝트 이관(adopt), 세션 마무리(wrap), 문서 점검(audit)에 쓴다. Project bootstrap: discovery interview, PRD, Claude Code docs, plan, build loop with approval gates and file-based state that survives /clear and compaction."
-argument-hint: "[new|adopt|discover|docs|plan|build|wrap|audit|status]"
+description: "프로젝트의 첫 원리를 세우는 절차. 질의응답으로 PRD를 확정하고, Claude Code용 문서(CLAUDE.md·PROGRESS·REFERENCE)와 작업 계획을 만든 뒤, 승인 관문을 거쳐 구현·검증·기록을 반복한다. 새 프로젝트 착수(new), 기존 프로젝트 이관(adopt), 세션 마무리(wrap), 문서 점검(audit), 스킬 개정분 반영(upgrade)에 쓴다. Project bootstrap: discovery interview, PRD, Claude Code docs, plan, build loop with approval gates and file-based state that survives /clear and compaction."
+argument-hint: "[new|adopt|discover|docs|plan|build|wrap|audit|upgrade|status]"
 disable-model-invocation: true
 ---
 
@@ -53,6 +53,7 @@ disable-model-invocation: true
 | 9 개선 | build | execute.md §개선 | rules·스킬 제안 | 제안 승인 |
 | - | wrap | execute.md §wrap | PROGRESS 갱신 | - |
 | - | audit | audit.md | 점검 보고서 | 수정 승인 |
+| - | upgrade | upgrade.md | 훅·설정·문서 갱신 | 적용 승인 |
 
 읽을 파일은 이 스킬 폴더의 `references/`에 있고, 문서 양식은 `references/templates/`에 있다.
 

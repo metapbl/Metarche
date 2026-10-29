@@ -45,9 +45,9 @@ disable-model-invocation: true
 | 1 목적 | discover | discover.md §1~3 | PRD §1 | 되짚기 |
 | 2 범위 | discover | discover.md §1~3 | PRD §2 | 되짚기 |
 | 3 기능 | discover | discover.md §1~3 | PRD §3 | 되짚기 |
-| 4 방식 | discover | discover.md §4 | PRD §4 | 안 선택 |
-| 5 확정 | discover | discover.md §5 | PRD `approved` | **PRD 승인** |
-| 6 문서 | docs | docs.md | CLAUDE.md, PROGRESS, REFERENCE, settings | 문서 승인 |
+| 4 방식 | discover | discover.md §4, security.md §1~6 | PRD §4~5, SECURITY_POLICY | 안 선택 |
+| 5 확정 | discover | discover.md §5 | PRD·SECURITY_POLICY `approved` | **PRD·보안 정책 승인** |
+| 6 문서 | docs | docs.md, security.md §8 | CLAUDE.md, PROGRESS, REFERENCE, settings | 문서 승인 |
 | 7 계획 | plan | plan.md | `docs/plans/YYYY-MM-DD-*.md` | 계획 승인 |
 | 8 구현 | build | execute.md | 코드, 기록 | 작업마다 |
 | 9 개선 | build | execute.md §개선 | rules·스킬 제안 | 제안 승인 |

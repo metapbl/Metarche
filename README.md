@@ -5,6 +5,7 @@ meta + archē (메타르케) — 프로젝트의 첫 원리를 세우는 Claude 
 
 ## 하는 일
 - 질의응답으로 목적·범위·기능·방식을 정하고 PRD를 승인받는다.
+- 보안 수준과 정책(데이터 등급, 프론트·백엔드 신뢰 경계, 암호화)을 PRD와 함께 승인받는다.
 - Claude Code용 문서(CLAUDE.md, PROGRESS, REFERENCE)와 권한·훅 설정을 만든다.
 - 작업 계획을 세우고, 승인 관문을 거쳐 구현·확인·기록을 반복한다.
 - 모든 상태를 파일에 두어 `/clear`와 압축 뒤에도 이어 간다.
@@ -42,7 +43,8 @@ skill/
    ├─ execute.md       8~9단계 구현·개선, wrap
    ├─ audit.md         점검
    ├─ adopt.md         기존 프로젝트 이관
-   └─ templates/       PRD·QA_LOG·OPEN·DECISIONS·CLAUDE·PROGRESS·REFERENCE·profile, settings.json, hooks/
+   ├─ security.md      보안 정책 수립 (수준·데이터 등급·신뢰 경계·암호화)
+   └─ templates/       PRD·SECURITY_POLICY·QA_LOG·OPEN·DECISIONS·CLAUDE·PROGRESS·REFERENCE·profile, settings.json, hooks/
 ~~~
 
 ## 라이선스

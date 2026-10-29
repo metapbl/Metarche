@@ -18,6 +18,7 @@
 
 ## 문서 지도
 - `docs/PRD.md` — 무엇을 왜 (승인본. 바꾸려면 /metarche discover)
+- `docs/SECURITY_POLICY.md` — 데이터 등급·신뢰 경계·암호화 (승인본). 인증·권한·암호화·민감 데이터를 건드리는 작업 전에 해당 절을 읽는다
 - `docs/PROGRESS.md` — 상태·다음 할 일 (머리는 세션 시작 때 자동 주입)
 - `docs/REFERENCE.md` — 근거·외부 사양·함정 대장. 필요한 절만 검색해 읽는다
 - `docs/plans/` — 작업 계획 (체크박스)

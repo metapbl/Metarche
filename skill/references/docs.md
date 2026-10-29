@@ -1,6 +1,6 @@
 # 단계 6 — 문서 (docs)
 
-PRD가 `approved`일 때만 시작한다. 입력: `docs/PRD.md`, `docs/discovery/DECISIONS.md`, (adopt면) `docs/legacy/`.
+PRD가 `approved`일 때만 시작한다. 입력: `docs/PRD.md`, `docs/SECURITY_POLICY.md`, `docs/discovery/DECISIONS.md`, (adopt면) `docs/legacy/`.
 산출물: 루트 `CLAUDE.md`, `docs/PROGRESS.md`, `docs/REFERENCE.md`, `.claude/settings.json`, `.claude/hooks/*.ps1`.
 양식은 `templates/`에 있다. 그대로 복사하지 말고 PRD에 해당 없는 칸은 지운다.
 
@@ -12,7 +12,8 @@ PRD가 `approved`일 때만 시작한다. 입력: `docs/PRD.md`, `docs/discovery
 | 가끔 필요 (근거·외부 사양·함정) | REFERENCE | 검색해 읽음 |
 | 결정과 버린 안 | DECISIONS (계속 씀) | 원장 하나 |
 | 작업 단계 | docs/plans/ | 체크박스 |
-| 반드시 지켜야 함 (위험 명령·관문) | settings.json 권한·훅 | Claude Code가 강제 |
+| 반드시 지켜야 함 (위험 명령·관문·비밀값) | settings.json 권한·훅 | Claude Code가 강제 |
+| 보안 정책 (등급·경계·암호화) | docs/SECURITY_POLICY.md (승인본) | 작업 때 해당 절만 읽음 |
 | 사용자 공통 성향 | ~/.claude/CLAUDE.md | 프로젝트에 다시 쓰지 않음 |
 | 서식 | 포매터·린터 설정 | 문서에 적지 않음 |
 
@@ -40,7 +41,11 @@ PRD가 `approved`일 때만 시작한다. 입력: `docs/PRD.md`, `docs/discovery
 ## §5 settings.json·훅
 - `templates/settings.json` → `.claude/settings.json`, `templates/hooks/*.ps1` → `.claude/hooks/`.
   - 이미 있는 파일은 덮어쓰지 않는다. settings.json은 기존 내용에 `permissions`·`hooks` 항목만 더하고, 같은 이름의 훅 파일은 차이를 보인다. 어느 쪽이든 전후를 보이고 승인받은 뒤 적용한다.
-- PRD §6 "위험한 명령"을 ask/deny로 옮긴다. 기본: 커밋·푸시 ask, `.env` 읽기 deny.
+- PRD §6 "위험한 명령"을 ask/deny로 옮긴다. 기본: 커밋·푸시 ask, `.env`·`.env.*`·`*.pem`·`*.key` 읽기 deny(하위 폴더 포함, `.env.example`은 허용).
+- 보안 정책을 security.md §8대로 옮기고, 옮긴 결과를 정책 10절에 적는다.
+  - 정책 7절 비밀값의 개발용 보관 위치를 `Read(...)`·`Edit(...)` deny에 더한다.
+  - 수준이 L1 이상이면 공식 security-guidance 플러그인을 제안한다 (Python 필요, 리뷰마다 사용량이 든다). 승인되면 settings.json `enabledPlugins`에 `"security-guidance@claude-plugins-official": true`를 넣고, 정책 4·5절에서 이 프로젝트의 규칙만 뽑아 `.claude/claude-security-guidance.md`(8KB 이내)를 만든다.
+  - 정책에 기계로 잡을 금지 패턴이 있으면 플러그인을 쓸 때는 `.claude/security-patterns.json`에, 아니면 check 훅의 보안 린터 규칙으로 넣는다.
 - progress-head.ps1: 세션 시작·재개·/clear·압축 후 PROGRESS 머리 주입.
 - gate.ps1: PRD 상태가 `approved`가 아니면 docs/·.claude/·CLAUDE.md 밖 Edit/Write/NotebookEdit를 막는다.
   - 훅은 PRD 승인 뒤인 이 단계에서 설치되므로 실제로 막는 때는 PRD 변경 중(`changing`)뿐이다. 승인 전(draft)은 철칙 1로 지킨다.
@@ -64,7 +69,8 @@ PRD가 `approved`일 때만 시작한다. 입력: `docs/PRD.md`, `docs/discovery
 - CLAUDE.md 60줄 이내, 첫 줄 `<!-- metarche:draft -->` (승인 후 `<!-- metarche -->`)
 - PROGRESS 머리 40줄 이내
 - `/hooks`에 SessionStart·PreToolUse 표시, `/clear` 직후 머리가 컨텍스트에 들어옴
-- `/permissions`에 ask·deny 규칙 표시
+- `/permissions`에 ask·deny 규칙 표시. deny한 비밀값 파일이 있으면 Read로 읽어 막히는지 본다
+- security-guidance를 쓰면 `(Get-Item .claude/claude-security-guidance.md).Length`가 8192 이하
 - check 훅: `$checks`의 도구마다 `Get-Command {도구}`가 성공하고, 일부러 검사에 걸리는 파일을 하나 써 보면 오류가 돌아온 뒤 그 파일을 지운다
 
 ## 관문

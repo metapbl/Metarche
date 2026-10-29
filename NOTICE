@@ -12,7 +12,7 @@ Licensed under the MIT License (see LICENSE).
 2. Everything Claude Code (ECC) — https://github.com/affaan-m/ECC
    MIT License, Copyright (c) 2026 Affaan Mustafa
    참고: plan → test → implement → review → verify → remember → improve 순환,
-         규칙 최소 로드 원칙
+         규칙 최소 로드 원칙, security-review·security-reviewer(보안 점검 항목, 사고 대응 절차)
 
 3. andrej-karpathy-skills — https://github.com/multica-ai/andrej-karpathy-skills
    MIT License (README·.claude-plugin/plugin.json 기준. 저장소에 LICENSE 파일 없음), 작성자 forrestchang
@@ -21,8 +21,9 @@ Licensed under the MIT License (see LICENSE).
 4. planning-with-files — https://github.com/OthmanAdi/planning-with-files
    방식만 참고(파일 기반 상태 보존, 재개). 문장은 포함하지 않음.
 
-5. claude-md-improver — https://github.com/anthropics/claude-plugins-official
-   점검 절차(보고서 → 승인 → 적용)만 참고. 문장은 포함하지 않음.
+5. claude-md-improver, claude-security, security-guidance — https://github.com/anthropics/claude-plugins-official
+   방식만 참고(점검 절차 보고서 → 승인 → 적용, 구성요소별 신뢰 경계, 악용 경로·영향 기준 심각도,
+   security-guidance가 읽는 파일 형식). 문장은 포함하지 않음.
 
 6. claude-md-templates — https://github.com/abhishekray07/claude-md-templates
    방식만 참고(전역·프로젝트·로컬 3단 구성, CLAUDE.md 길이 기준). 문장은 포함하지 않음.
@@ -31,6 +32,9 @@ Licensed under the MIT License (see LICENSE).
    방식만 참고(간결성, 점진적 공개, 서식은 도구에 맡김). 문장은 포함하지 않음.
 
 8. Claude Code 공식 문서 — https://code.claude.com/docs
+
+9. OWASP ASVS 5.0, OWASP Top 10:2025, OWASP Cheat Sheet Series — https://owasp.org
+   CC BY-SA 4.0. 장 번호(V·A)와 권장 알고리즘·수치만 인용. 문장은 포함하지 않음.
 
 위 1~3의 MIT 허가 문구 전문:
 

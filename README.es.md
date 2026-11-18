@@ -23,7 +23,7 @@
 meta + archē: una skill de Claude Code que convierte una entrevista de preguntas y respuestas en un PRD, documentos y un plan, y luego construye con puertas de aprobación.
 
 > [!NOTE]
-> Las instrucciones de la skill y las plantillas de documentos están escritas en coreano, por lo que los documentos que genera (PRD, CLAUDE.md, planes) también están en coreano.
+> Las instrucciones de la skill están en inglés. Habla contigo y escribe los documentos del proyecto (PRD, CLAUDE.md, planes) en tu idioma.
 
 ## Qué hace
 - Define el propósito, el alcance, las funciones y el enfoque mediante una entrevista y luego te pide aprobar un PRD.

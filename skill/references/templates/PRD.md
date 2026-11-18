@@ -1,58 +1,59 @@
-# PRD — {프로젝트명}
+# PRD — {project name}
 
-상태: draft | 단계: 1 목적 | 갱신: YYYY-MM-DD
-<!-- 상태가 approved (YYYY-MM-DD)가 되기 전에는 코드·뼈대·의존성 설치를 하지 않는다. -->
-<!-- 모든 항목 끝에 출처를 단다: [U] 사용자 · [X] 기존 코드·문서 · [AI] AI 기본값. 근거 결정은 (D###). -->
+Status: draft | Stage: 1 Purpose | Updated: YYYY-MM-DD
+<!-- Write this document in the user's language. Keep the `Status:` line, IDs and source tags exactly as they are. -->
+<!-- No code, scaffolding or dependency installs until Status is approved (YYYY-MM-DD). -->
+<!-- End every item with its source: [U] user · [X] existing code or docs · [AI] AI default. Decisions it rests on: (D###). -->
 
-## 1. 목적
-- 해결할 문제:
-- 사용자 (누가, 몇 명, 어떤 기기):
-- 성공 기준 (관찰 가능한 장면 하나):
-- 기한과 수명 (언제까지, 다 쓰면 폐기/유지):
+## 1. Purpose
+- Problem to solve:
+- Users (who, how many, which devices):
+- Success criterion (one observable scene):
+- Deadline and lifetime (by when; thrown away or maintained after use):
 
-## 2. 범위
-### 2.1 필수
-### 2.2 있으면 좋음
-### 2.3 이번에는 안 함
-### 2.4 반목표 (절대 그렇게 되면 안 되는 동작)
-### 2.5 나중을 위해 구조만 준비
-### 2.6 제약 (법·라이선스·비용·개인정보)
+## 2. Scope
+### 2.1 Must have
+### 2.2 Nice to have
+### 2.3 Not this time
+### 2.4 Anti-goals (behavior that must never happen)
+### 2.5 Structure prepared for later
+### 2.6 Constraints (law, license, cost, privacy)
 
-## 3. 기능
-### F1 {기능명}
-- 정상 흐름:
-- 예외 (실패·중단·끊김·잘못된 입력):
-- 상태별 동작 (처리 중·일시정지 중·종료 중 같은 조작):
-- 인터페이스 (다른 부분이 의존하는 함수·명령·파일 형식·화면 요소):
-- 인수 기준 (정상·예외·경계를 2~5개):
-  - Given {상태} / When {조작} / Then {보이는 결과}
-- 확인 방법: 자동 테스트 | 실기기 (누가, 무엇을 보고 판단)
-- 보안 (권한이나 민감 이상 데이터가 걸릴 때): 누가 할 수 있는가, 다루는 데이터 등급, 보안 인수 기준 1개 이상
-- 근거: D###
+## 3. Features
+### F1 {feature name}
+- Normal flow:
+- Exceptions (failure, interruption, lost connection, invalid input):
+- Behavior by state (the same action while working, paused, shutting down):
+- Interface (functions, commands, file formats, screen elements other parts rely on):
+- Acceptance criteria (2–5 covering normal, exception and edge cases):
+  - Given {state} / When {action} / Then {visible result}
+- How it is checked: automated test | device (who judges, by seeing what)
+- Security (when permissions or data of class sensitive or above are involved): who may do it, data classes handled, at least one security acceptance criterion
+- Source: D###
 
-## 4. 기술 결정
-| 항목 | 선택 | 버린 안 (이유) | 근거 |
+## 4. Technical decisions
+| Item | Choice | Rejected options (why) | Source |
 |---|---|---|---|
 
-## 5. 비기능 요구
-- 실행 환경 (OS, 언어 버전, 네트워크):
-- 성능 (시작 시간, 반응 속도, 자원):
-- 배포 형태:
-- 공개 저장소 여부, README 대상과 언어 목록 (공개면 `readme.md` 규격):
-- 로그 (위치, 형식, 상세 모드):
-- 보안 수준과 이유 (상세는 `docs/SECURITY_POLICY.md`):
+## 5. Non-functional requirements
+- Runtime environment (OS, language version, network):
+- Performance (startup time, responsiveness, resources):
+- Distribution form:
+- Public repository or not; README audience and languages (if public, the `readme.md` standard):
+- Logs (location, format, verbose mode):
+- Security level and why (details in `docs/SECURITY_POLICY.md`):
 
-## 6. 검증과 운영
-- 자동 테스트 대상 / 실기기 확인 대상과 결과 전달 방식:
-- 전체 테스트 명령, 걸리는 시간, 기준 시간 (넘으면 재검토. 예: 60초):
-- 편집 때 자동 검사 — 파일 단위 (고친 파일 경로를 맨 뒤에 받는 명령, 확장자별):
-- 작업 끝 자동 검사 — 프로젝트 단위 (경로를 받지 않는 명령. 예: `cargo clippy`, `tsc --noEmit`):
-- 위험한 명령 (실행 전 확인 대상):
-- 버전 관리 (커밋 단위, 메시지 형식):
+## 6. Verification and operations
+- What is tested automatically / what is checked on a device, and how results are reported:
+- Full test command, how long it takes, baseline time (revisit when exceeded; e.g. 60 s):
+- Per-file checks (commands that take the edited file's path last, per extension):
+- End-of-turn checks — project-wide (commands that take no path, e.g. `cargo clippy`, `tsc --noEmit`):
+- Dangerous commands (ask before running):
+- Version control (commit unit, message format):
 
-## 7. 미결
+## 7. Open questions
 → `docs/discovery/OPEN.md`
 
-## 8. 변경 이력
-| 날짜 | 변경 | 근거 |
+## 8. Change history
+| Date | Change | Source |
 |---|---|---|

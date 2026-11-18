@@ -1,16 +1,17 @@
-# QA_LOG — 질의응답 원장
+# QA_LOG — interview ledger
 
-<!-- 추가만 한다. 고치거나 지우지 않는다. 정정은 새 항목으로 쓰고 이전 Q번호를 적는다. -->
-<!-- 전체를 읽지 않는다. 필요한 Q번호나 낱말로 검색한다. -->
+<!-- Write entries in the user's language. Keep IDs and source tags exactly as they are. -->
+<!-- Append only. Never edit or delete. A correction is a new entry that names the earlier Q number. -->
+<!-- Never read it whole. Search for the Q number or words you need. -->
 
-## 양식
+## Form
 
-### Q001 · YYYY-MM-DD · 단계 1 · [U]
-Q: 질문
-A: 답 (사용자 표현 그대로, 길면 요약하고 "요약" 표시)
-→ D001 확정 | OPEN Q005 추가 | 없음
+### Q001 · YYYY-MM-DD · stage 1 · [U]
+Q: question
+A: answer (in the user's words; if long, summarize and mark "summary")
+→ D001 confirmed | OPEN Q005 added | none
 
-- 출처가 [X]인 항목은 A에 근거 파일과 위치를 적는다. 예: `src/app.py > main`
-- 출처가 [AI]인 항목은 A에 "AI 기본값"과 이유를 적고 OPEN의 재확인 칸에 올린다.
+- For an [X] entry, give the source file and location in A, e.g. `src/app.py > main`.
+- For an [AI] entry, write "AI default" and the reason in A, and add it to the re-check table in OPEN.
 
 ---

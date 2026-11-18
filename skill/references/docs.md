@@ -1,86 +1,86 @@
-# 단계 6 — 문서 (docs)
+# Stage 6 — docs
 
-PRD가 `approved`일 때만 시작한다. 입력: `docs/PRD.md`, `docs/SECURITY_POLICY.md`, `docs/discovery/DECISIONS.md`, (adopt면) `docs/legacy/`.
-산출물: 루트 `CLAUDE.md`, `docs/PROGRESS.md`, `docs/REFERENCE.md`, `.claude/settings.json`, `.claude/hooks/*.ps1`.
-양식은 `templates/`에 있다. 그대로 복사하지 말고 PRD에 해당 없는 칸은 지운다.
+Start only when the PRD is `approved`. Input: `docs/PRD.md`, `docs/SECURITY_POLICY.md`, `docs/discovery/DECISIONS.md`, and `docs/legacy/` for adopt.
+Output: root `CLAUDE.md`, `docs/PROGRESS.md`, `docs/REFERENCE.md`, `.claude/settings.json`, `.claude/hooks/*.ps1`.
+Templates are in `templates/`. Do not copy them verbatim; delete fields the PRD does not need, and write the documents in the user's language (SKILL.md "Language").
 
-## §1 무엇을 어디에 두나
-| 정보 | 위치 | 이유 |
+## §1 What goes where
+| Information | Place | Why |
 |---|---|---|
-| 매 세션 필요, 거의 안 바뀜 (명령·구조·프로젝트 규칙) | CLAUDE.md | 항상 로드됨 |
-| 자주 바뀜 (상태·다음 할 일·미해결) | PROGRESS 머리 | 훅이 주입 |
-| 가끔 필요 (근거·외부 사양·함정) | REFERENCE | 검색해 읽음 |
-| 결정과 버린 안 | DECISIONS (계속 씀) | 원장 하나 |
-| 작업 단계 | docs/plans/ | 체크박스 |
-| 반드시 지켜야 함 (위험 명령·관문·비밀값) | settings.json 권한·훅 | Claude Code가 강제 |
-| 보안 정책 (등급·경계·암호화) | docs/SECURITY_POLICY.md (승인본) | 작업 때 해당 절만 읽음 |
-| 사용자 공통 성향 | ~/.claude/CLAUDE.md | 프로젝트에 다시 쓰지 않음 |
-| 서식 | 포매터·린터 설정 | 문서에 적지 않음 |
+| Needed every session, rarely changes (commands, structure, project rules) | CLAUDE.md | always loaded |
+| Changes often (status, next step, open problems) | head of PROGRESS | injected by a hook |
+| Needed now and then (rationale, external specs, traps) | REFERENCE | searched, not read whole |
+| Decisions and rejected options | DECISIONS (kept growing) | one ledger |
+| Task steps | docs/plans/ | checkboxes |
+| Must always hold (dangerous commands, gates, secrets) | settings.json permissions and hooks | enforced by Claude Code |
+| Security policy (classes, boundaries, encryption) | docs/SECURITY_POLICY.md (approved copy) | read only the relevant section while working |
+| The user's general preferences | ~/.claude/CLAUDE.md | not repeated in the project |
+| Formatting | formatter and linter config | not written in documents |
 
 ## §2 CLAUDE.md
-- 첫 줄은 `<!-- metarche:draft -->`로 만들고, 관문 승인 뒤 `<!-- metarche -->`로 바꾼다 (상태 판별용). 60줄 이내, 넘치면 REFERENCE로 내린다.
-- 명령은 복사해 바로 실행되는 형태로 적는다.
-- 규칙은 어기면 실제로 문제가 나는 것만, 근거(D###·R§n)를 단다. 일반 원칙은 쓰지 않는다.
-- 코드 위치는 줄 번호 대신 `파일 > 함수`.
-- `@파일` 임포트 금지(매번 전체 로드). 경로만 적고 필요할 때 읽게 한다.
-- "압축 시 보존" 절을 둔다.
+- Create it with `<!-- metarche:draft -->` as the first line and change it to `<!-- metarche -->` after the gate (used by stage detection). At most 60 lines; move the overflow to REFERENCE.
+- Write commands so they can be copied and run as they are.
+- Rules: only those whose violation causes real problems, each with its source (D###, R§n). No general principles.
+- Point to code as `file > function`, not line numbers.
+- No `@file` imports (they load the whole file every time). Write the path and let it be read when needed.
+- Include a "keep on compaction" section.
 
-## §3 PROGRESS (토큰 비용 규칙)
-1. 머리(`<!-- head:end -->` 위)는 40줄 이내: 상태·다음 할 일·미해결·확인 대기.
-2. 갱신은 머리만 고친다. 전체 재작성 금지.
-3. 작업 단위 = 커밋 하나. 단위가 끝나면 계획 체크박스, 세션 끝에 머리를 갱신한다.
-4. 완료 기록은 한 줄 + 커밋 hash. 50줄을 넘으면 `docs/history/YYYY-MM.md`로 옮긴다.
+## §3 PROGRESS (token cost rules)
+1. The head (above `<!-- head:end -->`) stays within 40 lines: status, next step, open problems, waiting for checks.
+2. Update only the head. Never rewrite the whole file.
+3. Unit of work = one commit. Tick the plan checkbox when a unit is done; update the head at the end of the session.
+4. Done log: one line plus the commit hash. Past 50 lines, move it to `docs/history/YYYY-MM.md`.
 
 ## §4 REFERENCE
-- 절 번호 `R§n`으로 참조한다. 전체를 읽지 않고 검색한다.
-- R§3 설계 근거는 `D### — 한 줄 요약` 색인만 둔다. 결정 내용은 DECISIONS에만 쓴다.
-- 함정 대장(`T<n>`)에는 두 번 겪었거나 원인 찾기에 오래 걸린 것만 적는다.
-- 외부 사양에는 버전과 출처 URL을 단다.
-- 약 500줄을 넘으면 `docs/reference/` 아래 주제별로 나누고 REFERENCE는 목차만 남긴다.
+- Refer to sections as `R§n`. Search it; never read it whole.
+- R§3 design rationale holds only an index of `D### — one-line summary`. The decisions themselves live only in DECISIONS.
+- The trap log (`T<n>`) records only what happened twice or took long to diagnose.
+- External specs carry a version and a source URL.
+- Past about 500 lines, split by topic under `docs/reference/` and leave only a table of contents in REFERENCE.
 
-## §5 settings.json·훅
+## §5 settings.json and hooks
 - `templates/settings.json` → `.claude/settings.json`, `templates/hooks/*.ps1` → `.claude/hooks/`.
-  - 이미 있는 파일은 덮어쓰지 않는다. settings.json은 기존 내용에 `permissions`·`hooks` 항목만 더하고, 같은 이름의 훅 파일은 차이를 보인다. 어느 쪽이든 전후를 보이고 승인받은 뒤 적용한다.
-- PRD §6 "위험한 명령"을 ask/deny로 옮긴다. 기본: 커밋·푸시 ask, `.env`·`.env.*`·`*.pem`·`*.key` 읽기 deny(하위 폴더 포함, `.env.example`은 허용).
-- 보안 정책을 security.md §8대로 옮기고, 옮긴 결과를 정책 10절에 적는다.
-  - 정책 7절 비밀값의 개발용 보관 위치를 `Read(...)`·`Edit(...)` deny에 더한다.
-  - 수준이 L1 이상이면 공식 security-guidance 플러그인을 제안한다 (Python 필요, 리뷰마다 사용량이 든다). 승인되면 settings.json `enabledPlugins`에 `"security-guidance@claude-plugins-official": true`를 넣고, 정책 4·5절에서 이 프로젝트의 규칙만 뽑아 `.claude/claude-security-guidance.md`(8KB 이내)를 만든다.
-  - 정책에 기계로 잡을 금지 패턴이 있으면 플러그인을 쓸 때는 `.claude/security-patterns.json`에, 아니면 check 훅의 보안 린터 규칙으로 넣는다.
-- progress-head.ps1: 세션 시작·재개·/clear·압축 후 PROGRESS 머리 주입.
-- gate.ps1: PRD 상태가 `approved`가 아니면 docs/·.claude/·CLAUDE.md 밖 Edit/Write/NotebookEdit를 막는다.
-  - 훅은 PRD 승인 뒤인 이 단계에서 설치되므로 실제로 막는 때는 PRD 변경 중(`changing`)뿐이다. 승인 전(draft)은 철칙 1로 지킨다.
-  - 셸 명령의 쓰기는 못 막으므로 CLAUDE.md 규칙과 함께 쓴다.
-  - 프로젝트 밖 파일(예: `~/.claude/`)과 `.claude/worktrees/` 아래 파일도 막힌다. 의도한 동작이다. 필요하면 사용자가 직접 고친다.
-- check.ps1: 파일을 고칠 때마다 확장자별 검사(린터·타입 검사)를 돌리고, 실패하면 출력을 Claude에게 돌려줘 바로 고치게 한다.
-  - 스크립트 맨 위 `$checks` 표를 PRD §6 "편집 때 자동 검사"대로 채운다. 고친 파일 경로를 맨 뒤에 받는 명령만 넣는다. `cargo check`처럼 경로를 받지 않는 명령은 finish로 보내고, 전체 테스트는 넣지 않는다.
-  - 파일 하나만 받으면 프로젝트 설정을 못 읽는 도구는 설정을 명령에 직접 적는다 (예: `rustfmt --check --edition 2024`).
-  - 검사 도구가 설치돼 있어야 한다. 없으면 훅이 매번 "검사 도구 없음"을 돌려준다.
-- finish.ps1: 응답이 끝날 때(Stop) 프로젝트 단위 검사를 돌리고, 실패하면 출력을 돌려줘 이어서 고치게 한다.
-  - 맨 위 `$finish` 목록을 PRD §6 "작업 끝 자동 검사"대로 채운다. 비어 있으면 아무것도 하지 않는다.
-  - check.ps1이 파일을 고칠 때 만드는 `.claude/.unchecked`가 있을 때만 돈다 (질문에만 답한 턴에는 돌지 않는다). 통과하면 지운다. 셸 명령으로만 파일을 고친 턴은 잡지 못한다.
-  - 같은 실패로는 두 번까지만 막는다 (`$limit`). 넘으면 표시 파일을 지워 다음 턴을 막지 않는다. 막을 때마다 "고칠 방법이 분명하지 않거나 요청과 부딪히면 고치지 말고 사용자에게 물으라"는 문구를 함께 돌려준다.
-  - `.claude/.unchecked`를 `.gitignore`에 넣는다.
-- 개인 설정은 `.claude/settings.local.json` (git 제외).
+  - Do not overwrite existing files. For settings.json, add only the `permissions` and `hooks` entries to what is there; for a hook file with the same name, show the difference. Either way, show before and after and apply only after approval.
+- Move PRD §6 "dangerous commands" into ask/deny rules. Defaults: commit and push ask; reading `.env`, `.env.*`, `*.pem`, `*.key` denied (in subfolders too; `.env.example` allowed).
+- Carry the security policy over as in security.md §8, and record the result in policy §10.
+  - Add the development storage locations of secrets (policy §7) to the `Read(...)` and `Edit(...)` deny rules.
+  - At level L1 or above, propose the official security-guidance plugin (needs Python; each review costs usage). If approved, add `"security-guidance@claude-plugins-official": true` to `enabledPlugins` in settings.json, and build `.claude/claude-security-guidance.md` (under 8 KB) from this project's rules in policy §4 and §5.
+  - Banned patterns a machine can catch go into `.claude/security-patterns.json` when the plugin is used, otherwise into security linter rules for the check hook.
+- progress-head.ps1: injects the PROGRESS head at session start, resume, /clear and after compaction.
+- gate.ps1: while the PRD `Status:` is not `approved`, blocks Edit/Write/NotebookEdit outside docs/, .claude/ and CLAUDE.md.
+  - The hook is installed in this stage, after the PRD is approved, so it only actually blocks while the PRD is `changing`. Before approval (draft), rule 1 covers it.
+  - It cannot block writes made by shell commands, so it works together with the CLAUDE.md rules.
+  - Files outside the project (e.g. `~/.claude/`) and under `.claude/worktrees/` are blocked too. This is intended; the user edits them by hand if needed.
+- check.ps1: runs per-extension checks (linters, type checks) on every edited file and returns failures to Claude so it fixes them at once.
+  - Fill the `$checks` table at the top from PRD §6 "per-file checks". Only commands that take the edited file's path last. Commands that take no path, such as `cargo check`, go to finish; the full test suite goes nowhere here.
+  - Tools that cannot read project settings when given a single file get those settings in the command itself (e.g. `rustfmt --check --edition 2024`).
+  - The check tools must be installed. Otherwise the hook reports "check tool not found" every time.
+- finish.ps1: when a reply ends (Stop), runs the project-wide checks and returns failures so Claude keeps fixing.
+  - Fill the `$finish` list at the top from PRD §6 "end-of-turn checks". Empty means it does nothing.
+  - It runs only when `.claude/.unchecked`, created by check.ps1 on an edit, exists (so not on turns that only answered a question). It removes the marker on success. Turns that changed files only through shell commands are not caught.
+  - The same failure blocks at most twice (`$limit`). Past that the marker is removed so the next turn is not blocked. Every block also says: if the fix is unclear or would contradict the request, do not fix it; ask the user.
+  - Add `.claude/.unchecked` to `.gitignore`.
+- Personal settings go in `.claude/settings.local.json` (excluded from git).
 
-## §6 절차
-언어 스킬이 있으면(discover.md §2 "4 방식") 그 스킬의 `references/metarche.md`를 읽고, 검사 명령과 CLAUDE.md 규칙 값을 거기서 가져온다.
+## §6 Procedure
+If there is a language skill (discover.md §2 "4 Approach"), read its `references/metarche.md` and take the check commands and CLAUDE.md rule values from it.
 
-1. PRD·DECISIONS를 읽고 §1 표에 따라 분류한 목록(파일별 절 제목, 들어갈 항목, 출처 표시)을 보여 준다.
-2. 분류 승인 후 파일을 만든다. REFERENCE R§3에는 설계에 영향을 주는 확정 결정의 색인을 넣는다.
-3. 각 파일 줄 수와 §7 확인 결과를 증거로 제시한다.
-4. 관문.
-5. 승인되면 CLAUDE.md 첫 줄을 `<!-- metarche -->`로 바꾼다.
+1. Read the PRD and DECISIONS and show the classification per the §1 table (per file: section titles, items, source marks).
+2. After the classification is approved, create the files. Put an index of the settled decisions that shape the design into REFERENCE R§3.
+3. Show each file's line count and the §7 results as evidence.
+4. Gate.
+5. On approval, change the first line of CLAUDE.md to `<!-- metarche -->`.
 
-재개할 때 CLAUDE.md 첫 줄이 `<!-- metarche:draft -->`면 파일을 다시 만들지 않고 3번부터 한다.
+On resume, if CLAUDE.md starts with `<!-- metarche:draft -->`, do not recreate the files; continue from step 3.
 
-## §7 확인
-- CLAUDE.md 60줄 이내, 첫 줄 `<!-- metarche:draft -->` (승인 후 `<!-- metarche -->`)
-- PROGRESS 머리 40줄 이내
-- `/hooks`에 SessionStart·PreToolUse·PostToolUse·Stop 표시, `/clear` 직후 머리가 컨텍스트에 들어옴
-- `/permissions`에 ask·deny 규칙 표시. deny한 비밀값 파일이 있으면 Read로 읽어 막히는지 본다
-- security-guidance를 쓰면 `(Get-Item .claude/claude-security-guidance.md).Length`가 8192 이하
-- check 훅: `$checks`의 도구마다 `Get-Command {도구}`가 성공하고, 일부러 검사에 걸리는 파일을 하나 써 보면 오류가 돌아온 뒤 그 파일을 지운다
-- finish 훅: 일부러 컴파일·타입 오류를 넣고 응답을 끝내면 오류가 돌아오는지, 질문에만 답한 턴에는 검사가 돌지 않는지 본다. 끝나면 오류를 되돌린다
+## §7 Checks
+- CLAUDE.md within 60 lines, first line `<!-- metarche:draft -->` (after approval `<!-- metarche -->`)
+- PROGRESS head within 40 lines
+- `/hooks` shows SessionStart, PreToolUse, PostToolUse and Stop; right after `/clear` the head is in context
+- `/permissions` shows the ask and deny rules. If secret files are denied, try reading one with Read and confirm it is blocked
+- With security-guidance: `(Get-Item .claude/claude-security-guidance.md).Length` is 8192 or less
+- check hook: `Get-Command {tool}` succeeds for every tool in `$checks`; write a file that fails a check, see the error come back, then delete the file
+- finish hook: plant a compile or type error and end a reply; the error comes back. A turn that only answers a question runs no check. Revert the error afterwards
 
-## 관문
-> [관문] 문서 구성(CLAUDE.md·PROGRESS·REFERENCE·settings·훅)을 승인하시겠습니까? 승인 전에는 작업 계획과 코드를 만들지 않습니다. 고칠 곳이 있으면 번호로 알려 주십시오.
+## Gate
+> [Gate] Do you approve the document set (CLAUDE.md, PROGRESS, REFERENCE, settings, hooks)? Until you do, I will not create the plan or code. If something needs fixing, tell me its number.

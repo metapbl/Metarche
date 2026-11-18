@@ -1,18 +1,19 @@
-# PROGRESS — {프로젝트명}
+# PROGRESS — {project name}
+<!-- Write this document in the user's language. Keep the head:end marker and IDs exactly as they are. -->
 
-## 상태
-- 단계: {8 구현} · 계획: `docs/plans/YYYY-MM-DD-*.md` 작업 {n}/{m}
-- 갱신: YYYY-MM-DD
+## Status
+- Stage: {8 Build} · Plan: `docs/plans/YYYY-MM-DD-*.md` task {n}/{m}
+- Updated: YYYY-MM-DD
 
-## 다음 할 일
-1. {구체적 행동 하나 — 파일 > 함수까지}
+## Next step
+1. {one concrete action — down to file > function}
 
-## 미해결
-- {문제} — 단서: {로그·커밋·R§n}
+## Open problems
+- {problem} — clue: {log, commit, R§n}
 
-## 확인 대기 (사람만 확인 가능)
-- {항목} — 기대 결과: {무엇이 보이면 통과}
-<!-- head:end — 이 줄 위(40줄 이내)만 자동 주입된다. 갱신은 이 위만 고친다. -->
+## Waiting for checks (only a person can check)
+- {item} — expected: {what passing looks like}
+<!-- head:end — only the lines above (within 40) are injected. Update only above this line. -->
 
-## 완료 기록
-<!-- 한 줄씩: YYYY-MM-DD 무엇을 (커밋 hash). 50줄을 넘으면 docs/history/로 옮긴다. -->
+## Done log
+<!-- One line each: YYYY-MM-DD what (commit hash). Past 50 lines, move to docs/history/. -->

@@ -1,15 +1,15 @@
-# 전역 지침
+# Global instructions
 
-<!-- 위치: ~/.claude/CLAUDE.md. 모든 프로젝트, 모든 세션에 실린다. -->
-<!-- 어떤 프로젝트·작업에서도 참이고, 코드·문서를 읽어서는 알 수 없는 것만 둔다. 20줄 안팎. -->
-<!-- 넣지 않는 것: 언어·스택(프로젝트 파일에 있음), 커밋 규칙(~/.claude/settings.json의 ask), 스킬 호출 안내. -->
+<!-- Location: ~/.claude/CLAUDE.md. Loaded into every project and every session. -->
+<!-- Only what is true for every project and task and cannot be learned from code or docs. About 20 lines. -->
+<!-- Leave out: languages and stacks (in project files), commit rules (ask rules in ~/.claude/settings.json), how to call skills. -->
 
-## 소통
-- 언어, 답의 순서, 선택지 제시 방식
+## Communication
+- Language (metarche writes project documents in it), order of answers, how options are presented
 
-## 코딩 원칙
-<!-- 기본: andrej-karpathy-skills의 4원칙 요약 (NOTICE 3번) -->
-1. 코딩 전에 생각한다
-2. 단순하게 한다
-3. 필요한 곳만 고친다
-4. 확인 가능한 목표로 바꾼다
+## Coding principles
+<!-- Default: a summary of the four principles from andrej-karpathy-skills (NOTICE item 3) -->
+1. Think before coding
+2. Keep it simple
+3. Change only what is needed
+4. Turn the task into a checkable goal

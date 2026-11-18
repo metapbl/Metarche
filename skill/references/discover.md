@@ -1,140 +1,140 @@
-# discover — 0~5단계 (탐색 → PRD 확정) · PRD 변경
+# discover — stages 0–5 (explore → settle the PRD) · PRD changes
 
-## §0 탐색 (질문하기 전에)
+## §0 Explore (before asking)
 
-시작 전에 `templates/`의 `PRD.md`·`SECURITY_POLICY.md`를 `docs/`로, `QA_LOG.md`·`DECISIONS.md`를 `docs/discovery/`로 복사한다. 이미 있는 파일은 덮어쓰지 않는다. (new·adopt 공통)
-`OPEN.md`는 여기서 복사하지 않고 4번에서 만든다. OPEN이 있으면 상태 판별이 discover로 가므로, adopt가 끝나기 전에 만들면 재개 때 이관을 건너뛴다.
+Before starting, copy `PRD.md` and `SECURITY_POLICY.md` from `templates/` to `docs/`, and `QA_LOG.md` and `DECISIONS.md` to `docs/discovery/`. Do not overwrite files that already exist. (Both new and adopt.)
+Do not copy `OPEN.md` here; create it in step 4. Once OPEN exists, stage detection goes to discover, so creating it before adopt finishes would skip the adoption on resume.
 
-1. 전역 프로필 `~/.claude/CLAUDE.md`를 읽고, 이미 답이 있는 항목을 표시한다.
-2. 프로젝트 폴더를 훑는다: README, 기존 문서, 의존성 파일, 진입점, 폴더 구조, `git log --oneline -20`.
-3. 알아낸 사실을 `docs/discovery/QA_LOG.md`에 `[X]` 항목으로 적는다. 질문 없이 답만 있는 항목도 Q번호를 받는다.
-4. `templates/OPEN.md`로 첫 `docs/discovery/OPEN.md`를 만든다. §2 질문 은행에서 이 프로젝트에 해당하는 질문만 고르고, 탐색으로 답이 나온 것은 빼고, 우선순위를 매긴다.
-5. 탐색 요약(10줄 이내)과 첫 질문을 보낸다.
+1. Read the global profile `~/.claude/CLAUDE.md` and mark the items it already answers.
+2. Survey the project folder: README, existing docs, dependency files, entry points, folder structure, `git log --oneline -20`.
+3. Write what you learned to `docs/discovery/QA_LOG.md` as `[X]` entries. An entry that is only an answer, with no question, still gets a Q number.
+4. Create the first `docs/discovery/OPEN.md` from `templates/OPEN.md`. From the §2 question bank pick only the questions that apply, drop those exploration already answered, and order them by priority.
+5. Send a summary of the exploration (10 lines at most) and the first question.
 
-- 새 프로젝트면 2·3을 건너뛴다.
-- adopt면 1~3 대신 `adopt.md`를 따른다. adopt가 끝나면 4번부터 이어 간다.
+- For a new project, skip steps 2 and 3.
+- For adopt, follow `adopt.md` instead of steps 1–3. When adopt is done, continue from step 4.
 
-## §1 질문 방식
+## §1 How to ask
 
-- 큰 질문(목적, 사용자, 성공 기준, 비목표)은 한 번에 하나만 한다. 답을 받은 뒤 그 답에 맞춰 다음 질문을 만든다.
-- 세부 질문은 3~6개를 번호로 묶는다. 각 항목은 `n. 질문 — 추천: X (이유)` 형식이다.
-- 같은 묶음에는 아직 답을 받지 않은 질문에 기대는 질문을 넣지 않는다. 그런 질문은 다음 묶음으로 미룬다.
-- 선택지가 분명하면 객관식으로 낸다. AskUserQuestion 도구를 쓸 수 있으면 쓴다.
-- 답이 모호하면 해석을 하나 제시하고 맞는지 묻는다. 몰래 해석하지 않는다.
-- 사용자가 "모르겠다"고 하면 추천안을 `[AI]`로 채우고, OPEN에 `재확인` 표시를 남긴다.
-- 사용자가 답 대신 질문하면 먼저 답한 뒤 원래 질문으로 돌아온다.
-- 한 번에 묻는 양은 한 화면 이내로 한다.
-- 사용자에게 보이는 글에는 내부 기호(`[U]`, `D###`, `Q###`)를 설명 없이 쓰지 않는다.
+- Big questions (purpose, users, success criterion, non-goals) one at a time. Shape the next question from the answer.
+- Group detailed questions 3–6 at a time, numbered. Each item reads `n. question — recommended: X (reason)`.
+- Do not put a question in a group if it depends on another question in that group that has not been answered yet. Move it to the next group.
+- When the options are clear, make it multiple choice. Use the AskUserQuestion tool when available.
+- If an answer is ambiguous, offer one interpretation and ask whether it is right. Never interpret silently.
+- If the user says "I don't know", fill in the recommendation as `[AI]` and leave a `re-check` mark in OPEN.
+- If the user answers with a question, answer it first, then return to the original question.
+- Keep each batch of questions within one screen.
+- Do not show internal symbols (`[U]`, `D###`, `Q###`) to the user without explaining them.
 
-## §2 질문 은행
+## §2 Question bank
 
-필요한 것만 고른다. 프로필이나 탐색으로 답이 나온 것은 묻지 않는다.
+Pick only what is needed. Do not ask what the profile or the exploration already answered.
 
-### 1 목적
-- 해결하려는 불편은 무엇인가. 지금은 어떻게 하고 있는가.
-- 누가 쓰는가(본인, 지인, 배포). 몇 명이, 어떤 기기로.
-- 무엇이 되면 완성인가. 관찰 가능한 장면 하나로 말해 달라. (예: 영화 한 편을 끊김 없이 끝까지 본다)
-- 언제까지 필요한가. 다 쓰면 폐기하는가, 계속 유지하는가.
+### 1 Purpose
+- What problem are we solving? How is it handled today?
+- Who uses it (just you, people you know, the public)? How many, on what devices?
+- What makes it done? Describe one observable scene. (e.g. watching a whole movie without a stall)
+- By when is it needed? Is it thrown away after use, or maintained?
 
-### 2 범위
-- 꼭 있어야 하는 것 / 있으면 좋은 것 / 이번에는 안 할 것.
-- 반목표: 절대 그렇게 되면 안 되는 동작.
-- 지금 구현하지는 않지만 나중을 위해 구조만 준비할 것.
-- 법·라이선스·개인정보·비용(유료 API, 과금) 제약.
+### 2 Scope
+- Must have / nice to have / not this time.
+- Anti-goals: behavior that must never happen.
+- Structure to prepare now for later, without implementing it.
+- Legal, license, privacy and cost (paid APIs, billing) constraints.
 
-### 3 기능 (기능마다)
-- 정상 흐름: 사용자가 무엇을 하면 무엇이 보이는가.
-- 예외: 실패, 중단, 연결 끊김, 잘못된 입력에서 어떻게 되어야 하는가.
-- 상태별 동작: 일시정지 중, 처리 중, 종료 중에 같은 조작을 하면 어떻게 되는가.
-- 경계값: 아주 큰 입력, 0개, 동시 조작.
-- 인터페이스: 다른 기능이나 외부가 기대는 함수·명령·파일 형식은 무엇인가. 바뀌면 무엇이 깨지는가.
-- 화면: 어디에 무엇이 보이는가, 단축키, 알림 방식.
-- 인수 기준: 위 답을 `Given {상태} / When {조작} / Then {보이는 결과}` 예시 2~5개로 정리해 맞는지 확인받는다. 이 문장이 그대로 테스트가 된다.
-- 보안: 권한이 걸리거나 민감 이상 등급의 데이터(security.md §4)를 다루면, 누가 할 수 있는지와 보안 인수 기준(권한 없는 사용자, 변조된 입력)을 1개 이상 정한다.
+### 3 Features (per feature)
+- Normal flow: what does the user do, and what do they see?
+- Exceptions: what should happen on failure, interruption, lost connection, invalid input?
+- Behavior by state: what does the same action do while paused, while working, while shutting down?
+- Edge values: very large input, zero items, simultaneous actions.
+- Interface: which functions, commands or file formats do other features or outside parties rely on? What breaks if they change?
+- Screen: what appears where, shortcuts, how notifications work.
+- Acceptance criteria: turn the answers above into 2–5 examples of `Given {state} / When {action} / Then {visible result}` and confirm them. These sentences become the tests as they are.
+- Security: if permissions are involved or the feature handles data of class sensitive or above (security.md §4), settle who may do it and at least one security acceptance criterion (an unauthorized user, tampered input).
 
-### 4 방식
-- 실행 환경(OS, 언어 버전, 네트워크), 배포 형태(exe, 웹, 스크립트).
-- 언어 스킬: 주 언어에 맞는 언어 스킬(`~/.claude/skills/` 아래, `references/metarche.md`가 있는 스킬)이 설치돼 있으면 그 스킬의 `references/metarche.md`를 읽고 따른다. 없으면 이 질문 은행대로 한다.
-- 핵심 기술 선택은 §4 비교 양식으로 묻는다.
-- 외부 의존(라이브러리, API, 하드웨어)과 대체안.
-- 자료 저장 위치와 형식, 설정 파일.
-- 로그의 위치, 형식, 상세 모드.
-- 보안: security.md §1 질문을 하고, 답으로 보안 수준(§2)을 추천한다. 결과는 `docs/SECURITY_POLICY.md`에 적는다.
+### 4 Approach
+- Runtime environment (OS, language version, network) and distribution form (exe, web, script).
+- Language skill: if a language skill for the main language is installed (a skill under `~/.claude/skills/` with a `references/metarche.md`), read that file and follow it. Otherwise use this question bank.
+- Ask about key technology choices with the §4 comparison form.
+- External dependencies (libraries, APIs, hardware) and alternatives.
+- Where and in what format data is stored; config files.
+- Log location, format and verbose mode.
+- Security: ask the security.md §1 questions and recommend a security level (§2) from the answers. Record the result in `docs/SECURITY_POLICY.md`.
 
-### 5 검증·운영
-- 무엇은 자동 테스트로, 무엇은 사람이 직접 확인하는가. 사람이 확인한 결과는 어떤 형태로 받는가.
-- 전체 테스트 명령과 걸리는 시간. 테스트 도구가 없으면 무엇을 쓸지. 기준 시간도 정한다 — 추천: 60초 (넘으면 작업마다 관련 테스트만 돌리는 방식으로 바꿀지 다시 정한다).
-- 파일을 고칠 때마다 그 파일에 돌릴 검사(린터·서식)는 무엇인가. 고친 파일 경로를 받는 명령만 해당한다. 이것은 check 훅이 된다 (docs.md §5).
-- 작업이 끝날 때 프로젝트 전체에 돌릴 검사(컴파일·타입 검사처럼 파일 경로를 받지 않는 명령)는 무엇인가. 이것은 finish 훅이 된다 (docs.md §5).
-- 위험한 명령(배포, 원격 DB, 대량 삭제)은 무엇인가. 이것들은 settings.json에서 실행 전 확인 대상이 된다.
-- 버전 관리: 커밋 단위, 메시지 형식, 브랜치.
-- 공개 저장소인가. 공개면 README 대상(개발자·일반 사용자)과 언어 목록 — 추천: readme.md §1의 6개 (영어 기본). 이것은 plan의 README 갱신 작업이 된다.
+### 5 Verification and operations
+- What is tested automatically, and what does a person check by hand? In what form are the person's results reported?
+- The full test command and how long it takes. If there is no test tool, what to use. Also set a baseline time — recommended: 60 seconds (if exceeded, decide again whether to run only the related tests per task).
+- Which check (linter, formatter) runs on each file when it is edited? Only commands that take the edited file's path. This becomes the check hook (docs.md §5).
+- Which project-wide check runs when work ends (commands that take no file path, such as compiling or type checking)? This becomes the finish hook (docs.md §5).
+- Which commands are dangerous (deploy, remote database, mass deletion)? These become ask-first rules in settings.json.
+- Version control: commit unit, message format, branches.
+- Is the repository public? If so, who the README is for (developers or general users) and which languages — recommended: the six in readme.md §1 (English default). This becomes the README task in the plan.
 
-## §3 되짚기 양식
+## §3 Read-back form
 
-단계 1·2·3이 끝날 때, 또는 결정이 5~8개 모일 때 낸다.
-목적은 "AI가 제대로 알아들었는지"를 사용자가 한눈에 확인하게 하는 것이다.
+Send one at the end of stages 1, 2 and 3, or when 5–8 decisions have piled up.
+Its purpose is to let the user see at a glance whether the AI understood correctly. Write it in the user's language; the example below shows the shape.
 
 ~~~
-[되짚기] 단계 2 · 범위
+[Read-back] stage 2 · Scope
 
-제가 이해한 내용:
-윈도우 PC에 있는 동영상을 거실 TV로 보내 보는 프로그램입니다. 지금은 한 번에
-파일 하나만 보내고, 연속 재생은 나중에 붙일 수 있게 자리만 마련해 둡니다.
+What I understood:
+A program that sends videos on a Windows PC to the living-room TV. For now it sends
+one file at a time, and leaves room to add continuous playback later.
 
-정해진 것:
-1. mkv·avi·ts 파일도 재생한다 — 말씀하신 것
-2. 한 번에 파일 하나만 보낸다 — 제가 정한 기본값 (이유: 연속 재생을 미루기로 하셨으므로)
-3. 정지하면 TV의 재생 앱을 끈다 — 기존 코드에서 찾은 것 (core/cast_manager.py)
+Settled:
+1. Plays mkv, avi and ts files too — you said so
+2. Sends one file at a time — my default (reason: you chose to postpone continuous playback)
+3. Stopping closes the player app on the TV — found in the existing code (core/cast_manager.py)
 
-확인 부탁:
-"제가 정한 기본값"과 "기존 코드에서 찾은 것"을 봐 주십시오.
-모두 맞으면 "맞다", 틀린 것이 있으면 번호와 고칠 내용만 적어 주십시오. (예: 2번 → 여러 개)
+Please check:
+Look at "my default" and "found in the existing code".
+If all are right, say "right"; otherwise give only the number and the fix (e.g. 2 → several files).
 ~~~
 
-- "제가 이해한 내용"은 2~4문장, 전문용어 없이 쓴다.
-- 출처는 `[U]`=말씀하신 것, `[X]`=기존 코드·문서에서 찾은 것(위치 표시), `[AI]`=제가 정한 기본값(이유 표시)으로 풀어 쓴다.
-- 결정 번호(D###)는 화면에 쓰지 않고 파일에만 적는다.
-- 승인되면 PRD의 해당 절을 갱신하고, DECISIONS의 상태를 `확정`으로 바꾼다. 고친 번호가 있으면 고친 뒤 그 항목만 다시 보인다.
+- "What I understood" is 2–4 sentences, without jargon.
+- Spell out the sources: `[U]` = you said so, `[X]` = found in existing code or docs (with location), `[AI]` = my default (with reason).
+- Decision numbers (D###) go only into the files, never on screen.
+- On approval, update that PRD section and set those DECISIONS entries to `confirmed`. If numbers were corrected, fix them and show only those items again.
 
-## §4 방안 비교 양식
+## §4 Option comparison form
 
-핵심 기술 결정은 2~3안을 별도 메시지로 낸다. 다른 질문과 섞지 않는다.
+Present 2–3 options for a key technology decision in a message of its own. Do not mix it with other questions.
 
-| | A안 | B안 | C안(선택) |
+| | Option A | Option B | Option C (chosen) |
 |---|---|---|---|
-| 요약 | | | |
-| 장점 | | | |
-| 단점·위험 | | | |
-| 되돌리는 비용 | | | |
-| 추천 | 이유 한 줄 | | |
+| Summary | | | |
+| Pros | | | |
+| Cons and risks | | | |
+| Cost to reverse | | | |
+| Recommendation | one-line reason | | |
 
-선택 결과는 DECISIONS에 버린 안과 버린 이유까지 적는다. 이것이 나중에 재논의 금지 목록의 근거가 된다.
+Record the choice in DECISIONS together with the rejected options and why. This becomes the basis of the do-not-reopen list.
 
-## §5 PRD 확정
+## §5 Settle the PRD
 
-1. `docs/PRD.md`와 `docs/SECURITY_POLICY.md`의 모든 절이 채워졌는지, 모든 결정에 출처 표시가 있는지 확인한다. 보안 정책에서 해당 없는 칸은 지운다.
-2. 검사 서브에이전트를 띄운다. 대화 맥락 없이 PRD.md와 SECURITY_POLICY.md만 준다. 지시문:
-   > 너는 이 프로젝트를 처음 보는 엔지니어다. 첨부한 PRD.md와 SECURITY_POLICY.md만 읽고 답하라. (1) 이 문서만으로는 구현을 시작할 수 없는 곳, (2) 서로 모순되는 문장, (3) 확인 방법이 없는 성공 기준, (4) 예외 동작이 정해지지 않은 기능, (5) Given–When–Then 인수 기준이 없거나 그대로 테스트로 옮길 수 없는 기능, (6) PRD에 나오는 데이터·구성요소 중 보안 정책의 분류표·구성요소 표에 없는 것, 권한이나 민감 데이터가 걸렸는데 보안 인수 기준이 없는 기능을 항목별로 나열하라. 추측으로 메우지 말고, 해당 사항이 없으면 "없음"이라고 하라.
-3. 지적 목록과 처리 방식을 사용자에게 보여 준다. 실제로 빈 곳만 OPEN에 넣어 질문한다.
-4. 빈 곳이 없으면 관문을 연다.
-   > [관문] PRD와 보안 정책을 승인하시겠습니까? 승인 전에는 코드·뼈대·의존성 설치를 하지 않습니다. 고칠 곳이 있으면 번호로 알려 주십시오.
-5. 승인되면 PRD와 보안 정책 머리의 `상태:`를 `approved (YYYY-MM-DD)`로 바꾼다. git이 있으면 `docs: approve PRD` 커밋을 제안하고, 다음 단계(docs)를 안내한다.
+1. Check that every section of `docs/PRD.md` and `docs/SECURITY_POLICY.md` is filled and every decision has a source mark. Delete security policy fields that do not apply.
+2. Start a reviewer subagent. Give it only PRD.md and SECURITY_POLICY.md, no conversation context. Instruction:
+   > You are an engineer seeing this project for the first time. Read only the attached PRD.md and SECURITY_POLICY.md and answer. List item by item: (1) places where these documents alone are not enough to start implementing, (2) sentences that contradict each other, (3) success criteria with no way to check them, (4) features whose exception behavior is undefined, (5) features with no Given–When–Then acceptance criteria, or criteria that cannot become tests as written, (6) data or components in the PRD missing from the security policy's classification or component tables, and features that involve permissions or sensitive data but have no security acceptance criterion. Do not fill gaps with guesses; if there is nothing, say "none".
+3. Show the findings and how each will be handled. Put only real gaps into OPEN and ask about them.
+4. When there are no gaps, open the gate.
+   > [Gate] Do you approve the PRD and the security policy? Until you do, I will not write code, scaffold or install dependencies. If something needs fixing, tell me its number.
+5. On approval, set the `Status:` line at the top of both the PRD and the security policy to `approved (YYYY-MM-DD)`. If git is present, propose a `docs: approve PRD` commit and point to the next stage (docs).
 
-## §6 재개 (새 세션, /clear, 압축 뒤)
+## §6 Resume (new session, /clear, after compaction)
 
-1. `OPEN.md`와 `PRD.md` 머리(상태, 단계)만 읽는다. `docs/SECURITY_POLICY.md`가 없으면 `templates/`에서 복사한다 (스킬 개정 전에 시작한 프로젝트).
-2. `QA_LOG.md`는 필요한 Q번호만 검색한다.
-3. "단계 N, 미결 M개, 다음 질문"을 알리고 이어서 묻는다. 이미 답한 질문은 다시 묻지 않는다.
+1. Read only `OPEN.md` and the head of `PRD.md` (status, stage). If `docs/SECURITY_POLICY.md` is missing, copy it from `templates/` (projects started before the skill had it).
+2. Search `QA_LOG.md` only for the Q numbers you need.
+3. Report "stage N, M open, next question" and continue asking. Never ask an answered question again.
 
-## §7 승인 뒤 PRD 변경
+## §7 Changing the PRD after approval
 
-구현 중 PRD나 보안 정책을 바꿔야 할 때 쓴다. 보안 정책만 바뀌어도 같은 절차를 따른다 (2번의 상태 표시는 PRD에 한다). 계획만 바뀌는 일은 plan.md에서 처리한다.
+Use this when the PRD or the security policy must change during the build. A change to the security policy alone follows the same steps (the status mark in step 2 goes on the PRD). Changes to the plan alone are handled in plan.md.
 
-1. 바뀌는 내용과 이유(새로 알게 된 사실)를 밝힌다. 재논의 금지 결정을 건드리면 그 사실을 먼저 보인다.
-2. PRD 머리를 `상태: changing (YYYY-MM-DD)`로 바꾼다. 이 동안 gate 훅은 docs/ 밖 수정을 막는다.
-3. 바뀌는 절에 해당하는 질문만 새 Q번호로 묻는다. 결정은 새 D번호로 쓰고, 옛 결정에 `← D###로 대체`를 단다.
-4. §3 되짚기 → PRD 해당 절 수정 → PRD §8 변경 이력에 한 줄(날짜, 변경, 근거 D###).
-5. 영향받는 계획 작업을 알린다. 관문:
-   > [관문] PRD 변경({요약})을 승인하시겠습니까? 승인 전에는 이 변경에 해당하는 코드를 쓰지 않습니다.
-6. 승인되면 `상태: approved (YYYY-MM-DD)`로 되돌리고 계획 수정으로 넘어간다.
+1. State what changes and why (the newly learned fact). If it touches a do-not-reopen decision, show that first.
+2. Set the PRD's head to `Status: changing (YYYY-MM-DD)`. Meanwhile the gate hook blocks edits outside docs/.
+3. Ask only the questions for the changed sections, with new Q numbers. Write decisions with new D numbers and mark the old ones `superseded → D###`.
+4. §3 read-back → update the PRD sections → one line in the PRD §8 change history (date, change, source D###).
+5. List the affected plan tasks. Gate:
+   > [Gate] Do you approve the PRD change ({summary})? Until you do, I will not write the code for this change.
+6. On approval, set it back to `Status: approved (YYYY-MM-DD)` and move on to revising the plan.

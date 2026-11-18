@@ -1,91 +1,89 @@
 ---
 name: metarche
-description: "프로젝트의 첫 원리를 세우는 절차. 질의응답으로 PRD를 확정하고, Claude Code용 문서(CLAUDE.md·PROGRESS·REFERENCE)와 작업 계획을 만든 뒤, 승인 관문을 거쳐 구현·검증·기록을 반복한다. 새 프로젝트 착수(new), 기존 프로젝트 이관(adopt), 세션 마무리(wrap), 문서 점검(audit), 스킬 개정분 반영(upgrade)에 쓴다. Project bootstrap: discovery interview, PRD, Claude Code docs, plan, build loop with approval gates and file-based state that survives /clear and compaction."
+description: "Sets a project's first principles. A Q&A interview settles an approved PRD, then the skill writes Claude Code docs (CLAUDE.md, PROGRESS, REFERENCE) and a plan, and repeats build, verify and record behind approval gates. For starting a project (new), adopting an existing one (adopt), ending a session (wrap), auditing docs (audit) and applying skill revisions (upgrade). State lives in files, so it survives /clear and compaction."
 argument-hint: "[new|adopt|discover|docs|plan|build|wrap|audit|upgrade|status]"
 disable-model-invocation: true
 ---
 
 # metarche — meta + archē
 
-프로젝트마다 그 프로젝트의 첫 원리(목적·범위·규칙)를 사용자와의 질의응답으로 세우고,
-그 원리에 따라 문서를 만들고 코드를 쓴다.
+For each project, set its first principles (purpose, scope, rules) through an interview with the user,
+then write the documents and the code by those principles.
 
-## 철칙
+## Language
+- These instructions are in English. Speak to the user, and write every project document (PRD, SECURITY_POLICY, CLAUDE.md, PROGRESS, REFERENCE, plans, discovery files), in the user's language: the language of `~/.claude/CLAUDE.md`, otherwise the language the user writes in. Translate template headings and labels when you create the files.
+- Keep these markers exactly as written, in any document language, because hooks and stage detection read them: `Status: …` lines, `<!-- metarche -->`, `<!-- metarche:draft -->`, `<!-- head:end -->`, the IDs `Q###` `D###` `F#` `T#` `R§n` `U#`, and the source tags `[U]` `[X]` `[AI]`.
+- Projects created before the English version of this skill use `상태:` instead of `Status:`. Read it the same way; upgrade U7 migrates it.
 
-1. **관문 전 착수 금지.** PRD 승인 전에는 코드, 뼈대, 의존성 설치, 설정 파일 생성을 하지 않는다. 문서 구성과 작업 계획도 각각 승인된 뒤에만 다음 단계로 간다.
-2. **상태는 파일에 둔다.** 답·결정·오류는 나온 즉시 파일에 적는다. 대화에만 있는 사실은 압축되면 사라진 것으로 본다.
-3. **먼저 읽고 묻는다.** 코드·문서·전역 프로필(`~/.claude/CLAUDE.md`)에 답이 있으면 묻지 않고 확인만 받는다.
-4. **출처를 표시한다.** 모든 결정에 `[U]`(사용자가 말함), `[X]`(기존 코드·문서에서 추출), `[AI]`(AI가 채운 기본값) 중 하나를 붙인다. `[X]`와 `[AI]`는 되짚기에서 반드시 보여 준다.
-5. **필요한 것만 읽는다.** 단계에 필요한 references 파일만 읽는다. `QA_LOG.md`는 전체를 읽지 않고 검색한다.
-6. **증거 없이 완료라 하지 않는다.** 완료는 확인 명령의 출력이나 사용자의 실기기 결과로만 선언한다.
-7. **헷갈리면 멈추고 묻는다.** 가정으로 진행하지 않는다. 오타 수정 같은 사소한 작업에는 이 절차를 적용하지 않는다.
+## Rules
+1. **Nothing starts before its gate.** Before the PRD is approved: no code, no scaffolding, no dependency installs, no config files. The document set and the plan each move on only after their own approval.
+2. **State lives in files.** Write answers, decisions and errors to files as soon as they come up. A fact that exists only in the conversation is lost after compaction.
+3. **Read first, then ask.** If the code, the docs or the global profile (`~/.claude/CLAUDE.md`) already answers a question, do not ask it; only confirm.
+4. **Mark the source.** Every decision carries `[U]` (the user said it), `[X]` (taken from existing code or docs) or `[AI]` (a default the AI filled in). Always show `[X]` and `[AI]` items in the read-back.
+5. **Read only what you need.** Read only the references files the current stage needs. Search `QA_LOG.md`; never read it whole.
+6. **No "done" without evidence.** Declare completion only from a check command's output or the user's result on the real device.
+7. **When unsure, stop and ask.** Do not proceed on assumptions. Trivial work such as fixing a typo does not go through this procedure.
 
-## 시작: 상태 판별
+## Start: detect the state
+With an argument, go to that mode. Without one, check the table top to bottom and take the first match.
+If `new` or `adopt` does not fit the folder (`new` in a non-empty folder, `adopt` in an empty one), do not proceed; show the mismatch and ask which mode to use.
+Report the detected state and the next action in one line and get confirmation.
 
-인자가 있으면 그 모드로 간다. 없으면 아래 표를 위에서부터 확인해 먼저 맞는 모드로 간다.
-`new`·`adopt` 인자가 폴더 상태와 어긋나면(비어 있지 않은 폴더에서 `new`, 빈 폴더에서 `adopt`) 진행하지 않고 차이를 알린 뒤 어느 모드로 갈지 묻는다.
-판별 결과와 다음 행동을 한 줄로 알리고 확인을 받는다.
-
-| 조건 | 모드 |
+| Condition | Mode |
 |---|---|
-| `docs/discovery/OPEN.md` 있음, `docs/PRD.md` 상태가 `approved` 아님 | discover (이어서) |
-| PRD `approved`, 루트 `CLAUDE.md` 첫 줄이 `<!-- metarche -->`가 아님 (파일 없음 또는 `<!-- metarche:draft -->`) | docs |
-| 첫 줄이 `<!-- metarche -->`인 `CLAUDE.md` 있음, `docs/plans/`에 `상태: active` 계획 없음 | plan |
-| `docs/PROGRESS.md`와 `상태: active` 계획 있음 | build |
-| 코드나 문서는 있으나 위 파일이 없음 | adopt |
-| 폴더가 비어 있음 (`.git`·`.claude` 말고는 없음) | new |
+| `docs/discovery/OPEN.md` exists and the `Status:` of `docs/PRD.md` is not `approved` | discover (resume) |
+| PRD `approved`, and the first line of the root `CLAUDE.md` is not `<!-- metarche -->` (no file, or `<!-- metarche:draft -->`) | docs |
+| `CLAUDE.md` starts with `<!-- metarche -->` and no plan in `docs/plans/` has `Status: active` | plan |
+| `docs/PROGRESS.md` and a plan with `Status: active` exist | build |
+| Code or docs exist but none of the files above | adopt |
+| The folder is empty (nothing but `.git` and `.claude`) | new |
 
-`status`는 판별 결과와 현재 단계, 미결 질문 수만 보고하고 멈춘다.
+`status` reports only the detected state, the current stage and the number of open questions, then stops.
 
-## 단계 지도
+## Stage map
 
-| 단계 | 모드 | 읽을 파일 | 산출물 | 관문 |
+| Stage | Mode | Read | Output | Gate |
 |---|---|---|---|---|
-| 0 탐색 | new·adopt | discover.md §0 (adopt는 adopt.md 먼저) | QA_LOG 초기 항목, OPEN | - |
-| 1 목적 | discover | discover.md §1~3 | PRD §1 | 되짚기 |
-| 2 범위 | discover | discover.md §1~3 | PRD §2 | 되짚기 |
-| 3 기능 | discover | discover.md §1~3 | PRD §3 | 되짚기 |
-| 4 방식 | discover | discover.md §4, security.md §1~6 | PRD §4~5, SECURITY_POLICY | 안 선택 |
-| 5 확정 | discover | discover.md §5 | PRD·SECURITY_POLICY `approved` | **PRD·보안 정책 승인** |
-| 6 문서 | docs | docs.md, security.md §8 | CLAUDE.md, PROGRESS, REFERENCE, settings | 문서 승인 |
-| 7 계획 | plan | plan.md (공개 저장소면 readme.md) | `docs/plans/YYYY-MM-DD-*.md` | 계획 승인 |
-| 8 구현 | build | execute.md | 코드, 기록 | 작업마다 |
-| 9 개선 | build | execute.md §개선 | rules·스킬 제안 | 제안 승인 |
-| - | wrap | execute.md §wrap | PROGRESS 갱신 | - |
-| - | audit | audit.md | 점검 보고서 | 수정 승인 |
-| - | upgrade | upgrade.md | 훅·설정·문서 갱신 | 적용 승인 |
+| 0 Explore | new, adopt | discover.md §0 (adopt reads adopt.md first) | first QA_LOG entries, OPEN | - |
+| 1 Purpose | discover | discover.md §1–3 | PRD §1 | read-back |
+| 2 Scope | discover | discover.md §1–3 | PRD §2 | read-back |
+| 3 Features | discover | discover.md §1–3 | PRD §3 | read-back |
+| 4 Approach | discover | discover.md §4, security.md §1–6 | PRD §4–5, SECURITY_POLICY | option choice |
+| 5 Settle | discover | discover.md §5 | PRD and SECURITY_POLICY `approved` | **PRD and security policy approval** |
+| 6 Docs | docs | docs.md, security.md §8 | CLAUDE.md, PROGRESS, REFERENCE, settings | docs approval |
+| 7 Plan | plan | plan.md (readme.md if the repository is public) | `docs/plans/YYYY-MM-DD-*.md` | plan approval |
+| 8 Build | build | execute.md | code, records | per task |
+| 9 Improve | build | execute.md §improve | rule and skill proposals | proposal approval |
+| - | wrap | execute.md §wrap | PROGRESS update | - |
+| - | audit | audit.md | audit report | fix approval |
+| - | upgrade | upgrade.md | hooks, settings and docs updated | apply approval |
 
-읽을 파일은 이 스킬 폴더의 `references/`에 있고, 문서 양식은 `references/templates/`에 있다.
+The files to read are in this skill's `references/`; document templates are in `references/templates/`.
 
-## 질문 규칙 (요약, 상세는 discover.md)
+## Question rules (summary; details in discover.md)
+- Big questions (purpose, scope) one at a time. Detailed choices are numbered and grouped 3–6 at a time.
+- Every question carries a recommendation and a one-line reason. The user can answer "as recommended".
+- Do not ask questions whose answer would not change the result. Fill those with `[AI]` and show them in the read-back.
+- There is no target number of questions. Typically 15–30 for a small project, 40–80 for a medium one.
 
-- 목적·범위 같은 큰 질문은 한 번에 하나만 한다. 세부 선택은 번호를 붙여 3~6개씩 묶는다.
-- 모든 질문에 추천안과 이유를 한 줄로 붙인다. 사용자는 "추천대로"로 답할 수 있다.
-- 답이 바뀌어도 결과물이 달라지지 않는 질문은 하지 않는다. 그런 항목은 `[AI]`로 채우고 되짚기에서 보여 준다.
-- 질문 수 목표는 없다. 보통 소형 15~30개, 중형 40~80개다.
+## Record rules (summary; formats in templates/)
+- Append each answer to `docs/discovery/QA_LOG.md` at once. Append only; never edit.
+- Write settled items to `DECISIONS.md` as `D###` with their source `Q###`. When one is reversed, do not delete it; mark it `superseded → D###`.
+- `OPEN.md` is a priority queue. Remove a question once answered and keep the Q number that answered it.
+- When a read-back is approved, carry those decisions into `docs/PRD.md`.
+- Questions that come up during the build also go into OPEN and are handled the same way.
 
-## 기록 규칙 (요약, 양식은 templates/)
+## Gate wording
+At a gate, ask in this form (in the user's language). Move on only on an explicit approval such as "approve" or "yes, go ahead".
+Silence or an answer about something else is not approval.
 
-- 답을 받으면 즉시 `docs/discovery/QA_LOG.md`에 추가한다. 고치지 않고 추가만 한다.
-- 확정된 것은 `DECISIONS.md`에 `D###`로 적고 근거 `Q###`를 단다. 뒤집히면 지우지 않고 `← D###로 대체`를 단다.
-- `OPEN.md`는 우선순위 대기열이다. 해결된 질문은 지우고 해결한 Q번호를 남긴다.
-- 되짚기가 승인되면 해당 결정을 `docs/PRD.md`에 반영한다.
-- 구현 중 생긴 질문도 OPEN에 넣고 같은 방식으로 처리한다.
+> [Gate] Do you approve {what}? Until you do, I will not {what is blocked}. If something needs fixing, tell me its number.
 
-## 관문 문구
+## Ending each reply
+While a stage is in progress, end every reply with a one-line status (in the user's language):
 
-관문에서는 아래 형식으로 묻는다. "승인", "네 진행" 같은 명시적 승인이 있을 때만 넘어간다.
-침묵이나 다른 주제의 답은 승인이 아니다.
+`[metarche] stage 3 Features · 7 open · next: 5 questions on screens and shortcuts`
 
-> [관문] {무엇}을 승인하시겠습니까? 승인 전에는 {금지되는 일}을 하지 않습니다. 고칠 곳이 있으면 번호로 알려 주십시오.
-
-## 응답 끝맺음
-
-단계를 진행하는 동안 모든 응답 끝에 한 줄 상태를 붙인다.
-
-`[metarche] 단계 3 기능 · 미결 7개 · 다음: 화면·단축키 질문 5개`
-
-## 출처
-
-superpowers(brainstorming, writing-plans), ECC, andrej-karpathy-skills, planning-with-files,
-claude-md-improver, Claude Code 공식 문서의 방식을 참고했다. 상세는 저장소의 `NOTICE`.
+## Credits
+Draws on superpowers (brainstorming, writing-plans), ECC, andrej-karpathy-skills, planning-with-files,
+claude-md-improver and the Claude Code documentation. Details are in the repository's `NOTICE`.

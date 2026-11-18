@@ -1,42 +1,42 @@
-# 이관 (adopt) — 기존 프로젝트를 metarche 체계로
+# adopt — bring an existing project into metarche
 
-코드와 기존 문서가 있는 프로젝트에 쓴다. 이 단계에서는 코드를 고치지 않는다.
-시작 전에 discover.md §0 첫 문단대로 양식을 `docs/`에 복사한다.
-끝나면 discover.md §0의 4번(OPEN 작성)부터 이어 간다.
+For a project that already has code and documents. No code changes in this stage.
+Before starting, copy the templates to `docs/` as in the first paragraph of discover.md §0.
+When done, continue from step 4 of discover.md §0 (create OPEN).
 
-## §1 읽기 (묻기 전에)
-- 기존 지침·진행 문서 (CLAUDE.md, AGENTS.md, progress·worklog 류, README)
-- 의존성·빌드 파일 (requirements.txt, pyproject.toml, package.json 등), 진입점
-- `git log --oneline -30`, 폴더 구조 (2단계 깊이까지)
-- 큰 문서는 목차와 제목만 먼저 보고, 필요한 절만 읽는다.
+## §1 Read (before asking)
+- Existing guidance and progress documents (CLAUDE.md, AGENTS.md, progress and worklog files, README)
+- Dependency and build files (requirements.txt, pyproject.toml, package.json, etc.), entry points
+- `git log --oneline -30`, folder structure (two levels deep)
+- For large documents, look at the table of contents and headings first and read only the sections you need.
 
-## §2 역추출
-| 기존에서 찾은 것 | 옮길 곳 | 표시 |
+## §2 Extract
+| Found in the existing project | Goes to | Mark |
 |---|---|---|
-| 목적·대상·범위 | PRD §1~2 초안 | [X] 출처: 파일 > 절 |
-| 기능과 실제 동작 | PRD §3 | [X] |
-| 기술 선택과 이유 | DECISIONS (D###), PRD §4 | [X] |
-| 작업 방식 규칙 | 전역에 있으면 버림, 프로젝트 고유만 후보로 | [X] |
-| 진행 상황·다음 할 일 | PROGRESS 머리 후보 | [X] |
-| 미해결·알려진 문제 | OPEN 또는 PROGRESS 미해결 | [X] |
-| 원인 분석·함정 | REFERENCE 함정 대장 후보 | [X] |
-| 인증·권한·암호화·비밀값 처리 방식, 저장하는 데이터 | SECURITY_POLICY 초안 (구성요소·데이터 분류) | [X] |
-| 코드·설정에 들어간 비밀값 | 사용자에게 바로 알리고 교체를 권한다 (security.md §7). 값은 문서에 옮기지 않는다 | [X] |
-| 채팅 협업 전용 규칙 (코드 내보내기 방식 등) | 버림 목록 | - |
+| Purpose, audience, scope | draft of PRD §1–2 | [X] source: file > section |
+| Features and actual behavior | PRD §3 | [X] |
+| Technology choices and reasons | DECISIONS (D###), PRD §4 | [X] |
+| Working rules | dropped if already global; only project-specific ones are candidates | [X] |
+| Progress, next steps | candidates for the PROGRESS head | [X] |
+| Open and known problems | OPEN or PROGRESS open problems | [X] |
+| Root-cause analyses, traps | candidates for the REFERENCE trap log | [X] |
+| How authentication, permissions, encryption and secrets are handled; the data stored | draft SECURITY_POLICY (components, data classification) | [X] |
+| Secrets inside code or config | tell the user at once and recommend rotating them (security.md §7). Never copy the values into documents | [X] |
+| Rules only for chat-based collaboration (how code is exported, etc.) | drop list | - |
 
-- 문서와 코드가 다르면 코드를 사실로 보고, 차이를 QA_LOG에 [X] 항목으로 적는다.
-- OPEN은 이관이 끝난 뒤 만든다(discover.md §0 4번). OPEN으로 갈 항목은 그때 QA_LOG에서 옮긴다.
-- 찾지 못한 것만 질문한다. 추측한 값은 [AI]로 표시한다.
+- If documents and code disagree, treat the code as the truth and record the difference in QA_LOG as an [X] entry.
+- Create OPEN after the adoption (discover.md §0 step 4). Move the items meant for OPEN over from QA_LOG then.
+- Ask only about what you could not find. Mark guessed values [AI].
 
-## §3 되짚기
-1. 매핑 표(기존 문서의 절 → 새 위치 또는 버림)를 보인다.
-2. [X] 항목을 묶어 보이고 "틀린 번호만" 받는다.
-3. 버림 목록을 따로 보이고 확인받는다.
+## §3 Read-back
+1. Show the mapping table (section of an existing document → new place, or dropped).
+2. Show the [X] items in groups and ask only for "the numbers that are wrong".
+3. Show the drop list separately and get it confirmed.
 
-## §4 기존 문서 처리
-- 지우지 않는다. 승인 후 `docs/legacy/`로 옮기고, 새 문서가 승인되기 전까지 참조용으로 둔다.
-- 루트 CLAUDE.md는 옮긴 뒤에 docs 단계에서 새로 만든다.
+## §4 Existing documents
+- Do not delete them. After approval move them to `docs/legacy/` and keep them for reference until the new documents are approved.
+- The root CLAUDE.md is created anew in the docs stage after the move.
 
-## §5 다음
-되짚기가 끝나면 PRD 초안이 생긴 상태로 discover.md §0의 4번부터 이어 가며 빈칸만 묻는다. 이후는 새 프로젝트와 같다.
-단, 계획 단계에서 기존 코드를 처음 고치는 작업 앞에는 특성 테스트를 둔다 (plan.md §2).
+## §5 Next
+After the read-back, with a draft PRD in place, continue from step 4 of discover.md §0 and ask only about the gaps. From there it is the same as a new project.
+Except: in the plan, put a characterization test before the first task that changes existing code (plan.md §2).

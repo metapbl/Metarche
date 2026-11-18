@@ -1,33 +1,35 @@
-# 업그레이드 (upgrade) — 스킬 개정분을 기존 프로젝트에 반영
+# upgrade — apply skill revisions to an existing project
 
-스킬 안내문(references/)은 고치면 바로 모든 프로젝트에 적용된다. 이 모드는 프로젝트 안에 복사해 둔 파일(훅, settings.json, CLAUDE.md, PROGRESS, 정책 문서)만 맞춘다.
-버전 번호는 두지 않는다. 대장의 항목마다 "이미 적용됐는지"를 프로젝트 파일 내용으로 판정한다.
-스킬을 고쳐서 프로젝트 쪽 파일이 달라져야 하면, 그 개정과 같은 커밋에서 §2 대장에 항목을 더한다.
+Changes to the skill's guides (references/) apply to every project at once. This mode only updates the files copied into a project (hooks, settings.json, CLAUDE.md, PROGRESS, the policy document).
+There is no version number. For each ledger item, whether it is already applied is judged from the project's own files.
+When a skill change requires project files to change, add an item to the §2 ledger in the same commit.
 
-## §1 대상
-- 루트 `CLAUDE.md` 첫 줄이 `<!-- metarche -->`인 프로젝트만 대상이다 (docs 단계를 마친 프로젝트).
-- 그 전 단계면 업그레이드할 파일이 아직 없다. 알리고 `/metarche`로 이어 가게 한다.
-- PRD가 `changing`이면 진행하지 않는다. 변경을 먼저 끝낸다.
+## §1 Scope
+- Only projects whose root `CLAUDE.md` starts with `<!-- metarche -->` (the docs stage is done).
+- Before that stage there is nothing to upgrade yet. Say so and continue with `/metarche`.
+- Do not proceed while the PRD is `changing`. Finish the change first.
 
-## §2 개정 대장
-`$t`는 이 스킬의 `references/templates` 경로다. 판정은 읽기만 하고, 적용은 §3 관문 뒤에 한다.
+## §2 Revision ledger
+`$t` is this skill's `references/templates` path. Judging only reads; applying happens after the §3 gate.
+Judge text items by meaning, in any document language (e.g. U4 also matches a Korean line).
 
-| # | 날짜·근거 | 내용 | 판정 (참이면 적용됨) | 적용 |
+| # | Date · source | What | Judged applied when | Apply |
 |---|---|---|---|---|
-| U1 | 2026-10-29 · 60df637 외 | 훅 본문을 템플릿과 맞춘다 | `progress-head.ps1`·`gate.ps1`이 템플릿과 같고(줄바꿈 무시), `check.ps1`은 `$checks = @{ … }` 블록을 뺀 나머지가 같다 | 템플릿으로 바꾼다. `check.ps1`은 프로젝트의 `$checks` 블록을 그대로 다시 넣는다. 템플릿에 없는 훅 파일은 건드리지 않는다 |
-| U2 | 2026-10-29 · c7cd968 | 비밀값 deny를 하위 폴더까지 막는 형식으로 | `permissions.deny`에 `Read(.env)`, `Read(.env.*)`, `Read(!.env.example)`, `Read(*.pem)`, `Read(*.key)`가 모두 있다 | `Read(./.env)`·`Read(./.env.*)`를 지우고 빠진 규칙을 이 순서로 더한다 (`!` 규칙은 `Read(.env.*)` 뒤). 사용자가 넣은 `Read(./{파일 이름})` 규칙은 `Read({파일 이름})`로 바꿀지 묻는다 |
-| U3 | 2026-10-29 · 60df637 | PROGRESS에 마지막 커밋을 적지 않는다 (훅이 git에서 읽음) | `docs/PROGRESS.md` 머리에 `마지막 커밋` 문구가 없다 | 그 부분만 지운다. 그 안에 push 여부·태그 같은 다른 정보가 있으면 지우기 전에 보이고 남길지 묻는다 |
-| U4 | 2026-10-29 · c7cd968, 60df637 | CLAUDE.md에 보안 정책 줄과 wrap 커밋 규칙 | `docs/SECURITY_POLICY.md` 줄과 `wrap 때 남은 변경` 줄이 있다 | 템플릿 CLAUDE.md의 두 줄을 같은 절(문서 지도, 작업 기록)에 넣는다. 넣은 뒤 60줄을 넘으면 알린다 |
-| U5 | 2026-10-29 · c7cd968 | 보안 정책 | `docs/SECURITY_POLICY.md`가 있고 상태가 `approved`다 | 질의응답이 필요해 이 모드에서 쓰지 않는다. §3의 6번을 따른다 |
-| U6 | 2026-11-18 · finish 훅 도입 | 작업 끝 검사(finish 훅) | `.claude/hooks/finish.ps1`이 있고, settings.json `hooks.Stop`에 finish.ps1 항목이 있고, `.gitignore`에 `.claude/.unchecked`가 있다 | finish.ps1을 복사하고 Stop 항목·`.gitignore` 줄·CLAUDE.md 명령 절의 "작업 끝 자동 검사" 줄을 더한다. `$finish` 명령은 사용자에게 묻고, PRD §6에 같은 줄을 적고 §8 변경 이력에 한 줄 남긴다. check.ps1의 `.unchecked` 줄은 U1이 템플릿과 맞추면서 들어간다. 템플릿에 없는 훅 파일(사용자가 만든 것)은 건드리지 않는다 |
+| U1 | 2026-10-29 · 60df637 and later | hook bodies match the templates | `progress-head.ps1` and `gate.ps1` equal the templates (ignoring line endings), and `check.ps1` and `finish.ps1` equal them apart from the `$checks = @{ … }` / `$finish = @( … )` blocks | replace with the templates, putting the project's `$checks` and `$finish` blocks back in. Leave hook files that are not in the templates alone |
+| U2 | 2026-10-29 · c7cd968 | secret deny rules that also cover subfolders | `permissions.deny` has all of `Read(.env)`, `Read(.env.*)`, `Read(!.env.example)`, `Read(*.pem)`, `Read(*.key)` | remove `Read(./.env)` and `Read(./.env.*)` and add the missing rules in this order (the `!` rule after `Read(.env.*)`). Ask whether user-added `Read(./{file name})` rules should become `Read({file name})` |
+| U3 | 2026-10-29 · 60df637 | PROGRESS does not record the last commit (the hook reads it from git) | the head of `docs/PROGRESS.md` has no last-commit line (`Last commit` or the older `마지막 커밋`) | remove just that part. If it carries other information (pushed or not, tags), show it and ask whether to keep it before removing |
+| U4 | 2026-10-29 · c7cd968, 60df637 | CLAUDE.md has the security policy line and the wrap commit rule | there is a line pointing to `docs/SECURITY_POLICY.md` and a line saying wrap commits leftover changes and asks before pushing | add the two lines from the template CLAUDE.md to the same sections (document map, work log), in the project's document language. Report if CLAUDE.md then exceeds 60 lines |
+| U5 | 2026-10-29 · c7cd968 | security policy | `docs/SECURITY_POLICY.md` exists and its `Status:` is `approved` | needs an interview, so this mode does not write it. Follow §3 step 6 |
+| U6 | 2026-11-18 · end-of-turn hook | end-of-turn check (finish hook) | `.claude/hooks/finish.ps1` exists, settings.json `hooks.Stop` has a finish.ps1 entry, and `.gitignore` has `.claude/.unchecked` | copy finish.ps1 and add the Stop entry, the `.gitignore` line and the "end-of-turn checks" line in the CLAUDE.md commands section. Ask the user for the `$finish` commands, write the same line in PRD §6 and add a line to the §8 change history. The `.unchecked` lines in check.ps1 arrive with U1. Leave hook files that are not in the templates (the user's own) alone |
+| U7 | 2026-11-19 · English skill | status markers in the fixed form `Status:` | no line in `docs/PRD.md`, `docs/SECURITY_POLICY.md` or `docs/plans/*.md` starts with `상태:` | in those lines, replace only the word `상태:` with `Status:` and keep the value (`approved (YYYY-MM-DD)`, `active`, etc.) and the rest of the line. The gate hook accepts both forms, so nothing breaks before this is applied |
 
-## §3 절차
-1. §1 대상인지 확인하고, §2 판정을 모두 돌려 항목별 적용됨·미적용을 표로 보인다. 미적용이 없으면 그렇게 알리고 끝낸다.
-2. 미적용 항목(U5 제외)마다 바뀔 파일과 전후 차이를 보인다.
-3. `git status --short`로 커밋 안 된 변경을 보인다. 업그레이드할 파일에 이미 변경이 있으면 그 파일은 건너뛸지 묻는다.
-4. 관문.
-5. 승인된 항목만 적용하고 판정을 다시 돌려 증거로 보인다. 바꾼 파일만 `chore: metarche upgrade (U#, …)`(또는 프로젝트의 커밋 형식)로 커밋하고, push는 할지 묻는다.
-6. U5가 미적용이면 지금 discover.md §7(PRD 변경)로 보안 정책을 만들지 묻는다. 만들면 파일이 없을 때 `$t/SECURITY_POLICY.md`를 `docs/`로 복사하고 시작한다. 그동안 gate 훅이 docs/ 밖 수정을 막는다는 것도 알린다. 미루면 PROGRESS 머리 "미해결"에 `보안 정책 미작성 — /metarche discover로 "보안 정책 추가"`를 적는다.
+## §3 Procedure
+1. Confirm the §1 scope, run every §2 judgment and show a table of applied and not applied. If nothing is missing, say so and stop.
+2. For each missing item (except U5), show the files that change and the before and after.
+3. Show uncommitted changes with `git status --short`. If a file to upgrade already has changes, ask whether to skip it.
+4. Gate.
+5. Apply only the approved items and rerun the judgments as evidence. Commit only the changed files as `chore: metarche upgrade (U#, …)` (or the project's commit format), and ask whether to push.
+6. If U5 is missing, ask whether to write the security policy now through discover.md §7 (PRD change). If yes and the file is missing, copy `$t/SECURITY_POLICY.md` to `docs/` first. Mention that the gate hook blocks edits outside docs/ meanwhile. If postponed, add to "open problems" in the PROGRESS head: `security policy not written — run /metarche discover and ask to add the security policy` (in the project's document language).
 
-## 관문
-> [관문] 업그레이드 {U#, …}를 적용하시겠습니까? 승인 전에는 프로젝트 파일을 고치지 않습니다. 고칠 곳이 있으면 번호로 알려 주십시오.
+## Gate
+> [Gate] Do you approve applying upgrade {U#, …}? Until you do, I will not change project files. If something needs fixing, tell me its number.

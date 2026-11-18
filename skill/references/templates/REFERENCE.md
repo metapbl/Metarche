@@ -1,21 +1,21 @@
-# REFERENCE — {프로젝트명}
-<!-- 필요할 때 검색해 읽는다. 참조는 R§n, 코드 위치는 파일 > 함수. -->
+# REFERENCE — {project name}
+<!-- Write this document in the user's language. Search it when needed. Refer to sections as R§n, to code as file > function. -->
 
-## R§1 아키텍처
-- 흐름:
-- `{파일}` > `{함수}` — {역할}
+## R§1 Architecture
+- Flow:
+- `{file}` > `{function}` — {role}
 
-## R§2 외부 사양·제약
-- {라이브러리·API} {버전}: {이 프로젝트가 기대는 동작} (출처: URL)
+## R§2 External specs and constraints
+- {library or API} {version}: {behavior this project relies on} (source: URL)
 
-## R§3 설계 근거
-<!-- 내용은 docs/discovery/DECISIONS.md에 있다. 여기는 색인만. -->
-- D### — {한 줄 요약}
+## R§3 Design rationale
+<!-- The decisions live in docs/discovery/DECISIONS.md. This is only an index. -->
+- D### — {one-line summary}
 
-## R§4 함정 대장
-| ID | 증상 | 원인 | 대처 | 근거 |
+## R§4 Trap log
+| ID | Symptom | Cause | Remedy | Source |
 |---|---|---|---|---|
-| T1 | | | | 커밋·로그 |
+| T1 | | | | commit, log |
 
-## R§5 환경·도구
+## R§5 Environment and tools
 -

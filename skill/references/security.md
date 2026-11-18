@@ -1,109 +1,109 @@
-# 보안 정책 (security)
+# security — security policy
 
-discover 4단계에서 보안 질문을 하고, 5단계에서 `docs/SECURITY_POLICY.md`를 PRD와 함께 승인받는다.
-docs 단계는 이 정책을 Claude Code 설정으로 옮기고, build·audit 단계는 정책대로 확인한다.
-기준은 OWASP ASVS 5.0(V번호)과 OWASP Top 10:2025(A번호)다. 문장은 옮기지 않고 장 번호로만 근거를 단다.
+Ask the security questions in discover stage 4 and approve `docs/SECURITY_POLICY.md` together with the PRD in stage 5.
+The docs stage carries the policy into Claude Code settings; the build and audit stages check against it.
+The baseline is OWASP ASVS 5.0 (V numbers) and OWASP Top 10:2025 (A numbers). Their text is not copied; only chapter numbers are cited.
 
-## §1 질문 (discover 4단계)
-답이 이미 PRD에 있으면 묻지 않는다. 번호로 묶어 한 번에 낸다.
-1. 구성요소: 사용자에게 배포되는 쪽(웹 프론트·앱·데스크톱)과 서버 쪽(API·작업자·DB)이 각각 무엇인가.
-2. 노출: 인터넷에서 닿는가, 내부망·로컬에서만 쓰는가.
-3. 사용자: 혼자 쓰는가, 계정이 여럿인가, 역할(관리자·일반)이 나뉘는가.
-4. 데이터: 무엇을 저장·전송하는가. §4 등급표로 하나씩 분류한다.
-5. 외부: 결제·인증·저장소 같은 외부 서비스, 받는 웹훅, 사용자가 올리는 파일.
-6. 지역·규제: 어느 지역 사용자에게 제공하는가, 지켜야 할 규제가 있는가.
-   - 스킬은 법을 해석하지 않는다. 사용자가 말한 규제만 `[U]`로 적는다.
-   - 사용자가 모르면 OPEN에 "규제 전문가 확인"으로 남긴다. 그 규제를 몰라도 §4의 등급별 보호는 그대로 적용한다.
+## §1 Questions (discover stage 4)
+Skip anything the PRD already answers. Ask them numbered, in one batch.
+1. Components: what runs on the user's side (web front end, app, desktop) and on the server side (API, workers, database)?
+2. Exposure: is it reachable from the internet, or used only on an internal network or locally?
+3. Users: one person, several accounts, separate roles (admin, regular)?
+4. Data: what is stored and transmitted? Classify each item with the §4 table.
+5. Outside: external services such as payments, authentication or storage; incoming webhooks; files users upload.
+6. Region and regulation: which regions' users is it offered to, and which regulations apply?
+   - The skill does not interpret law. Record only the regulations the user names, as `[U]`.
+   - If the user does not know, leave "check with a regulatory expert" in OPEN. The per-class protection in §4 applies regardless.
 
-## §2 보안 수준
-답을 보고 하나를 추천하고, 이유와 함께 DECISIONS에 적는다.
+## §2 Security level
+Recommend one from the answers and record it in DECISIONS with the reason.
 
-| 수준 | 언제 | 정책 범위 |
+| Level | When | Policy scope |
 |---|---|---|
-| 기본 | 로컬 단일 사용자 도구, 네트워크 서비스 없음 | §5 중 비밀값·외부 입력·의존성만 |
-| L1 | 인터넷 노출, 민감 데이터 적음 | ASVS L1 해당 장 |
-| L2 | 계정·역할이 있음, 개인정보·결제·인증정보를 다룸 | ASVS L2 해당 장. 대부분의 서비스가 여기 |
-| L3 | 금융·의료·고위험 데이터, 침해 피해가 큼 | ASVS L3. 외부 보안 검토를 권한다 |
+| Basic | local single-user tool, no network service | from §5 only secrets, external input and dependencies |
+| L1 | exposed to the internet, little sensitive data | the relevant ASVS L1 chapters |
+| L2 | accounts and roles; personal data, payments or credentials | the relevant ASVS L2 chapters. Most services land here |
+| L3 | financial, medical or other high-risk data; a breach does great harm | ASVS L3. Recommend an external security review |
 
-ASVS는 웹 위주다. 데스크톱·CLI는 해당 장만 고른다 (V5 파일, V11 암호화, V13 설정, V15 의존성).
+ASVS is web-centric. For desktop and CLI tools, pick only the relevant chapters (V5 files, V11 cryptography, V13 configuration, V15 dependencies).
 
-## §3 신뢰 경계
-- 배포되는 쪽(브라우저·앱·데스크톱)은 사용자 손에 있다. 그 안의 코드와 데이터는 읽히고 바뀐다고 본다.
-- 그래서 모든 검증·권한 판단은 서버에서 한다. 클라이언트 검증은 사용자 편의일 뿐 통제로 세지 않는다.
-- 정책의 구성요소 표에 경계마다 "들어오는 것"과 "그 경계의 통제"를 적는다. 외부 서비스 응답과 웹훅도 신뢰하지 않는 입력이다.
+## §3 Trust boundaries
+- What ships to the user (browser, app, desktop) is in the user's hands. Assume its code and data can be read and changed.
+- So every validation and permission decision happens on the server. Client-side validation is a convenience, not a control.
+- In the policy's component table, write for each boundary "what comes in" and "the control at that boundary". Responses from external services and webhooks are untrusted input too.
 
-## §4 데이터 등급과 보호
-ASVS V14.1은 민감 데이터를 등급으로 나누고 등급마다 보호 요구를 문서로 두라고 한다. 아래는 Metarche 기본값이다. 정책에서 프로젝트에 맞게 바꾼다.
+## §4 Data classes and protection
+ASVS V14.1 asks for sensitive data to be classified and the protection for each class documented. Below are Metarche's defaults; adjust them in the policy.
 
-| 등급 | 예 | 저장 | 전송 | 로그·화면 |
+| Class | Examples | At rest | In transit | Logs and screen |
 |---|---|---|---|---|
-| 공개 | 공개 게시물 | 평문 | TLS | 제한 없음 |
-| 내부 | 설정, 사용 통계 | 평문 + 접근 통제 | TLS | 제한 없음 |
-| 민감 | 이름·연락처·주소, 사업 기밀 | 접근 통제. L2부터 DB·디스크 암호화 | TLS | 로그 마스킹, 필요한 만큼만 반환 |
-| 인증정보 | 비밀번호, API 키, 토큰 | 비밀번호는 일방향 해시. 키·토큰은 해시하거나 §6 방식으로 암호화 | TLS, URL에 넣지 않음 (V14.2.1) | 로그·화면 금지 |
-| 고위험 | 신분증 번호, 카드·계좌, 생체, 건강 | 저장하지 않는 길을 먼저 찾는다(카드는 결제대행). 저장하면 애플리케이션 수준 암호화(§6) | TLS | 로그 금지, 화면 마스킹 |
+| Public | public posts | plain | TLS | no limits |
+| Internal | settings, usage statistics | plain + access control | TLS | no limits |
+| Sensitive | names, contacts, addresses, business secrets | access control; database or disk encryption from L2 | TLS | masked in logs; return only what is needed |
+| Credentials | passwords, API keys, tokens | passwords as one-way hashes; keys and tokens hashed or encrypted as in §6 | TLS; never in URLs (V14.2.1) | never in logs or on screen |
+| High-risk | ID numbers, cards and accounts, biometrics, health | first look for a way not to store it (cards via a payment provider); if stored, application-level encryption (§6) | TLS | never in logs; masked on screen |
 
-- 암호화 여부는 법이 아니라 이 등급으로 정한다. 사용자가 말한 규제가 더 강하면 규제를 따른다.
-- 등급마다 보존 기간과 지우는 방법도 적는다.
+- Whether to encrypt is decided by this class, not by law. If a regulation the user named is stricter, follow it.
+- Also record a retention period and a deletion method for each class.
 
-## §5 영역별 규칙
-정책에는 프로젝트에 해당하는 줄만 옮긴다.
+## §5 Rules by area
+Copy into the policy only the lines that apply to the project.
 
-### 클라이언트 (V3, V14.3)
-- 비밀값(API 키, 서명 키)을 넣지 않는다. 빌드에 들어간 값은 공개된 값이다.
-- 브라우저 저장소(localStorage, sessionStorage, IndexedDB)에 민감 데이터를 두지 않는다 (V14.3.3). 세션은 `HttpOnly; Secure; SameSite` 쿠키로 둔다.
-- 사용자 입력을 HTML로 넣지 않는다. 프레임워크의 자동 이스케이프를 쓰고, `innerHTML` 같은 우회는 정화 라이브러리를 거친다.
-- CSP는 `unsafe-inline`, `unsafe-eval` 없이 시작한다. 그 밖에 HSTS, `X-Content-Type-Options: nosniff`, `frame-ancestors`를 설정한다.
-- 로그아웃하면 클라이언트에 남은 인증 데이터를 지운다 (V14.3.1).
+### Client (V3, V14.3)
+- No secrets (API keys, signing keys) inside. Anything in the build is public.
+- No sensitive data in browser storage (localStorage, sessionStorage, IndexedDB) (V14.3.3). Sessions live in `HttpOnly; Secure; SameSite` cookies.
+- Never insert user input as HTML. Use the framework's automatic escaping; bypasses such as `innerHTML` go through a sanitizing library.
+- Start the CSP without `unsafe-inline` or `unsafe-eval`. Also set HSTS, `X-Content-Type-Options: nosniff` and `frame-ancestors`.
+- On logout, clear the authentication data left on the client (V14.3.1).
 
-### 서버 (V1, V2, V4, V6~V8, V16)
-- 인증 (V6): 직접 만들지 않고 검증된 라이브러리나 서비스를 쓴다. 로그인 시도 횟수를 제한한다.
-- 권한 (V8, A01): 모든 요청에서, 객체 단위로 확인한다 ("이 사용자가 이 주문을 볼 수 있는가"). 기본은 거부한다.
-- 입력 (V2): 허용 목록으로 검증한다(형식, 길이, 범위). 거부 목록으로 걸러내지 않는다.
-- 주입 (V1, A05): SQL은 파라미터 쿼리로, 셸 명령은 인자 배열로 넘긴다. 문자열을 이어 붙이지 않는다.
-- API (V4): CORS는 허용 출처만 둔다. 상태를 바꾸는 요청은 CSRF를 막는다(SameSite 쿠키나 토큰). 비싼 작업은 요청 횟수를 제한한다.
-- 파일 (V5): 업로드는 크기·형식·확장자를 확인하고, 웹 루트 밖에 임의 이름으로 저장한다.
-- 오류 (V16, A10): 사용자에게는 일반 문구만 보여 준다. 실패하면 닫힌 쪽(거부)으로 끝난다.
-- 로그 (V16, A09): 로그인 실패, 권한 거부 같은 보안 사건을 남긴다. §4에서 금지한 데이터는 남기지 않는다.
+### Server (V1, V2, V4, V6–V8, V16)
+- Authentication (V6): do not build your own; use a proven library or service. Limit login attempts.
+- Authorization (V8, A01): check on every request, per object ("may this user see this order?"). Deny by default.
+- Input (V2): validate with allow lists (format, length, range). Do not filter with deny lists.
+- Injection (V1, A05): SQL through parameterized queries, shell commands through argument arrays. Never concatenate strings.
+- API (V4): CORS lists only allowed origins. State-changing requests are protected against CSRF (SameSite cookies or tokens). Rate-limit expensive operations.
+- Files (V5): check uploads for size, type and extension, and store them outside the web root under random names.
+- Errors (V16, A10): show users only generic messages. Fail closed (deny).
+- Logs (V16, A09): log security events such as failed logins and denied permissions. Never log the data §4 forbids.
 
-### 공통 (V11~V13, V15, A03)
-- 통신 (V12): 외부 구간은 TLS 1.2 이상. L2부터는 내부 서비스 사이도 TLS.
-- 설정 (V13): 운영에서는 디버그 모드를 끄고 기본 계정을 바꾼다. 비밀값은 환경 변수나 비밀 관리 서비스에 둔다.
-- 비밀값: 저장소에 커밋하지 않는다. `.env.example`에는 이름만 둔다. 노출되면 교체한다.
-- 의존성 (V15.2, A03): lock 파일을 커밋하고, 취약점 검사 명령(`npm audit`, `pip-audit` 등)을 정한다.
+### Common (V11–V13, V15, A03)
+- Transport (V12): TLS 1.2 or later on external links. From L2, TLS between internal services too.
+- Configuration (V13): in production turn debug mode off and change default accounts. Keep secrets in environment variables or a secret manager.
+- Secrets: never commit them to the repository. `.env.example` holds names only. Rotate anything exposed.
+- Dependencies (V15.2, A03): commit lock files and settle a vulnerability check command (`npm audit`, `pip-audit`, etc.).
 
-## §6 암호화 결정
-- 직접 구현하지 않는다. 언어의 표준 라이브러리나 널리 쓰는 라이브러리를 쓴다 (V11.2).
-- 아래 표는 2026년 OWASP 치트시트 기준이다. 정책에는 표에서 실제로 쓰는 줄만 옮긴다.
+## §6 Encryption choices
+- Do not implement cryptography yourself. Use the language's standard library or a widely used library (V11.2).
+- The table follows the 2026 OWASP cheat sheets. Copy into the policy only the rows actually used.
 
-| 용도 | 쓸 것 | 쓰지 않을 것 |
+| Purpose | Use | Do not use |
 |---|---|---|
-| 비밀번호 저장 | Argon2id (m=19MiB, t=2, p=1). 없으면 scrypt, 레거시는 bcrypt(비용 10 이상) | MD5, SHA-1·SHA-256 단독, 복호화 가능한 암호화 |
-| 저장 데이터 암호화 | AES-256-GCM | ECB 모드, 직접 만든 방식 |
-| 무결성·서명 | HMAC-SHA-256, Ed25519 | `hash(키 + 메시지)` 같은 직접 조합 |
-| 난수·토큰 | 운영체제 CSPRNG (`secrets`, `crypto.randomBytes`) | 일반 난수 함수 |
-| 전송 | TLS 1.2 이상 (가능하면 1.3) | 직접 만든 채널 암호화 |
+| Password storage | Argon2id (m=19 MiB, t=2, p=1); otherwise scrypt; legacy: bcrypt (cost 10 or more) | MD5, SHA-1 or SHA-256 alone, reversible encryption |
+| Encrypting stored data | AES-256-GCM | ECB mode, home-made schemes |
+| Integrity and signatures | HMAC-SHA-256, Ed25519 | home-made constructions such as `hash(key + message)` |
+| Random values and tokens | the OS CSPRNG (`secrets`, `crypto.randomBytes`) | ordinary random functions |
+| Transport | TLS 1.2 or later (1.3 where possible) | home-made channel encryption |
 
-키 관리 (V11.1):
-- 키는 데이터와 다른 곳에 둔다. 저장 데이터를 암호화하면 데이터 키(DEK)를 키 암호화 키(KEK)로 감싸고, KEK는 비밀 관리 서비스나 KMS에 둔다.
-- 정책의 "암호화 목록"에 키·알고리즘·인증서와 각각 무엇을 보호하는지를 적는다 (V11.1.2).
-- 교체 시점(노출 의심, 정한 주기)과 교체 절차를 적는다.
+Key management (V11.1):
+- Keep keys apart from the data. When encrypting stored data, wrap the data key (DEK) with a key-encryption key (KEK) held in a secret manager or KMS.
+- List in the policy's "encryption inventory" every key, algorithm and certificate and what each protects (V11.1.2).
+- Record when keys rotate (suspected exposure, a fixed period) and how.
 
-## §7 사고 대응
-build 중 보안 문제를 발견하면:
-1. 하던 작업을 멈추고 사용자에게 알린다.
-2. 심각도를 매긴다. 기준은 누가 어디서 악용할 수 있는가와 피해 크기다.
-3. 비밀값이 노출됐으면 먼저 교체하고, 그다음 코드를 고친다. git 이력에 남은 값은 지워도 노출된 것으로 본다.
-4. 같은 유형을 저장소 전체에서 찾는다.
-5. 원인을 함정 대장(T#)에 적고, 기계로 잡을 수 있으면 검사(check 훅, 보안 패턴)를 더한다.
+## §7 Incident response
+When a security problem is found during the build:
+1. Stop the current work and tell the user.
+2. Rate the severity by who can exploit it from where and how much harm it does.
+3. If a secret is exposed, rotate it first, then fix the code. A value left in git history counts as exposed even after deletion.
+4. Search the whole repository for the same kind of problem.
+5. Record the cause in the trap log (T#), and if a machine can catch it, add a check (check hook, security pattern).
 
-## §8 Claude Code로 옮기기 (docs 단계)
-| 정책 | 옮길 곳 |
+## §8 Carrying it into Claude Code (docs stage)
+| Policy | Goes to |
 |---|---|
-| 비밀값 위치 | settings.json `permissions.deny` (`Read`·`Edit`) |
-| 리뷰 기준 (§5 중 이 프로젝트 줄) | `.claude/claude-security-guidance.md` (8KB 이내) |
-| 기계로 잡을 금지 패턴 | `.claude/security-patterns.json`, check 훅의 보안 린터 (semgrep, bandit 등) |
-| 의존성 검사 명령 | CLAUDE.md 명령 절, audit |
+| Secret locations | settings.json `permissions.deny` (`Read`, `Edit`) |
+| Review criteria (this project's lines from §5) | `.claude/claude-security-guidance.md` (under 8 KB) |
+| Banned patterns a machine can catch | `.claude/security-patterns.json`, security linters in the check hook (semgrep, bandit, etc.) |
+| Dependency check command | CLAUDE.md commands section, audit |
 
-- `claude-security-guidance.md`와 `security-patterns.json`은 공식 security-guidance 플러그인이 읽는 파일이다. 플러그인을 쓰기로 했을 때만 만든다 (docs.md §5).
-- 한계: deny 규칙은 `cat .env`처럼 파일 이름을 적은 명령은 막지만, `grep -r`이나 스크립트가 간접으로 읽는 것은 막지 못한다. 운영체제 수준 차단은 샌드박스가 하는데, 네이티브 Windows는 지원하지 않는다(WSL2 필요). L2 이상에서 개발 PC에 운영 비밀값을 두지 않는 이유다.
+- `claude-security-guidance.md` and `security-patterns.json` are read by the official security-guidance plugin. Create them only when the plugin is used (docs.md §5).
+- Limit: deny rules block commands that name the file, such as `cat .env`, but not indirect reads through `grep -r` or a script. OS-level blocking is the sandbox's job, and native Windows does not support it (WSL2 needed). This is why, from L2, production secrets do not belong on the development machine.

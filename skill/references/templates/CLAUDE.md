@@ -1,36 +1,36 @@
 <!-- metarche:draft -->
-# {프로젝트명}
+# {project name}
 
-{한 줄: 무엇을, 누구를 위해. 상세는 docs/PRD.md}
+{One line: what, for whom. Details in docs/PRD.md}
 
-## 구조
-- `{폴더}/` — {역할}
+## Structure
+- `{folder}/` — {role}
 
-## 명령
-- 실행: `{명령}`
-- 전체 테스트: `{명령}` (작업마다 실행)
-- 편집 때 자동 검사: `.claude/hooks/check.ps1`이 실행 (`{도구}`)
-- 작업 끝 자동 검사: `.claude/hooks/finish.ps1`이 실행 (`{도구}`)
-- 빌드·배포: `{명령}` (실행 전 확인)
+## Commands
+- Run: `{command}`
+- Full test: `{command}` (run for every task)
+- Per-file checks: run by `.claude/hooks/check.ps1` (`{tool}`)
+- End-of-turn checks: run by `.claude/hooks/finish.ps1` (`{tool}`)
+- Build and deploy: `{command}` (ask before running)
 
-## 이 프로젝트의 규칙
-<!-- 어기면 실제로 문제가 난 것만. 일반 원칙은 ~/.claude/CLAUDE.md에 있다. -->
-- {규칙} (근거: D### 또는 R§n)
+## Rules for this project
+<!-- Only what has actually caused problems when broken. General principles live in ~/.claude/CLAUDE.md. -->
+- {rule} (source: D### or R§n)
 
-## 문서 지도
-- `docs/PRD.md` — 무엇을 왜 (승인본. 바꾸려면 /metarche discover)
-- `docs/SECURITY_POLICY.md` — 데이터 등급·신뢰 경계·암호화 (승인본). 인증·권한·암호화·민감 데이터를 건드리는 작업 전에 해당 절을 읽는다
-- `docs/PROGRESS.md` — 상태·다음 할 일 (머리는 세션 시작 때 자동 주입)
-- `docs/REFERENCE.md` — 근거·외부 사양·함정 대장. 필요한 절만 검색해 읽는다
-- `docs/plans/` — 작업 계획 (체크박스)
-- `docs/discovery/` — DECISIONS는 결정 확인용, QA_LOG는 검색만
+## Document map
+- `docs/PRD.md` — what and why (approved; to change it, /metarche discover)
+- `docs/SECURITY_POLICY.md` — data classes, trust boundaries, encryption (approved). Read the relevant section before work that touches authentication, permissions, encryption or sensitive data
+- `docs/PROGRESS.md` — status and next step (the head is injected at session start)
+- `docs/REFERENCE.md` — rationale, external specs, trap log. Search for the section you need
+- `docs/plans/` — task plans (checkboxes)
+- `docs/discovery/` — DECISIONS to confirm decisions; QA_LOG search only
 
-## 작업 기록
-- 작업을 끝내면 계획 파일의 체크박스를 갱신한다. 세션을 마칠 때 docs/PROGRESS.md 머리 부분을 갱신하고 /metarche wrap을 제안한다.
-- wrap 때 남은 변경을 `docs:`로 커밋하고, push는 할지 묻는다.
-- 관련 없는 작업으로 넘어갈 때는 /clear를 제안한다.
-- 새 결정은 `docs/discovery/DECISIONS.md`에, 반복된 실수의 원인은 REFERENCE 함정 대장에 적는다.
-- PRD 변경 중(`상태: changing`)에는 docs/ 밖을 수정하지 않는다 (훅이 막는다).
+## Work log
+- When a task is done, update the plan's checkbox. At the end of a session, update the head of docs/PROGRESS.md and propose /metarche wrap.
+- At wrap, commit leftover changes as `docs:` and ask whether to push.
+- Before switching to unrelated work, propose /clear.
+- New decisions go into `docs/discovery/DECISIONS.md`; causes of repeated mistakes go into the REFERENCE trap log.
+- While the PRD is changing (`Status: changing`), do not edit outside docs/ (the hook blocks it).
 
-## 압축 시 보존
-- 압축할 때는 진행 중인 계획 파일 경로, 수정한 파일 목록, 확인 명령을 보존한다.
+## Keep on compaction
+- When compacting, keep the active plan's path, the list of edited files and the check commands.

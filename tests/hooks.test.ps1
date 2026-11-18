@@ -1,7 +1,7 @@
-# 훅 템플릿 4개를 임시 프로젝트에서 실행해 동작을 확인한다. 실패가 하나라도 있으면 exit 1.
-# 실행: pwsh -NoProfile -File tests/hooks.test.ps1   (Windows·macOS·Linux 공통)
+# Runs the four hook templates in a throwaway project and checks their behavior. Exits 1 if any check fails.
+# Run: pwsh -NoProfile -File tests/hooks.test.ps1   (Windows, macOS and Linux)
 $ErrorActionPreference = 'Stop'
-[Console]::OutputEncoding = [Text.Encoding]::UTF8   # 훅은 UTF-8로 출력한다. 콘솔 기본 인코딩(CP949 등)으로 읽으면 한글 비교가 깨진다.
+[Console]::OutputEncoding = [Text.Encoding]::UTF8   # hooks print UTF-8; reading with the console code page (CP949 etc.) garbles non-ASCII text
 $tpl = Join-Path $PSScriptRoot '../skill/references/templates/hooks'
 $root = Join-Path ([IO.Path]::GetTempPath()) ("metarche-hooks-" + [guid]::NewGuid().ToString('N').Substring(0, 8))
 $hooks = Join-Path $root '.claude/hooks'
@@ -18,7 +18,7 @@ function Expect($name, $cond) {
 }
 function Edit($rel) { Run 'check.ps1' (@{ tool_input = @{ file_path = $rel } } | ConvertTo-Json -Compress) }
 
-# 시험용 검사기: 파일(또는 프로젝트)에 BAD가 있으면 실패한다. 경로에 공백이 없도록 프로젝트 안에 둔다.
+# Test checkers: fail when the file (or the project) contains BAD. Kept inside the project so the path has no spaces.
 Set-Content (Join-Path $root 'file-check.ps1') 'if ((Get-Content $args[0] -Raw) -match "BAD") { "bad file"; exit 1 }'
 Set-Content (Join-Path $root 'proj-check.ps1') 'if (Get-ChildItem src -File | Where-Object { (Get-Content $_.FullName -Raw) -match "BAD" }) { "bad project"; exit 1 }'
 Copy-Item (Join-Path $tpl 'gate.ps1'), (Join-Path $tpl 'progress-head.ps1') $hooks
@@ -29,56 +29,59 @@ Copy-Item (Join-Path $tpl 'gate.ps1'), (Join-Path $tpl 'progress-head.ps1') $hoo
 $mark = Join-Path $root '.claude/.unchecked'
 
 "gate.ps1"
-Set-Content (Join-Path $root 'docs/PRD.md') "# PRD`n`n상태: changing (2026-01-01)"
+Set-Content (Join-Path $root 'docs/PRD.md') "# PRD`n`nStatus: changing (2026-01-01)"
 $edit = { param($p) Run 'gate.ps1' (@{ cwd = $root; tool_input = @{ file_path = $p } } | ConvertTo-Json -Compress) }
-Expect 'PRD 변경 중에는 src/ 수정을 막는다' ((& $edit 'src/a.txt').Code -eq 2)
-Expect 'PRD 변경 중에도 docs/ 수정은 허용한다' ((& $edit 'docs/notes.md').Code -eq 0)
-Expect 'docs/../src 우회를 막는다' ((& $edit 'docs/../src/a.txt').Code -eq 2)
-Expect '절대 경로로 준 src/도 막는다' ((& $edit (Join-Path $root 'src/a.txt')).Code -eq 2)
-Expect '.claude/worktrees/ 수정은 막는다' ((& $edit '.claude/worktrees/x/a.txt').Code -eq 2)
+Expect 'blocks src/ while the PRD is changing' ((& $edit 'src/a.txt').Code -eq 2)
+Expect 'allows docs/ while the PRD is changing' ((& $edit 'docs/notes.md').Code -eq 0)
+Expect 'blocks the docs/../src escape' ((& $edit 'docs/../src/a.txt').Code -eq 2)
+Expect 'blocks src/ given as an absolute path' ((& $edit (Join-Path $root 'src/a.txt')).Code -eq 2)
+Expect 'blocks .claude/worktrees/' ((& $edit '.claude/worktrees/x/a.txt').Code -eq 2)
+Set-Content (Join-Path $root 'docs/PRD.md') "# PRD`n`nStatus: approved (2026-01-01)"
+Expect 'allows src/ once the PRD is approved' ((& $edit 'src/a.txt').Code -eq 0)
 Set-Content (Join-Path $root 'docs/PRD.md') "# PRD`n`n상태: approved (2026-01-01)"
-Expect 'PRD 승인 뒤에는 src/ 수정을 허용한다' ((& $edit 'src/a.txt').Code -eq 0)
+Expect 'accepts the legacy marker 상태: approved' ((& $edit 'src/a.txt').Code -eq 0)
 
 "check.ps1"
 Set-Content (Join-Path $root 'src/a.txt') 'GOOD'
 $r = Edit 'src/a.txt'
-Expect '통과하는 파일은 exit 0' ($r.Code -eq 0)
-Expect '파일을 고치면 표시 파일을 만든다' (Test-Path $mark)
+Expect 'passing file exits 0' ($r.Code -eq 0)
+Expect 'editing a file creates the marker' (Test-Path $mark)
 Set-Content (Join-Path $root 'src/a.txt') 'BAD'
 $r = Edit 'src/a.txt'
-Expect '검사에 걸리는 파일은 exit 2와 출력' ($r.Code -eq 2 -and $r.Out -match 'bad file')
-Expect '검사 표에 없는 확장자는 exit 0' ((Edit 'src/b.md').Code -eq 0)
-Expect '프로젝트 밖 파일은 무시한다' ((Edit (Join-Path ([IO.Path]::GetTempPath()) 'outside.txt')).Code -eq 0)
+Expect 'failing file exits 2 with output' ($r.Code -eq 2 -and $r.Out -match 'bad file')
+Expect 'extension without checks exits 0' ((Edit 'src/b.md').Code -eq 0)
+Expect 'ignores files outside the project' ((Edit (Join-Path ([IO.Path]::GetTempPath()) 'outside.txt')).Code -eq 0)
 Set-Content $mark '1'
 Edit 'src/a.txt' | Out-Null
-Expect '이미 있는 표시 파일의 횟수는 그대로 둔다' ((Get-Content $mark -Raw).Trim() -eq '1')
+Expect 'keeps the count in an existing marker' ((Get-Content $mark -Raw).Trim() -eq '1')
 
 "finish.ps1"
 Remove-Item -Force $mark
-Expect '표시 파일이 없으면 검사하지 않는다' ((Run 'finish.ps1' '{}').Code -eq 0)
+Expect 'no marker means no check' ((Run 'finish.ps1' '{}').Code -eq 0)
 New-Item -ItemType File -Force $mark | Out-Null
 $r = Run 'finish.ps1' '{}'
-Expect '첫 실패는 막는다 (1/2)' ($r.Code -eq 2 -and $r.Out -match '1/2' -and $r.Out -match 'bad project')
-Expect '막을 때 사용자에게 물으라는 문구를 준다' ($r.Out -match '사용자에게 물으십시오')
+Expect 'first failure blocks (1/2)' ($r.Code -eq 2 -and $r.Out -match '1/2' -and $r.Out -match 'bad project')
+Expect 'a block tells Claude to ask the user' ($r.Out -match 'ask the user')
 $r = Run 'finish.ps1' '{}'
-Expect '두 번째 실패도 막는다 (2/2)' ($r.Code -eq 2 -and $r.Out -match '2/2')
+Expect 'second failure blocks (2/2)' ($r.Code -eq 2 -and $r.Out -match '2/2')
 $r = Run 'finish.ps1' '{}'
-Expect '세 번째 실패는 통과시키고 표시를 지운다' ($r.Code -eq 0 -and -not (Test-Path $mark))
-Expect '그다음 질문만 한 턴은 막지 않는다' ((Run 'finish.ps1' '{}').Code -eq 0)
+Expect 'third failure lets go and removes the marker' ($r.Code -eq 0 -and -not (Test-Path $mark))
+Expect 'a following question-only turn is not blocked' ((Run 'finish.ps1' '{}').Code -eq 0)
 Set-Content (Join-Path $root 'src/a.txt') 'GOOD'
 New-Item -ItemType File -Force $mark | Out-Null
 $r = Run 'finish.ps1' '{}'
-Expect '통과하면 표시 파일을 지운다' ($r.Code -eq 0 -and -not (Test-Path $mark))
+Expect 'passing removes the marker' ($r.Code -eq 0 -and -not (Test-Path $mark))
 
 "progress-head.ps1"
-Set-Content (Join-Path $root 'docs/PROGRESS.md') "# PROGRESS`n## 상태`n- 단계: 8`n<!-- head:end -->`n## 완료 기록`n- 이 줄은 주입되지 않는다"
+# Korean content checks that non-ASCII text survives injection.
+Set-Content (Join-Path $root 'docs/PROGRESS.md') "# PROGRESS`n## 상태`n- 단계: 8`n<!-- head:end -->`n## 완료 기록`n- not injected"
 git -C $root init -q 2>&1 | Out-Null
 git -C $root -c user.name=t -c user.email=t@example.com commit -q --allow-empty -m 'docs: 시험 커밋' 2>&1 | Out-Null
 $r = Run 'progress-head.ps1' '{}'
-Expect '머리를 주입한다' ($r.Out -match '단계: 8')
-Expect 'head:end 아래는 주입하지 않는다' ($r.Out -notmatch '주입되지 않는다')
-Expect '마지막 커밋을 git에서 읽는다 (한글 포함)' ($r.Out -match '마지막 커밋 \(git\): [0-9a-f]+ docs: 시험 커밋')
+Expect 'injects the head' ($r.Out -match '단계: 8')
+Expect 'does not inject below head:end' ($r.Out -notmatch 'not injected')
+Expect 'reads the last commit from git (non-ASCII message)' ($r.Out -match 'Last commit \(git\): [0-9a-f]+ docs: 시험 커밋')
 
 Remove-Item -Recurse -Force $root
-if ($script:failures) { "실패 $($script:failures)개"; exit 1 }
-"모두 통과"
+if ($script:failures) { "$($script:failures) failed"; exit 1 }
+"all passed"

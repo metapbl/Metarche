@@ -1,17 +1,18 @@
-# DECISIONS — 결정 원장
+# DECISIONS — decision ledger
 
-<!-- 프로젝트가 끝날 때까지 계속 쓴다. 지우지 않는다. -->
-<!-- 뒤집히면 상태를 '대체'로 바꾸고 결정 칸 끝에 '← D###로 대체'를 단다. -->
-<!-- 상태: 제안(질의응답 중) → 확정(되짚기 승인) → 대체 -->
+<!-- Write this document in the user's language. Keep IDs, source tags and status words exactly as they are. -->
+<!-- Kept until the project ends. Never delete entries. -->
+<!-- When a decision is reversed, set its status to `superseded` and end its decision cell with `superseded → D###`. -->
+<!-- Status: `proposed` (during the interview) → `confirmed` (read-back approved) → `superseded` -->
 
-| ID | 날짜 | 단계 | 결정 | 출처 | 근거 Q | 버린 안 (이유) | 상태 |
+| ID | Date | Stage | Decision | Source | From Q | Rejected options (why) | Status |
 |---|---|---|---|---|---|---|---|
 
-## 재논의 금지 규칙
-상태가 '확정'이고 버린 안이 적힌 결정은, 새로운 사실이 없으면 다시 제안하지 않는다.
-새로운 사실이 생기면 그 사실을 먼저 밝히고, 새 Q번호로 다시 묻는다.
+## Do-not-reopen rule
+A `confirmed` decision with rejected options recorded is not proposed again unless there is a new fact.
+If a new fact appears, state it first and ask again under a new Q number.
 
-## 다른 문서와의 관계
-- 결정의 내용은 이 파일에만 쓴다. 다른 문서는 D번호로 가리킨다.
-- `docs/REFERENCE.md` R§3에는 설계에 영향을 주는 결정만 `D### — 한 줄 요약`으로 둔다.
-- 구현 중 생긴 결정도 여기에 이어서 적는다 (단계 칸에 `구현`).
+## Relation to other documents
+- The content of a decision is written only here. Other documents point to it by D number.
+- `docs/REFERENCE.md` R§3 lists only the decisions that shape the design, as `D### — one-line summary`.
+- Decisions made during the build are appended here too (stage column: `build`).

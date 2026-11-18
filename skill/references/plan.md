@@ -1,55 +1,56 @@
-# 단계 7 — 계획 (plan)
+# Stage 7 — plan
 
-문서 구성이 승인된 뒤 시작한다. 입력: `docs/PRD.md`, 루트 `CLAUDE.md`, 필요한 `R§`만.
-산출물: `docs/plans/YYYY-MM-DD-{slug}.md` 하나. 진행 중(`상태: active`) 계획은 한 번에 하나만 둔다. 승인 전 계획은 `상태: draft`다.
+Start after the document set is approved. Input: `docs/PRD.md`, root `CLAUDE.md`, and only the `R§` sections you need.
+Output: one `docs/plans/YYYY-MM-DD-{slug}.md`. Keep only one plan in progress (`Status: active`) at a time. A plan before approval is `Status: draft`.
+Write the plan in the user's language; keep the `Status:` line and IDs as they are (SKILL.md "Language").
 
-## §1 계획 파일 양식
+## §1 Plan file form
 ~~~
-# {기능 묶음 이름}
-상태: draft | 시작: YYYY-MM-DD | 근거: PRD F1, F2 (D###)
+# {feature group name}
+Status: draft | Started: YYYY-MM-DD | Source: PRD F1, F2 (D###)
 
-목표: {끝나면 무엇이 되는가, 한두 문장}
-구조: {바뀌거나 생기는 파일과 역할}
-전역 제약: {모든 작업에 해당하는 규칙. 예: 공개 API 이름 유지}
-테스트 위치: {인수 테스트를 거는 공개 인터페이스. 가능한 높은 곳 한 곳}
+Goal: {what is true when it is done, one or two sentences}
+Structure: {files that change or appear, and their roles}
+Global constraints: {rules for every task, e.g. keep public API names}
+Test seam: {the public interface the acceptance tests use; one, as high as possible}
 
-## 작업
-- [ ] 1. {무엇} — `파일 > 함수`
-  - 확인: `{명령}` → {기대 출력} | 실기기: {항목} → {기대 결과}
-- [ ] 2. {무엇} — `파일 > 함수` (선행: 1)
-- [ ] n. 인수 확인 — PRD 성공 기준과 이 계획에 넣은 F#의 인수 기준을 모두 실행
-  - 확인: 전체 테스트 `{명령}` 통과 | 실기기: {성공 기준 장면} → {기대 결과}
-  - 사양 대조: §2 마지막 줄의 서브에이전트 결과
+## Tasks
+- [ ] 1. {what} — `file > function`
+  - Check: `{command}` → {expected output} | Device: {item} → {expected result}
+- [ ] 2. {what} — `file > function` (after: 1)
+- [ ] n. Acceptance — run the PRD success criterion and the acceptance criteria of every F# in this plan
+  - Check: full test `{command}` passes | Device: {success scene} → {expected result}
+  - Spec review: the subagent result from the last line of §2
 
-## 자가 검토
-- PRD 기능 누락: 없음 | {F#}
-- 테스트로 옮기지 않은 인수 기준: 없음 | {F# 기준} → {실기기 확인으로 대체한 이유}
-- 순서 의존: {n은 m 뒤}
+## Self-review
+- PRD features missing: none | {F#}
+- Acceptance criteria not turned into tests: none | {F# criterion} → {why a device check replaces it}
+- Order dependencies: {n after m}
 ~~~
 
-## §2 작업 크기
-- 작업 하나 = 커밋 하나. 한 세션 안에 끝나고 확인 한 번으로 판정할 수 있는 크기.
-- 확인 방법이 없는 작업은 쓰지 않는다. 나누거나 확인 방법부터 정한다.
-- 자동 테스트가 가능하면 "실패하는 테스트 작성"을 그 작업의 첫 단계로 둔다. 불가능하면 실기기 확인 항목을 쓴다.
-- 테스트는 두 겹이다. 바깥은 PRD 인수 기준(Given–When–Then)을 옮긴 인수 테스트, 안쪽은 함수 단위 테스트. 기능은 바깥 테스트가 통과해야 끝난다.
-- 테스트 도구가 아직 없으면 그것을 마련하는 작업을 1번으로 둔다.
-- 기존 코드(adopt)를 처음 고치는 작업 앞에는 특성 테스트 작업을 둔다: 고칠 `파일 > 함수`의 지금 동작을 그대로 고정하는 테스트. 지금 동작이 버그여도 먼저 고정하고, 고칠 때 그 테스트를 바꾼다.
-- PRD §5에서 공개 저장소로 정했으면 인수 확인 바로 앞에 "README 갱신" 작업을 둔다 (readme.md, 확인은 그 §6).
-- PRD 기능에 보안 인수 기준이 있으면 인수 테스트에 함께 옮긴다 (권한 없는 사용자, 변조된 입력이 거부되는지).
-- 좋은 테스트는 공개된 함수·명령으로 동작을 확인한다. 기대값은 코드에서 계산하지 않고 PRD 인수 기준처럼 코드와 독립된 값을 쓴다. mock은 외부 API·시간·난수 같은 시스템 경계에서만 쓴다.
-- 구조 변경(이름 바꾸기, 추출, 이동)과 동작 변경은 같은 작업에 섞지 않는다. 둘 다 필요하면 구조 변경 작업을 앞에 두고, 그 작업 전후로 테스트가 그대로 통과해야 한다.
-- 작업은 층(DB, 화면)별로 나누지 않는다. 확인 가능한 동작 하나가 끝까지 관통하도록 나눈다.
-- 한 번에 통과시킬 수 없는 넓은 변경(이름 바꾸기 등)은 새 형태 추가 → 호출부를 묶음별로 옮기기 → 옛 형태 삭제의 작업들로 나눈다. 작업마다 테스트가 통과해야 한다.
-- 작업이 앞 작업의 결과에 기대면 `(선행: m)`을 단다. 확인 대기 중에 다음 작업을 고르는 근거다 (execute.md §확인 결과 5).
-- 마지막 작업은 항상 "인수 확인"이다 (§1 양식). 계획 끝에 한 번, 맥락 없는 서브에이전트에 이 계획 파일, PRD의 해당 F#, `git diff {계획 시작 커밋}..`을 주고 빠진 것·요청하지 않은 추가·잘못 구현된 것을 나열하게 한다 (discover.md §5와 같은 방식). 지적은 사용자에게 보이고 처리한다.
-- `{나중에}`, `TBD` 같은 빈칸을 남기지 않는다. 모르면 OPEN에 질문을 넣고 그 작업은 보류한다.
+## §2 Task size
+- One task = one commit. Small enough to finish in one session and be judged by one check.
+- Do not write a task that has no way to be checked. Split it, or settle the check first.
+- If automated testing is possible, the task's first step is "write a failing test". Otherwise write a device-check item.
+- Tests come in two layers: outside, acceptance tests taken from the PRD acceptance criteria (Given–When–Then); inside, function-level tests. A feature is done only when its outer tests pass.
+- If there is no test tool yet, task 1 sets one up.
+- Before the first task that changes existing code (adopt), add a characterization-test task: a test that pins the current behavior of the `file > function` to be changed. Pin it even if the current behavior is a bug, and change that test when you fix it.
+- If PRD §5 says the repository is public, put a "README update" task right before acceptance (readme.md; its checks are in §6 there).
+- If a PRD feature has security acceptance criteria, carry them into the acceptance tests (an unauthorized user and tampered input are rejected).
+- Good tests check behavior through public functions and commands. Expected values are not computed from the code; use values independent of it, such as those in the PRD acceptance criteria. Use mocks only at system boundaries such as external APIs, time and randomness.
+- Do not mix a structural change (rename, extract, move) and a behavior change in one task. If both are needed, put the structural task first; the tests must pass unchanged before and after it.
+- Do not split tasks by layer (database, screen). Split them so each one carries one checkable behavior all the way through.
+- A wide change that cannot pass in one step (a rename, say) becomes tasks: add the new form → move callers over in batches → delete the old form. Tests pass after every task.
+- If a task relies on an earlier task's result, mark it `(after: m)`. This is how the next task is picked while a check is pending (execute.md §results 5).
+- The last task is always "Acceptance" (§1 form). Once at the end of the plan, give a subagent with no conversation context this plan file, the PRD's F# sections and `git diff {plan start commit}..`, and have it list what is missing, what was added without being asked and what was implemented wrongly (as in discover.md §5). Show the findings to the user and deal with them.
+- Leave no blanks such as `{later}` or `TBD`. If unknown, put a question in OPEN and hold that task.
 
-## §3 절차
-1. PRD 기능을 묶음으로 나누고, 이번 계획에 넣을 묶음을 제안한다 (추천안 포함). 언어 스킬이 있으면(discover.md §2 "4 방식") 그 스킬의 `references/metarche.md`가 정한 첫 작업(뼈대·설정)을 계획 1번에 넣는다.
-2. 계획 파일을 `상태: draft`로 쓰고 자가 검토를 채운다. 재개할 때 `상태: draft` 계획이 이미 있으면 새로 쓰지 않고 그 파일로 관문을 다시 연다.
-3. 관문.
-4. 승인되면 계획의 `상태:`를 `active`로 바꾸고, `docs/PROGRESS.md` 머리의 "계획"과 "다음 할 일"을 갱신한다.
-5. 모든 체크박스가 끝나면 `상태: done (YYYY-MM-DD)`로 바꾸고 다음 계획을 제안한다.
+## §3 Procedure
+1. Group the PRD features and propose the group for this plan (with a recommendation). If there is a language skill (discover.md §2 "4 Approach"), put the first task its `references/metarche.md` defines (skeleton, settings) as task 1.
+2. Write the plan file with `Status: draft` and fill in the self-review. On resume, if a `Status: draft` plan exists, do not write a new one; reopen the gate with that file.
+3. Gate.
+4. On approval, set the plan's `Status:` to `active` and update "plan" and "next step" in the head of `docs/PROGRESS.md`.
+5. When every checkbox is done, set `Status: done (YYYY-MM-DD)` and propose the next plan.
 
-## 관문
-> [관문] 작업 계획 `{파일}`을 승인하시겠습니까? 승인 전에는 코드를 쓰지 않습니다. 고칠 곳이 있으면 번호로 알려 주십시오.
+## Gate
+> [Gate] Do you approve the plan `{file}`? Until you do, I will not write code. If something needs fixing, tell me its number.

@@ -1,67 +1,67 @@
-# 단계 8~9 — 구현 (build) · 개선 · 마무리 (wrap)
+# Stages 8–9 — build · improve · wrap
 
-입력: 진행 중 계획, PROGRESS 머리(훅이 주입). 계획에 없는 일은 하지 않는다.
+Input: the active plan and the PROGRESS head (injected by a hook). Do nothing that is not in the plan.
 
-## §구현 — 작업 하나의 순환
-1. 계획에서 첫 미완 작업을 고르고, 해당 `파일 > 함수`만 읽는다.
-2. 바꿀 곳과 확인 방법을 두세 줄로 알린다. 계획과 다르면 여기서 멈추고 묻는다.
-   - 인증·권한·암호화·비밀값·민감 이상 데이터를 건드리면 `docs/SECURITY_POLICY.md`의 해당 절을 읽고, 그 규칙을 따른다는 것을 함께 알린다.
-3. (가능하면) 실패하는 테스트 → 구현 → 테스트 통과.
-   - 테스트를 끄거나 지우거나 기대값을 바꿔서 통과시키지 않는다. 계획에 없는 테스트 변경이 필요해 보이면 멈추고 이유를 보인 뒤 묻는다.
-4. 확인 명령을 실행하고, CLAUDE.md에 전체 테스트 명령이 있으면 그것도 실행해 출력을 증거로 보인다. 앞 작업의 테스트가 깨졌으면 다음 작업으로 가지 않고 먼저 고친다.
-   - 전체 테스트에 걸린 시간도 보인다. PRD §6 기준 시간을 넘으면 멈추지 않고, PROGRESS "미해결"에 `전체 테스트 N초, 기준 초과 — 작업마다 관련 테스트만 돌리고 전체는 인수 확인 때 돌릴지 결정 필요`를 적고 알린다. 바꾸기로 하면 discover.md §7로 PRD §6을 고친다.
-5. 체크박스를 갱신하고 커밋 메시지를 제안한다. 커밋은 승인 후.
-   - 2번의 보안 작업이었으면 커밋 제안 전에 `/security-review`를 실행하고 지적과 처리 결과를 보인다.
+## §build — one task
+1. Pick the first unfinished task in the plan and read only its `file > function`.
+2. State in two or three lines what will change and how it will be checked. If it differs from the plan, stop here and ask.
+   - If the task touches authentication, permissions, encryption, secrets or data of class sensitive or above, read the relevant section of `docs/SECURITY_POLICY.md` and say that you will follow it.
+3. (When possible) failing test → implementation → test passes.
+   - Never make tests pass by disabling or deleting them or by changing expected values. If a test change outside the plan seems needed, stop, show why and ask.
+4. Run the check command, and also the full test command if CLAUDE.md has one; show the output as evidence. If a test from an earlier task broke, fix it before moving on.
+   - Also show how long the full test run took. If it exceeds the PRD §6 baseline, do not stop; add to "open problems" in PROGRESS: `full test N s, over baseline — decide whether to run only related tests per task and the full suite at acceptance`, and say so. If that is decided, change PRD §6 through discover.md §7.
+5. Tick the checkbox and propose a commit message. Commit only after approval.
+   - If step 2 was security work, run `/security-review` before proposing the commit and show the findings and how they were handled.
 
-## §멈춤 조건
-- 같은 확인이 두 번 실패하면 고치기를 멈추고 §디버그 절차로 바꾼다.
-- 실기기·외부 서비스·화면·소리 확인이 필요하면 확인 항목과 기대 결과를 주고, PROGRESS "확인 대기"에 적고, 결과를 기다린다. 결과를 받으면 §확인 결과를 따른다.
-- PRD를 바꿔야 하는 발견은 `/metarche discover`로 돌린다. 계획만 바뀌면 계획 수정안을 보이고 승인받는다.
-- 새 질문은 `docs/discovery/OPEN.md`에 넣는다.
-- 구현 중 별도의 질의응답 도구로 정한 결과는 DECISIONS에 적는다. PRD에 닿으면 discover.md §7, 계획에 닿으면 계획 수정으로 넘긴다.
-- 보안 문제(비밀값 노출, 권한 우회 등)를 발견하면 하던 작업을 멈추고 security.md §7 절차를 따른다.
+## §stop — when to stop
+- If the same check fails twice, stop fixing and switch to the §debug procedure.
+- If a check needs a real device, an external service, the screen or sound, give the items and expected results, add them to "waiting for checks" in PROGRESS, and wait. When the results come, follow §results.
+- A finding that requires changing the PRD goes back to `/metarche discover`. If only the plan changes, show the revised plan and get approval.
+- New questions go into `docs/discovery/OPEN.md`.
+- Results settled during the build with a separate interview tool are written to DECISIONS. If they touch the PRD, go through discover.md §7; if they touch the plan, revise the plan.
+- If you find a security problem (an exposed secret, a permission bypass), stop the current work and follow security.md §7.
 
-## §확인 결과 — 사람이 확인한 결과를 받은 뒤
-확인을 요청할 때는 기대 결과를 번호 붙인 항목으로 주고, 항목마다 "예/아니요와 본 것"으로 답해 달라고 한다 (형식은 PRD §6).
+## §results — after a person reports a check
+When asking for a check, give the expected results as numbered items and ask for "yes/no and what you saw" for each (form in PRD §6).
 
-1. 판정: 모든 항목이 "예"일 때만 통과다. "대충 된다", "거의 된다"처럼 애매한 답은 통과로 보지 않고, 애매한 항목만 다시 묻는다.
-2. 기록: 계획의 해당 작업 확인 줄 아래에 `- 결과: YYYY-MM-DD 통과|실패 — {사용자 답, 길면 요약 표시}`를 단다. 대화에만 두지 않는다.
-3. 통과: PROGRESS "확인 대기"에서 지우고, 체크박스를 채우고, 커밋 메시지를 제안한다.
-4. 실패: 체크박스는 비워 둔다. PROGRESS "확인 대기"에서 지우고 "미해결"로 옮긴다 (단서: 사용자가 본 것). 무엇을 했고 무엇이 보였는지, 로그가 어디 있는지 모자라면 그것부터 묻고, §디버그 1번(재현)부터 한다. 고친 뒤 같은 확인 항목으로 다시 요청한다.
-5. 기다리는 동안: 확인 대기 중인 작업에 기대지 않는 다음 작업만 진행한다. 기대는 작업은 결과가 올 때까지 시작하지 않는다.
-6. 인수 확인(계획 마지막 작업)이 실패하면 원인 작업의 체크박스를 다시 비우고 그 작업으로 돌아간다. 계획에 없던 작업이 필요하면 계획 수정안을 보이고 승인받는다.
+1. Verdict: it passes only if every item is "yes". Vague answers such as "mostly works" or "almost" do not pass; ask again about just those items.
+2. Record: under the task's check line in the plan, add `- Result: YYYY-MM-DD pass|fail — {the user's answer, summarized if long}`. Do not leave it only in the conversation.
+3. Pass: remove it from "waiting for checks" in PROGRESS, tick the checkbox, propose a commit message.
+4. Fail: leave the checkbox empty. Move it from "waiting for checks" to "open problems" in PROGRESS (clue: what the user saw). If you lack what was done, what appeared or where the logs are, ask for that first, then start at §debug step 1 (reproduce). After the fix, ask again with the same check items.
+5. While waiting: work only on tasks that do not depend on the pending one. Tasks that do depend on it wait for the result.
+6. If acceptance (the plan's last task) fails, clear the checkbox of the task that caused it and go back to it. If a task outside the plan is needed, show the revised plan and get approval.
 
-## §디버그 — 추측으로 고치지 않는다
-1. 재현: 사용자가 말한 증상 그대로를 다시 일으키는 명령이나 조작을 적는다. 비슷한 다른 실패로 바꿔 재현하지 않는다. 재현되지 않으면 고치지 않고 재현 방법부터 찾는다.
-2. 줄이기: 실패가 남는 가장 작은 입력·범위로 줄인다. 언제부터 깨졌는지 모르면 `git bisect`를 쓴다.
-3. 가설: 원인 가설 1~3개와 각각을 확인할 방법을 보이고, 확인한 결과로 하나를 고른다. 사용자 판단이 필요하면 여기서 묻는다.
-4. 수정: 그 실패를 잡는 회귀 테스트를 먼저 쓰고, 고치기 전에 그 테스트가 실패하는 것을 본다. 그다음 고친다.
-5. 정리: 임시 디버그 출력(`print` 등)에는 고유 표식(예: `[DBG-a4f2]`)을 붙인다. 커밋 전에 그 표식을 검색해 0건인 것을 증거로 보인다. 남길 진단은 로거로만 둔다 (PRD §5 로그).
-6. 기록: 원인 찾기에 오래 걸렸으면 함정 대장(T#) 추가를 제안한다.
+## §debug — no fixes by guessing
+1. Reproduce: write down the command or actions that bring back the user's exact symptom. Do not reproduce a different, similar failure instead. If it does not reproduce, do not fix; find a way to reproduce it first.
+2. Reduce: shrink to the smallest input and scope that still fails. If you do not know when it broke, use `git bisect`.
+3. Hypothesize: show 1–3 hypotheses with a way to test each, and pick one by the results. If the user must judge, ask here.
+4. Fix: write a regression test that catches the failure first, and watch it fail before fixing. Then fix.
+5. Clean up: tag temporary debug output (`print` and the like) with a unique marker (e.g. `[DBG-a4f2]`). Before committing, search for the marker and show zero hits as evidence. Diagnostics that stay go through the logger only (PRD §5 logs).
+6. Record: if the cause took long to find, propose an entry in the trap log (T#).
 
-로그·요청·응답을 대화나 문서에 옮길 때 비밀값(토큰, 비밀번호, 키)은 `<REDACTED>`로 가린다.
+When copying logs, requests or responses into the conversation or a document, replace secrets (tokens, passwords, keys) with `<REDACTED>`.
 
-## §wrap — 세션 마무리
-1. PROGRESS 머리만 고친다: 상태(계획·작업 번호. 마지막 커밋은 훅이 git에서 읽어 넣으므로 적지 않는다), 다음 할 일(파일 > 함수까지), 미해결, 확인 대기.
-2. 이번 세션 완료 작업을 "완료 기록"에 한 줄씩(날짜, 무엇, 커밋 hash). 50줄을 넘으면 `docs/history/YYYY-MM.md`로 옮긴다.
-3. 남은 변경(`git status --short`)을 `docs:`(또는 프로젝트의 커밋 형식)로 커밋하고, push는 할지 묻는다. 커밋하면 안 되는 변경(작업 중인 코드 등)이 섞였으면 커밋하지 않고 목록을 알린 뒤 묻는다.
-4. 이번 세션에 원인 찾기가 오래 걸린 문제가 있으면 함정 대장(T#) 추가를 제안한다.
-5. 이번 세션에 실제 동작이나 인터페이스가 PRD §3과 달라졌으면 차이를 보이고 PRD 변경(discover.md §7)을 제안한다. 문서가 코드보다 늦으면 다음 세션이 틀린 문서를 믿는다.
-6. 머리 줄 수를 증거로 보인다:
+## §wrap — end of session
+1. Update only the PROGRESS head: status (plan and task number; do not write the last commit, the hook reads it from git), next step (down to file > function), open problems, waiting for checks.
+2. Add this session's finished tasks to the "done log", one line each (date, what, commit hash). Past 50 lines, move it to `docs/history/YYYY-MM.md`.
+3. Commit the remaining changes (`git status --short`) as `docs:` (or the project's commit format), and ask whether to push. If changes that must not be committed (code in progress, etc.) are mixed in, do not commit; list them and ask.
+4. If something took long to diagnose this session, propose a trap log (T#) entry.
+5. If actual behavior or an interface drifted from PRD §3 this session, show the difference and propose a PRD change (discover.md §7). If the documents lag behind the code, the next session trusts wrong documents.
+6. Show the head's line count as evidence:
    `(Get-Content docs/PROGRESS.md | Select-String -Pattern 'head:end').LineNumber`
-7. 다음 세션은 `/clear` 후 시작해도 된다고 알린다.
+7. Say that the next session can start after `/clear`.
 
-## §개선 — 같은 실수를 막는 위치
-강제할 수 있는 것은 문서보다 검사로 막는다. 아래 표에서 위쪽 칸을 먼저 따져 본다.
+## §improve — where to stop the same mistake
+Prevent what can be enforced with checks rather than documents. Consider the rows of this table from the top.
 
-| 실수 성격 | 넣을 곳 |
+| Kind of mistake | Where it goes |
 |---|---|
-| 기계가 판정할 수 있는 실수 (금지된 import·호출, 타입, 형식) | 린터·타입 검사 설정이나 규칙 (ruff·semgrep·import-linter 등). 편집 때 check 훅이 실행 |
-| 반복되는 동작 오류 | 그 실수를 잡는 회귀 테스트 |
-| 이 프로젝트에서 반복되는 판단 실수 (기계가 판정할 수 없음) | CLAUDE.md "이 프로젝트의 규칙" (근거 T#) |
-| 원인이 외부 사양·환경 | REFERENCE 함정 대장 |
-| 절대 일어나면 안 되는 동작 | settings.json 권한 또는 훅 |
-| 여러 프로젝트에서 반복 | ~/.claude/CLAUDE.md |
-| 반복되는 다단계 작업 | 프로젝트 스킬 (`.claude/skills/`) |
+| A machine can judge it (banned imports or calls, types, formatting) | linter or type-check config and rules (ruff, semgrep, import-linter, etc.), run by the check hook on edit |
+| A recurring behavior bug | a regression test that catches it |
+| A recurring judgment mistake in this project (no machine can judge it) | CLAUDE.md "rules for this project" (source T#) |
+| The cause is an external spec or the environment | REFERENCE trap log |
+| Behavior that must never happen | settings.json permissions or a hook |
+| Recurs across projects | ~/.claude/CLAUDE.md |
+| A recurring multi-step task | a project skill (`.claude/skills/`) |
 
-제안은 "무엇을, 어디에, 왜(T#·커밋)"로 하고 승인 후 반영한다. CLAUDE.md가 60줄을 넘게 되면 넣는 대신 REFERENCE로 내린다.
+Propose as "what, where, why (T#, commit)" and apply after approval. If CLAUDE.md would exceed 60 lines, move it to REFERENCE instead.

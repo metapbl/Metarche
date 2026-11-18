@@ -1,51 +1,52 @@
-# 보안 정책 — {프로젝트명}
+# Security policy — {project name}
 
-상태: draft | 수준: 기본 | L1 | L2 | L3 | 갱신: YYYY-MM-DD
-<!-- PRD와 함께 승인한다. 바꾸려면 PRD 변경 절차(discover.md §7)를 따른다. -->
-<!-- 작성 기준은 metarche references/security.md. 해당 없는 칸은 지운다. 항목 끝에 출처 [U]·[X]·[AI]와 근거 D###. -->
+Status: draft | Level: basic | L1 | L2 | L3 | Updated: YYYY-MM-DD
+<!-- Write this document in the user's language. Keep the `Status:` line, IDs and source tags exactly as they are. -->
+<!-- Approved together with the PRD. To change it, follow the PRD change procedure (discover.md §7). -->
+<!-- Written per metarche references/security.md. Delete fields that do not apply. End items with the source [U] [X] [AI] and D###. -->
 
-## 1. 범위
-- 수준과 이유:
-- 서비스 지역·적용 규제 (사용자가 말한 것만, 모르면 OPEN):
-- 이 정책이 다루지 않는 것:
+## 1. Scope
+- Level and why:
+- Service regions and applicable regulations (only those the user named; if unknown, OPEN):
+- What this policy does not cover:
 
-## 2. 구성요소와 신뢰 경계
-| 구성요소 | 배포 위치 | 인터넷 노출 | 들어오는 입력 | 이 경계의 통제 |
+## 2. Components and trust boundaries
+| Component | Runs where | Internet-facing | Incoming input | Control at this boundary |
 |---|---|---|---|---|
-| {웹 프론트} | 사용자 브라우저 | 예 | 사용자 조작 | 없음 (신뢰하지 않음) |
-| {API 서버} | | | | 인증·권한·입력 검증 |
+| {web front end} | user's browser | yes | user actions | none (untrusted) |
+| {API server} | | | | authentication, authorization, input validation |
 
-## 3. 데이터 분류
-| 데이터 | 등급 | 저장 위치 | 저장 보호 | 전송 | 로그·화면 | 보존 기간 | 규제 |
+## 3. Data classification
+| Data | Class | Stored where | Protection at rest | In transit | Logs and screen | Retention | Regulation |
 |---|---|---|---|---|---|---|---|
-| | 공개·내부·민감·인증정보·고위험 | | | | | | |
+| | public, internal, sensitive, credentials, high-risk | | | | | | |
 
-## 4. 클라이언트 규칙
+## 4. Client rules
 - 
 
-## 5. 서버 규칙
-- 인증:
-- 권한 (누가 무엇을):
-- 입력 검증:
-- 오류·로그:
+## 5. Server rules
+- Authentication:
+- Authorization (who may do what):
+- Input validation:
+- Errors and logs:
 
-## 6. 암호화
-| 용도 | 알고리즘·라이브러리 | 키 위치 | 보호 대상 | 교체 |
+## 6. Encryption
+| Purpose | Algorithm or library | Key location | Protects | Rotation |
 |---|---|---|---|---|
 
-## 7. 비밀값
-| 이름 | 쓰는 곳 | 보관 (개발 / 운영) | 노출 시 교체 방법 |
+## 7. Secrets
+| Name | Used by | Stored (development / production) | How to rotate if exposed |
 |---|---|---|---|
 
-## 8. 의존성
-- 취약점 검사 명령:
-- lock 파일:
+## 8. Dependencies
+- Vulnerability check command:
+- Lock files:
 
-## 9. 사고 대응
-- 연락·결정할 사람:
-- 절차: security.md §7 기본 절차를 따른다 | {다르게 할 점}
+## 9. Incident response
+- Who to contact and who decides:
+- Procedure: follow the default in security.md §7 | {what differs}
 
-## 10. Claude Code 적용 (docs 단계에서 채움)
-- deny 규칙:
-- security-guidance 플러그인: 사용 | 미사용 (이유)
-- 편집 때 보안 검사:
+## 10. Applied in Claude Code (filled in the docs stage)
+- Deny rules:
+- security-guidance plugin: used | not used (why)
+- Per-file security checks:

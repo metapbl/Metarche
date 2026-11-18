@@ -1,49 +1,51 @@
-# 점검 (audit)
+# audit
 
-문서가 실제 코드·상태와 맞는지, 비용 규칙을 지키는지 본다. 고치기 전에 보고서부터 낸다.
+Check whether the documents match the actual code and state, and whether the cost rules hold. Report before fixing anything.
 
-## §1 점검 항목
-| # | 대상 | 기준 |
+## §1 Audit items
+| # | Target | Criterion |
 |---|---|---|
-| 1 | CLAUDE.md | 첫 줄 `<!-- metarche -->`, 60줄 이내, `@` 임포트 없음 |
-| 2 | CLAUDE.md 명령 | 적힌 명령이 실제로 실행됨 (위험 명령은 실행하지 않고 존재만 확인) |
-| 3 | CLAUDE.md 구조·규칙 | 적힌 파일·함수가 실제로 있음, 규칙마다 근거 표시 |
-| 4 | PROGRESS | `head:end` 표시 있음, 머리 40줄 이내, 완료 기록 50줄 이내 |
-| 5 | PROGRESS 상태 | 계획·작업 번호가 진행 중 계획의 체크박스와 맞음 |
-| 6 | plans | `상태: active` 하나 이하, 체크박스와 실제 커밋이 맞음 |
-| 7 | REFERENCE | 500줄 이내 또는 분할됨, 함정 대장에 근거 표시 |
-| 8 | discovery | DECISIONS 대체 표시 정상, OPEN에 오래 남은 질문 |
-| 9 | settings·훅 | `.claude/settings.json` JSON 유효, 훅 파일 존재 |
-| 10 | 중복 | 전역 CLAUDE.md와 겹치는 문장 |
-| 11 | 보안 정책 | 상태 `approved`. 데이터 분류표의 저장 위치·구성요소 표가 실제 코드·스키마와 맞음, 암호화 표의 알고리즘이 코드에 쓰인 것과 같음 |
-| 12 | 비밀값 | 작업 트리와 git 이력에 비밀값 없음 |
-| 13 | deny 범위 | 정책 7절의 비밀값 보관 위치가 settings.json deny에 모두 있음 |
-| 14 | 의존성 | 정책 8절의 취약점 검사 명령에 높음 이상이 없음 |
-| 15 | 검사 연결 | check.ps1 `$checks`와 finish.ps1 `$finish`가 비어 있지 않음. 비어 있으면 주의 (PRD §6에 검사 없음으로 적혀 있으면 통과) |
-| 16 | README | 공개 저장소면 readme.md §6 확인 항목 통과 (번역본 구성 일치, 명령 실행, 링크, 금지 정보 없음) |
+| 1 | CLAUDE.md | first line `<!-- metarche -->`, within 60 lines, no `@` imports |
+| 2 | CLAUDE.md commands | the listed commands actually run (dangerous commands: check they exist, do not run them) |
+| 3 | CLAUDE.md structure and rules | the listed files and functions exist; every rule has a source |
+| 4 | PROGRESS | `head:end` marker present, head within 40 lines, done log within 50 lines |
+| 5 | PROGRESS status | plan and task number match the checkboxes of the active plan |
+| 6 | plans | at most one `Status: active`; checkboxes match the actual commits |
+| 7 | REFERENCE | within 500 lines or split; trap log entries have sources |
+| 8 | discovery | DECISIONS `superseded →` marks are consistent; questions left long in OPEN |
+| 9 | settings and hooks | `.claude/settings.json` is valid JSON; hook files exist |
+| 10 | duplication | sentences that repeat the global CLAUDE.md |
+| 11 | security policy | `Status: approved`. The storage locations in the data classification and the component table match the actual code and schema; the algorithms in the encryption table are the ones the code uses |
+| 12 | secrets | no secrets in the working tree or git history |
+| 13 | deny scope | every secret storage location in policy §7 is in the settings.json deny rules |
+| 14 | dependencies | the vulnerability check in policy §8 reports nothing high or above |
+| 15 | wired checks | check.ps1 `$checks` and finish.ps1 `$finish` are not empty. Empty is a warning (passes if PRD §6 says there are no checks) |
+| 16 | README | for a public repository, the readme.md §6 checks pass (translations match, commands run, links resolve, nothing forbidden) |
 
-## §2 확인 명령 (PowerShell)
+Projects created before the English version of this skill use `상태:` instead of `Status:`; treat it the same and suggest upgrade U7.
+
+## §2 Check commands (PowerShell)
 ~~~
 (Get-Content CLAUDE.md).Count; (Get-Content CLAUDE.md -TotalCount 1)
 (Get-Content docs/PROGRESS.md | Select-String 'head:end').LineNumber
 (Get-Content docs/REFERENCE.md).Count
-if (Test-Path docs/plans) { Select-String -Path docs/plans/*.md -Pattern '^상태: active' } else { "plans 없음" }
+if (Test-Path docs/plans) { Select-String -Path docs/plans/*.md -Pattern '^(Status|상태): active' } else { "no plans" }
 Get-Content .claude/settings.json -Raw | ConvertFrom-Json | Out-Null; "settings OK"
 Test-Path .claude/hooks/progress-head.ps1, .claude/hooks/gate.ps1, .claude/hooks/check.ps1, .claude/hooks/finish.ps1
 git log -1 --format='%h %s'
 Get-Content docs/SECURITY_POLICY.md -TotalCount 3
-if (Get-Command gitleaks -ErrorAction SilentlyContinue) { gitleaks git --redact } else { "gitleaks 없음: 작업 트리만 검사"; git grep -nIE 'AKIA[0-9A-Z]{16}|-----BEGIN [A-Z ]*PRIVATE KEY|sk_live_|ghp_[0-9A-Za-z]{36}' }
+if (Get-Command gitleaks -ErrorAction SilentlyContinue) { gitleaks git --redact } else { "no gitleaks: working tree only"; git grep -nIE 'AKIA[0-9A-Z]{16}|-----BEGIN [A-Z ]*PRIVATE KEY|sk_live_|ghp_[0-9A-Za-z]{36}' }
 ~~~
-- 11·14는 명령 하나로 끝나지 않는다. 정책의 표를 한 줄씩 코드에서 찾아 보고, 14는 정책 8절의 명령을 실행한다.
-- 비밀값이 나오면 값은 보고서에 쓰지 않고 파일 > 위치만 적는다.
+- Items 11 and 14 take more than one command. Look up each row of the policy tables in the code; for 14, run the command in policy §8.
+- If a secret turns up, do not write its value in the report; give only file > location.
 
-## §3 보고서
-항목마다 통과·주의·실패와 증거(명령 출력, 파일 > 위치)를 한 줄로 쓴다. 끝에 고칠 목록을 우선순위로 번호를 매겨 붙인다.
+## §3 Report
+One line per item: pass, warning or fail, with evidence (command output, file > location). End with a numbered fix list in priority order.
 
-## §4 절차
-1. §2를 실행하고 §3 보고서를 낸다. 이 단계에서는 아무것도 고치지 않는다.
-2. 사용자가 고를 번호를 받으면 바뀔 부분(전후)을 보인다.
-3. 승인 후 적용하고 해당 확인 명령을 다시 실행해 증거를 보인다.
+## §4 Procedure
+1. Run §2 and deliver the §3 report. Fix nothing at this step.
+2. When the user picks numbers, show the changes (before and after).
+3. Apply after approval and rerun the relevant check commands as evidence.
 
-## 관문
-> [관문] 보고서의 {번호} 수정안을 적용하시겠습니까? 승인 전에는 문서를 고치지 않습니다.
+## Gate
+> [Gate] Do you approve applying fixes {numbers} from the report? Until you do, I will not change the documents.

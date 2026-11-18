@@ -46,6 +46,7 @@ skill/
    ├─ adopt.md         기존 프로젝트 이관
    ├─ security.md      보안 정책 수립 (수준·데이터 등급·신뢰 경계·암호화)
    ├─ upgrade.md       스킬 개정분을 기존 프로젝트에 반영 (개정 대장)
+   ├─ readme.md        공개 저장소의 README 규격 (다국어 줄, Shields.io 배지)
    └─ templates/       PRD·SECURITY_POLICY·QA_LOG·OPEN·DECISIONS·CLAUDE·PROGRESS·REFERENCE·profile, settings.json, hooks/
 ~~~
 

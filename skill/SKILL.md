@@ -48,7 +48,7 @@ disable-model-invocation: true
 | 4 방식 | discover | discover.md §4, security.md §1~6 | PRD §4~5, SECURITY_POLICY | 안 선택 |
 | 5 확정 | discover | discover.md §5 | PRD·SECURITY_POLICY `approved` | **PRD·보안 정책 승인** |
 | 6 문서 | docs | docs.md, security.md §8 | CLAUDE.md, PROGRESS, REFERENCE, settings | 문서 승인 |
-| 7 계획 | plan | plan.md | `docs/plans/YYYY-MM-DD-*.md` | 계획 승인 |
+| 7 계획 | plan | plan.md (공개 저장소면 readme.md) | `docs/plans/YYYY-MM-DD-*.md` | 계획 승인 |
 | 8 구현 | build | execute.md | 코드, 기록 | 작업마다 |
 | 9 개선 | build | execute.md §개선 | rules·스킬 제안 | 제안 승인 |
 | - | wrap | execute.md §wrap | PROGRESS 갱신 | - |

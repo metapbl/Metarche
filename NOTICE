@@ -46,6 +46,10 @@ Licensed under the MIT License (see LICENSE).
 11. Kent Beck, "Augmented Coding: Beyond the Vibes" — https://tidyfirst.substack.com/p/augmented-coding-beyond-the-vibes
    방식만 참고(구조 변경과 동작 변경 분리, 테스트를 끄거나 지우는 것을 이탈 신호로 봄). 문장은 포함하지 않음.
 
+12. README 규격 — Standard Readme 명세 https://github.com/RichardLitt/standard-readme (MIT License, Copyright (c) 2017-2025 Richard Littauer),
+    GitHub Docs "About READMEs", Shields.io 문서 https://shields.io
+    방식만 참고(제목·한 줄 소개·라이선스 위치, 번역 파일 이름, 배지 URL 문법). 문장은 포함하지 않음.
+
 위 1~3의 MIT 허가 문구 전문:
 
 Permission is hereby granted, free of charge, to any person obtaining a copy

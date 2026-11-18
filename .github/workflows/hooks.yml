@@ -1,0 +1,23 @@
+name: hooks
+
+on:
+  push:
+    paths: ["skill/references/templates/hooks/**", "tests/**", ".github/workflows/hooks.yml"]
+  pull_request:
+    paths: ["skill/references/templates/hooks/**", "tests/**", ".github/workflows/hooks.yml"]
+  workflow_dispatch:
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Hook tests
+        shell: pwsh
+        run: |
+          $PSVersionTable.PSVersion.ToString()
+          pwsh -NoProfile -File tests/hooks.test.ps1

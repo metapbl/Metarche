@@ -36,6 +36,16 @@ Licensed under the MIT License (see LICENSE).
 9. OWASP ASVS 5.0, OWASP Top 10:2025, OWASP Cheat Sheet Series — https://owasp.org
    CC BY-SA 4.0. 장 번호(V·A)와 권장 알고리즘·수치만 인용. 문장은 포함하지 않음.
 
+10. mattpocock/skills — https://github.com/mattpocock/skills
+   MIT License, Copyright (c) 2026 Matt Pocock
+   참고: tdd(좋은 테스트·mock 경계), to-tickets(세로 조각, expand–contract, 선행 관계),
+         to-spec(테스트 위치), diagnosing-bugs(증상 재현, 실패 먼저 보기, 디버그 표식, 비밀값 가림),
+         code-review(사양 대조), grilling(질문 의존 순서), retro(연결 안 된 검사).
+         방식만 참고. 문장은 포함하지 않음.
+
+11. Kent Beck, "Augmented Coding: Beyond the Vibes" — https://tidyfirst.substack.com/p/augmented-coding-beyond-the-vibes
+   방식만 참고(구조 변경과 동작 변경 분리, 테스트를 끄거나 지우는 것을 이탈 신호로 봄). 문장은 포함하지 않음.
+
 위 1~3의 MIT 허가 문구 전문:
 
 Permission is hereby granted, free of charge, to any person obtaining a copy

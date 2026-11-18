@@ -13,6 +13,10 @@ if (-not $path) { exit 0 }
 $full = [IO.Path]::GetFullPath($path, $root)
 $base = [IO.Path]::GetFullPath($root).TrimEnd('\', '/') + [IO.Path]::DirectorySeparatorChar
 if (-not $full.StartsWith($base, [StringComparison]::OrdinalIgnoreCase) -or -not (Test-Path $full)) { exit 0 }
+# 작업 끝 검사(finish.ps1)가 돌도록 표시한다. 이미 있으면 finish가 적은 횟수를 지키려고 건드리지 않는다.
+# 셸 명령으로 고친 파일은 여기로 오지 않는다.
+$mark = Join-Path $root '.claude/.unchecked'
+if (-not (Test-Path $mark)) { New-Item -ItemType File -Force $mark | Out-Null }
 $cmds = $checks[[IO.Path]::GetExtension($full)]
 if (-not $cmds) { exit 0 }
 Set-Location $root

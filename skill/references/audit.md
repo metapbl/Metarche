@@ -19,6 +19,7 @@
 | 12 | 비밀값 | 작업 트리와 git 이력에 비밀값 없음 |
 | 13 | deny 범위 | 정책 7절의 비밀값 보관 위치가 settings.json deny에 모두 있음 |
 | 14 | 의존성 | 정책 8절의 취약점 검사 명령에 높음 이상이 없음 |
+| 15 | 검사 연결 | check.ps1 `$checks`와 finish.ps1 `$finish`가 비어 있지 않음. 비어 있으면 주의 (PRD §6에 검사 없음으로 적혀 있으면 통과) |
 
 ## §2 확인 명령 (PowerShell)
 ~~~
@@ -27,7 +28,7 @@
 (Get-Content docs/REFERENCE.md).Count
 if (Test-Path docs/plans) { Select-String -Path docs/plans/*.md -Pattern '^상태: active' } else { "plans 없음" }
 Get-Content .claude/settings.json -Raw | ConvertFrom-Json | Out-Null; "settings OK"
-Test-Path .claude/hooks/progress-head.ps1, .claude/hooks/gate.ps1, .claude/hooks/check.ps1
+Test-Path .claude/hooks/progress-head.ps1, .claude/hooks/gate.ps1, .claude/hooks/check.ps1, .claude/hooks/finish.ps1
 git log -1 --format='%h %s'
 Get-Content docs/SECURITY_POLICY.md -TotalCount 3
 if (Get-Command gitleaks -ErrorAction SilentlyContinue) { gitleaks git --redact } else { "gitleaks 없음: 작업 트리만 검사"; git grep -nIE 'AKIA[0-9A-Z]{16}|-----BEGIN [A-Z ]*PRIVATE KEY|sk_live_|ghp_[0-9A-Za-z]{36}' }

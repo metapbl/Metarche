@@ -19,6 +19,7 @@
 | U3 | 2026-10-29 · 60df637 | PROGRESS에 마지막 커밋을 적지 않는다 (훅이 git에서 읽음) | `docs/PROGRESS.md` 머리에 `마지막 커밋` 문구가 없다 | 그 부분만 지운다. 그 안에 push 여부·태그 같은 다른 정보가 있으면 지우기 전에 보이고 남길지 묻는다 |
 | U4 | 2026-10-29 · c7cd968, 60df637 | CLAUDE.md에 보안 정책 줄과 wrap 커밋 규칙 | `docs/SECURITY_POLICY.md` 줄과 `wrap 때 남은 변경` 줄이 있다 | 템플릿 CLAUDE.md의 두 줄을 같은 절(문서 지도, 작업 기록)에 넣는다. 넣은 뒤 60줄을 넘으면 알린다 |
 | U5 | 2026-10-29 · c7cd968 | 보안 정책 | `docs/SECURITY_POLICY.md`가 있고 상태가 `approved`다 | 질의응답이 필요해 이 모드에서 쓰지 않는다. §3의 6번을 따른다 |
+| U6 | 2026-11-18 · finish 훅 도입 | 작업 끝 검사(finish 훅) | `.claude/hooks/finish.ps1`이 있고, settings.json `hooks.Stop`에 finish.ps1 항목이 있고, `.gitignore`에 `.claude/.unchecked`가 있다 | finish.ps1을 복사하고 Stop 항목·`.gitignore` 줄·CLAUDE.md 명령 절의 "작업 끝 자동 검사" 줄을 더한다. `$finish` 명령은 사용자에게 묻고, PRD §6에 같은 줄을 적고 §8 변경 이력에 한 줄 남긴다. check.ps1의 `.unchecked` 줄은 U1이 템플릿과 맞추면서 들어간다. 템플릿에 없는 훅 파일(사용자가 만든 것)은 건드리지 않는다 |
 
 ## §3 절차
 1. §1 대상인지 확인하고, §2 판정을 모두 돌려 항목별 적용됨·미적용을 표로 보인다. 미적용이 없으면 그렇게 알리고 끝낸다.

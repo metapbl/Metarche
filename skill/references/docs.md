@@ -52,11 +52,19 @@ PRD가 `approved`일 때만 시작한다. 입력: `docs/PRD.md`, `docs/SECURITY_
   - 셸 명령의 쓰기는 못 막으므로 CLAUDE.md 규칙과 함께 쓴다.
   - 프로젝트 밖 파일(예: `~/.claude/`)과 `.claude/worktrees/` 아래 파일도 막힌다. 의도한 동작이다. 필요하면 사용자가 직접 고친다.
 - check.ps1: 파일을 고칠 때마다 확장자별 검사(린터·타입 검사)를 돌리고, 실패하면 출력을 Claude에게 돌려줘 바로 고치게 한다.
-  - 스크립트 맨 위 `$checks` 표를 PRD §6 "편집 때 자동 검사"대로 채운다. 고친 파일 하나만 검사하는 명령으로 둔다 (전체 테스트는 넣지 않는다).
+  - 스크립트 맨 위 `$checks` 표를 PRD §6 "편집 때 자동 검사"대로 채운다. 고친 파일 경로를 맨 뒤에 받는 명령만 넣는다. `cargo check`처럼 경로를 받지 않는 명령은 finish로 보내고, 전체 테스트는 넣지 않는다.
+  - 파일 하나만 받으면 프로젝트 설정을 못 읽는 도구는 설정을 명령에 직접 적는다 (예: `rustfmt --check --edition 2024`).
   - 검사 도구가 설치돼 있어야 한다. 없으면 훅이 매번 "검사 도구 없음"을 돌려준다.
+- finish.ps1: 응답이 끝날 때(Stop) 프로젝트 단위 검사를 돌리고, 실패하면 출력을 돌려줘 이어서 고치게 한다.
+  - 맨 위 `$finish` 목록을 PRD §6 "작업 끝 자동 검사"대로 채운다. 비어 있으면 아무것도 하지 않는다.
+  - check.ps1이 파일을 고칠 때 만드는 `.claude/.unchecked`가 있을 때만 돈다 (질문에만 답한 턴에는 돌지 않는다). 통과하면 지운다. 셸 명령으로만 파일을 고친 턴은 잡지 못한다.
+  - 같은 실패로는 두 번까지만 막는다 (`$limit`). 넘으면 표시 파일을 지워 다음 턴을 막지 않는다. 막을 때마다 "고칠 방법이 분명하지 않거나 요청과 부딪히면 고치지 말고 사용자에게 물으라"는 문구를 함께 돌려준다.
+  - `.claude/.unchecked`를 `.gitignore`에 넣는다.
 - 개인 설정은 `.claude/settings.local.json` (git 제외).
 
 ## §6 절차
+언어 스킬이 있으면(discover.md §2 "4 방식") 그 스킬의 `references/metarche.md`를 읽고, 검사 명령과 CLAUDE.md 규칙 값을 거기서 가져온다.
+
 1. PRD·DECISIONS를 읽고 §1 표에 따라 분류한 목록(파일별 절 제목, 들어갈 항목, 출처 표시)을 보여 준다.
 2. 분류 승인 후 파일을 만든다. REFERENCE R§3에는 설계에 영향을 주는 확정 결정의 색인을 넣는다.
 3. 각 파일 줄 수와 §7 확인 결과를 증거로 제시한다.
@@ -68,10 +76,11 @@ PRD가 `approved`일 때만 시작한다. 입력: `docs/PRD.md`, `docs/SECURITY_
 ## §7 확인
 - CLAUDE.md 60줄 이내, 첫 줄 `<!-- metarche:draft -->` (승인 후 `<!-- metarche -->`)
 - PROGRESS 머리 40줄 이내
-- `/hooks`에 SessionStart·PreToolUse 표시, `/clear` 직후 머리가 컨텍스트에 들어옴
+- `/hooks`에 SessionStart·PreToolUse·PostToolUse·Stop 표시, `/clear` 직후 머리가 컨텍스트에 들어옴
 - `/permissions`에 ask·deny 규칙 표시. deny한 비밀값 파일이 있으면 Read로 읽어 막히는지 본다
 - security-guidance를 쓰면 `(Get-Item .claude/claude-security-guidance.md).Length`가 8192 이하
 - check 훅: `$checks`의 도구마다 `Get-Command {도구}`가 성공하고, 일부러 검사에 걸리는 파일을 하나 써 보면 오류가 돌아온 뒤 그 파일을 지운다
+- finish 훅: 일부러 컴파일·타입 오류를 넣고 응답을 끝내면 오류가 돌아오는지, 질문에만 답한 턴에는 검사가 돌지 않는지 본다. 끝나면 오류를 되돌린다
 
 ## 관문
 > [관문] 문서 구성(CLAUDE.md·PROGRESS·REFERENCE·settings·훅)을 승인하시겠습니까? 승인 전에는 작업 계획과 코드를 만들지 않습니다. 고칠 곳이 있으면 번호로 알려 주십시오.

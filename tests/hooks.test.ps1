@@ -1,6 +1,7 @@
 # 훅 템플릿 4개를 임시 프로젝트에서 실행해 동작을 확인한다. 실패가 하나라도 있으면 exit 1.
 # 실행: pwsh -NoProfile -File tests/hooks.test.ps1   (Windows·macOS·Linux 공통)
 $ErrorActionPreference = 'Stop'
+[Console]::OutputEncoding = [Text.Encoding]::UTF8   # 훅은 UTF-8로 출력한다. 콘솔 기본 인코딩(CP949 등)으로 읽으면 한글 비교가 깨진다.
 $tpl = Join-Path $PSScriptRoot '../skill/references/templates/hooks'
 $root = Join-Path ([IO.Path]::GetTempPath()) ("metarche-hooks-" + [guid]::NewGuid().ToString('N').Substring(0, 8))
 $hooks = Join-Path $root '.claude/hooks'

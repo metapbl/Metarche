@@ -15,8 +15,9 @@
 <p align="center">
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-blue?style=flat-square"></a>
   <a href="#インストール"><img alt="Claude Code skill" src="https://img.shields.io/badge/Claude_Code-skill-D97757?style=flat-square&logo=claude&logoColor=white"></a>
-  <a href="#必要環境"><img alt="Platform: Windows" src="https://img.shields.io/badge/platform-Windows-0078D4?style=flat-square"></a>
+  <a href="#必要環境"><img alt="Platform: Windows, macOS, Linux" src="https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-0078D4?style=flat-square"></a>
   <a href="#必要環境"><img alt="PowerShell 7" src="https://img.shields.io/badge/PowerShell-7-5391FE?style=flat-square"></a>
+  <a href="https://github.com/metapbl/Metarche/actions/workflows/hooks.yml"><img alt="Hook tests" src="https://img.shields.io/github/actions/workflow/status/metapbl/Metarche/hooks.yml?branch=main&style=flat-square&label=hook%20tests"></a>
 </p>
 
 meta + archē：質疑応答で PRD・ドキュメント・計画を固め、承認ゲートを通して実装まで進める Claude Code スキル。
@@ -32,15 +33,21 @@ meta + archē：質疑応答で PRD・ドキュメント・計画を固め、承
 - すべての状態をファイルに置くので、`/clear` やコンテキスト圧縮のあとも続けられます。
 
 ## 必要環境
-- Windows と PowerShell 7（`pwsh`）。フックは PowerShell スクリプトです。
+- Windows、macOS、Linux のいずれかと PowerShell 7（`pwsh`）。フックは PowerShell スクリプトで、3 つの OS すべてで[フックのテスト](tests/hooks.test.ps1)により確認しています。
 - [Claude Code](https://code.claude.com/docs)
 - git（推奨）
 
 ## インストール
+Windows（PowerShell 7）：
 ~~~
 git clone https://github.com/metapbl/Metarche.git "$env:USERPROFILE\My Projects\metarche"
 New-Item -ItemType Directory -Force "$env:USERPROFILE\.claude\skills" | Out-Null
 New-Item -ItemType Junction -Path "$env:USERPROFILE\.claude\skills\metarche" -Target "$env:USERPROFILE\My Projects\metarche\skill"
+~~~
+macOS / Linux（先に [PowerShell 7](https://learn.microsoft.com/powershell/scripting/install/installing-powershell) をインストール）：
+~~~
+git clone https://github.com/metapbl/Metarche.git ~/metarche
+mkdir -p ~/.claude/skills && ln -s ~/metarche/skill ~/.claude/skills/metarche
 ~~~
 Claude Code の `/skills` に `metarche` が表示されれば完了です。更新はリポジトリのフォルダーで `git pull` を実行します。
 

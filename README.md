@@ -13,8 +13,9 @@
 <p align="center">
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-blue?style=flat-square"></a>
   <a href="#install"><img alt="Claude Code skill" src="https://img.shields.io/badge/Claude_Code-skill-D97757?style=flat-square&logo=claude&logoColor=white"></a>
-  <a href="#requirements"><img alt="Platform: Windows" src="https://img.shields.io/badge/platform-Windows-0078D4?style=flat-square"></a>
+  <a href="#requirements"><img alt="Platform: Windows, macOS, Linux" src="https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-0078D4?style=flat-square"></a>
   <a href="#requirements"><img alt="PowerShell 7" src="https://img.shields.io/badge/PowerShell-7-5391FE?style=flat-square"></a>
+  <a href="https://github.com/metapbl/Metarche/actions/workflows/hooks.yml"><img alt="Hook tests" src="https://img.shields.io/github/actions/workflow/status/metapbl/Metarche/hooks.yml?branch=main&style=flat-square&label=hook%20tests"></a>
 </p>
 
 meta + archē: a Claude Code skill that turns a Q&A interview into a PRD, docs and a plan, then builds behind gates.
@@ -30,15 +31,21 @@ meta + archē: a Claude Code skill that turns a Q&A interview into a PRD, docs a
 - Keeps all state in files, so work continues after `/clear` and context compaction.
 
 ## Requirements
-- Windows with PowerShell 7 (`pwsh`). The hooks are PowerShell scripts.
+- Windows, macOS or Linux with PowerShell 7 (`pwsh`). The hooks are PowerShell scripts, tested on all three by [hook tests](tests/hooks.test.ps1).
 - [Claude Code](https://code.claude.com/docs)
 - git (recommended)
 
 ## Install
+Windows (PowerShell 7):
 ~~~
 git clone https://github.com/metapbl/Metarche.git "$env:USERPROFILE\My Projects\metarche"
 New-Item -ItemType Directory -Force "$env:USERPROFILE\.claude\skills" | Out-Null
 New-Item -ItemType Junction -Path "$env:USERPROFILE\.claude\skills\metarche" -Target "$env:USERPROFILE\My Projects\metarche\skill"
+~~~
+macOS / Linux (install [PowerShell 7](https://learn.microsoft.com/powershell/scripting/install/installing-powershell) first):
+~~~
+git clone https://github.com/metapbl/Metarche.git ~/metarche
+mkdir -p ~/.claude/skills && ln -s ~/metarche/skill ~/.claude/skills/metarche
 ~~~
 You are done when `metarche` appears in `/skills` in Claude Code. To update, run `git pull` in the repository folder.
 

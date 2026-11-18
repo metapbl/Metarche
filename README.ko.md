@@ -15,8 +15,9 @@
 <p align="center">
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-blue?style=flat-square"></a>
   <a href="#설치"><img alt="Claude Code skill" src="https://img.shields.io/badge/Claude_Code-skill-D97757?style=flat-square&logo=claude&logoColor=white"></a>
-  <a href="#요구-사항"><img alt="Platform: Windows" src="https://img.shields.io/badge/platform-Windows-0078D4?style=flat-square"></a>
+  <a href="#요구-사항"><img alt="Platform: Windows, macOS, Linux" src="https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-0078D4?style=flat-square"></a>
   <a href="#요구-사항"><img alt="PowerShell 7" src="https://img.shields.io/badge/PowerShell-7-5391FE?style=flat-square"></a>
+  <a href="https://github.com/metapbl/Metarche/actions/workflows/hooks.yml"><img alt="Hook tests" src="https://img.shields.io/github/actions/workflow/status/metapbl/Metarche/hooks.yml?branch=main&style=flat-square&label=hook%20tests"></a>
 </p>
 
 meta + archē(메타르케): 질의응답으로 PRD·문서·계획을 세우고, 승인 관문을 거쳐 구현까지 이어 가는 Claude Code 스킬.
@@ -32,15 +33,21 @@ meta + archē(메타르케): 질의응답으로 PRD·문서·계획을 세우고
 - 모든 상태를 파일에 두어 `/clear`와 컨텍스트 압축 뒤에도 이어 갑니다.
 
 ## 요구 사항
-- Windows와 PowerShell 7(`pwsh`). 훅이 PowerShell 스크립트입니다.
+- Windows, macOS 또는 Linux와 PowerShell 7(`pwsh`). 훅이 PowerShell 스크립트이며, 세 OS 모두에서 [훅 시험](tests/hooks.test.ps1)으로 확인합니다.
 - [Claude Code](https://code.claude.com/docs)
 - git (권장)
 
 ## 설치
+Windows (PowerShell 7):
 ~~~
 git clone https://github.com/metapbl/Metarche.git "$env:USERPROFILE\My Projects\metarche"
 New-Item -ItemType Directory -Force "$env:USERPROFILE\.claude\skills" | Out-Null
 New-Item -ItemType Junction -Path "$env:USERPROFILE\.claude\skills\metarche" -Target "$env:USERPROFILE\My Projects\metarche\skill"
+~~~
+macOS / Linux ([PowerShell 7](https://learn.microsoft.com/powershell/scripting/install/installing-powershell)을 먼저 설치):
+~~~
+git clone https://github.com/metapbl/Metarche.git ~/metarche
+mkdir -p ~/.claude/skills && ln -s ~/metarche/skill ~/.claude/skills/metarche
 ~~~
 Claude Code의 `/skills`에 `metarche`가 보이면 끝입니다. 갱신은 저장소 폴더에서 `git pull`을 실행합니다.
 

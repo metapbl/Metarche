@@ -15,8 +15,9 @@
 <p align="center">
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-blue?style=flat-square"></a>
   <a href="#安装"><img alt="Claude Code skill" src="https://img.shields.io/badge/Claude_Code-skill-D97757?style=flat-square&logo=claude&logoColor=white"></a>
-  <a href="#环境要求"><img alt="Platform: Windows" src="https://img.shields.io/badge/platform-Windows-0078D4?style=flat-square"></a>
+  <a href="#环境要求"><img alt="Platform: Windows, macOS, Linux" src="https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-0078D4?style=flat-square"></a>
   <a href="#环境要求"><img alt="PowerShell 7" src="https://img.shields.io/badge/PowerShell-7-5391FE?style=flat-square"></a>
+  <a href="https://github.com/metapbl/Metarche/actions/workflows/hooks.yml"><img alt="Hook tests" src="https://img.shields.io/github/actions/workflow/status/metapbl/Metarche/hooks.yml?branch=main&style=flat-square&label=hook%20tests"></a>
 </p>
 
 meta + archē：通过问答确定 PRD、文档和计划，再经过审批关卡完成实现的 Claude Code 技能。
@@ -32,15 +33,21 @@ meta + archē：通过问答确定 PRD、文档和计划，再经过审批关卡
 - 所有状态都保存在文件中，因此在 `/clear` 和上下文压缩之后也能继续。
 
 ## 环境要求
-- Windows 与 PowerShell 7（`pwsh`）。钩子是 PowerShell 脚本。
+- Windows、macOS 或 Linux，以及 PowerShell 7（`pwsh`）。钩子是 PowerShell 脚本，并通过[钩子测试](tests/hooks.test.ps1)在这三个系统上验证。
 - [Claude Code](https://code.claude.com/docs)
 - git（推荐）
 
 ## 安装
+Windows（PowerShell 7）：
 ~~~
 git clone https://github.com/metapbl/Metarche.git "$env:USERPROFILE\My Projects\metarche"
 New-Item -ItemType Directory -Force "$env:USERPROFILE\.claude\skills" | Out-Null
 New-Item -ItemType Junction -Path "$env:USERPROFILE\.claude\skills\metarche" -Target "$env:USERPROFILE\My Projects\metarche\skill"
+~~~
+macOS / Linux（请先安装 [PowerShell 7](https://learn.microsoft.com/powershell/scripting/install/installing-powershell)）：
+~~~
+git clone https://github.com/metapbl/Metarche.git ~/metarche
+mkdir -p ~/.claude/skills && ln -s ~/metarche/skill ~/.claude/skills/metarche
 ~~~
 在 Claude Code 的 `/skills` 中看到 `metarche` 即安装完成。更新时在仓库文件夹中运行 `git pull`。
 

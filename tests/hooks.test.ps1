@@ -53,7 +53,7 @@ Edit 'src/a.txt' | Out-Null
 Expect '이미 있는 표시 파일의 횟수는 그대로 둔다' ((Get-Content $mark -Raw).Trim() -eq '1')
 
 "finish.ps1"
-Remove-Item $mark
+Remove-Item -Force $mark
 Expect '표시 파일이 없으면 검사하지 않는다' ((Run 'finish.ps1' '{}').Code -eq 0)
 New-Item -ItemType File -Force $mark | Out-Null
 $r = Run 'finish.ps1' '{}'

@@ -49,7 +49,16 @@ The README languages are set by the project (PRD §5), independent of the langua
 - Dynamic badges such as stars, downloads and releases only for public repositories (a private one shows "repo not found").
 
 ## §4 Body
-- Contents (GitHub's recommendation): what it does (PRD §1) · why it is useful · install and usage (AGENTS.md commands, only ones that actually run, in code blocks) · where to get help · maintainers and license.
+Specific but short. The README is the front door: the path a first-time user follows is exact, and everything deeper lives in `docs/` and is linked. Too long beats too short, but when it grows, move content out instead of cutting it.
+
+- Sections, in this order (leave out what does not apply): what it does and why it is useful (PRD §1) · requirements · install · quick start · usage · project-specific sections · project status · help and contributing · security · credits · license.
+- Install: the basic case in a few lines, as copy-paste commands; other platforms and special cases in a short sub-section.
+- Quick start: the smallest real example from a fresh install, with the expected output or what the user sees. Use real commands from AGENTS.md that actually run.
+- After each code block, say in one sentence what happens when it runs.
+- Project status: what is tested and where, what is not tried yet, how much it may still change.
+- Help and contributing: where to ask questions and report bugs, whether pull requests are accepted and on what terms, and the commands a contributor must run (tests, linters).
+- Security: how to report a vulnerability privately (e.g. GitHub private vulnerability reporting), never in a public issue.
+- When a section turns into a tutorial, a how-to guide, reference or explanation beyond what a first-time user needs, move it to `docs/`, one kind per document, and link it from the README.
 - Link files inside the repository with relative links. Leave no broken links.
 - Put the license section last and give it as an SPDX identifier (e.g. `MIT`, `LGPL-2.1-or-later`).
 - Never include: secrets, real IP addresses, host or device names, personal data, internal paths (docs/SECURITY_POLICY.md §3 and §7).
@@ -65,7 +74,8 @@ The README languages are set by the project (PRD §5), independent of the langua
 
 ## §6 Checks (the README update task and audit item 16)
 - Every file in the language line exists, and each translation has as many `##` headings and badges as the English version.
-- Actually run the install and usage commands (dangerous commands: check they exist only).
+- Actually run the install and usage commands (dangerous commands: check they exist only). Follow the quick start from a fresh clone and compare with the expected output it shows.
+- The project status, help and contributing, and security sections exist and are current (status matches what was actually tested).
 - Every file a relative link points to exists.
 - Open the badge images. For badges with `logo=`, confirm the logo actually shows (an icon dropped from the set disappears silently).
 - In-page links (`#heading`) use each translation's own headings.

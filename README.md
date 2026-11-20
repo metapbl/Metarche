@@ -58,6 +58,17 @@ mkdir -p ~/.agents/skills && ln -s ~/metarche/skill ~/.agents/skills/metarche
 ~~~
 You are done when `metarche` appears in `/skills` in Claude Code or Codex. To update, run `git pull` in the repository folder.
 
+## Quick start
+In an empty folder, start your agent and call the skill (`$metarche new` in Codex). A first session looks like this; metarche talks in your language.
+~~~
+> /metarche new
+[metarche] Empty folder, so mode new. Next: stage 0, then the first question on purpose. Go ahead?
+> yes
+What problem should this project solve, and how do you handle it today?
+[metarche] stage 1 Purpose · 3 open · next: success scene, deadline
+~~~
+Answers go to `docs/discovery/QA_LOG.md` and decisions to `DECISIONS.md`. After stage 5 you approve `docs/PRD.md` and `docs/SECURITY_POLICY.md`; no code is written before that.
+
 ## Usage
 | Command | When |
 |---|---|
@@ -102,6 +113,19 @@ skill/
    ├─ readme.md        README standard for public repositories (language line, Shields.io badges)
    └─ templates/       PRD, SECURITY_POLICY, QA_LOG, OPEN, DECISIONS, AGENTS, CLAUDE, PROGRESS, REFERENCE, profile, hooks/, claude/, codex/
 ~~~
+
+## Project status
+- Used by the author on several projects (Windows, Claude Code).
+- Hook tests pass on Windows, macOS and Linux in CI.
+- The Codex adapter follows Codex's documentation but has not been run against Codex yet.
+- Still changing. Existing projects catch up with `/metarche upgrade`.
+
+## Help and contributing
+- Questions and bug reports: [GitHub Issues](https://github.com/metapbl/Metarche/issues).
+- Pull requests: open an issue first to agree on the change. Keep the skill text in English and free of personal tool names, and keep the hook tests passing: `pwsh -NoProfile -File tests/hooks.test.ps1`.
+
+## Security
+Report vulnerabilities privately through [GitHub private vulnerability reporting](https://github.com/metapbl/Metarche/security/advisories/new), not in a public issue.
 
 ## Credits
 Projects and articles this skill draws on are listed in [`NOTICE`](NOTICE).

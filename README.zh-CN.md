@@ -60,6 +60,17 @@ mkdir -p ~/.agents/skills && ln -s ~/metarche/skill ~/.agents/skills/metarche
 ~~~
 在 Claude Code 或 Codex 的 `/skills` 中看到 `metarche` 即安装完成。更新时在仓库文件夹中运行 `git pull`。
 
+## 快速开始
+在空文件夹中启动智能体并调用本技能（Codex 中为 `$metarche new`）。第一次会话如下所示；metarche 会用你的语言交流。
+~~~
+> /metarche new
+[metarche] Empty folder, so mode new. Next: stage 0, then the first question on purpose. Go ahead?
+> yes
+What problem should this project solve, and how do you handle it today?
+[metarche] stage 1 Purpose · 3 open · next: success scene, deadline
+~~~
+回答记录在 `docs/discovery/QA_LOG.md`，决定记录在 `DECISIONS.md`。在第 5 步批准 `docs/PRD.md` 和 `docs/SECURITY_POLICY.md` 之前，不会编写任何代码。
+
 ## 使用
 | 命令 | 何时使用 |
 |---|---|
@@ -104,6 +115,19 @@ skill/
    ├─ readme.md        公开仓库的 README 规范（语言行、Shields.io 徽章）
    └─ templates/       PRD、SECURITY_POLICY、QA_LOG、OPEN、DECISIONS、AGENTS、CLAUDE、PROGRESS、REFERENCE、profile、hooks/、claude/、codex/
 ~~~
+
+## 项目状态
+- 作者已在多个项目中使用（Windows、Claude Code）。
+- 钩子测试在 CI 中的 Windows、macOS、Linux 上均通过。
+- Codex 适配器按 Codex 官方文档编写，但尚未在 Codex 中实际运行。
+- 仍在变化中。现有项目通过 `/metarche upgrade` 跟进。
+
+## 帮助与贡献
+- 提问和报告缺陷：[GitHub Issues](https://github.com/metapbl/Metarche/issues)。
+- Pull request：请先开 issue 讨论改动。技能文本保持英文且不含个人工具名称，并确保钩子测试通过：`pwsh -NoProfile -File tests/hooks.test.ps1`。
+
+## 安全
+请通过 [GitHub 私密漏洞报告](https://github.com/metapbl/Metarche/security/advisories/new) 报告漏洞，不要发在公开 issue 中。
 
 ## 致谢
 本技能参考的项目和文章列在 [`NOTICE`](NOTICE) 中。

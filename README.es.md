@@ -60,6 +60,17 @@ mkdir -p ~/.agents/skills && ln -s ~/metarche/skill ~/.agents/skills/metarche
 ~~~
 Está listo cuando `metarche` aparece en `/skills` dentro de Claude Code o Codex. Para actualizar, ejecuta `git pull` en la carpeta del repositorio.
 
+## Inicio rápido
+En una carpeta vacía, inicia tu agente y llama a la skill (`$metarche new` en Codex). Una primera sesión se ve así; metarche habla en tu idioma.
+~~~
+> /metarche new
+[metarche] Empty folder, so mode new. Next: stage 0, then the first question on purpose. Go ahead?
+> yes
+What problem should this project solve, and how do you handle it today?
+[metarche] stage 1 Purpose · 3 open · next: success scene, deadline
+~~~
+Las respuestas van a `docs/discovery/QA_LOG.md` y las decisiones a `DECISIONS.md`. Hasta que apruebes `docs/PRD.md` y `docs/SECURITY_POLICY.md` en el paso 5, no se escribe código.
+
 ## Uso
 | Comando | Cuándo |
 |---|---|
@@ -104,6 +115,19 @@ skill/
    ├─ readme.md        norma de README para repositorios públicos (línea de idiomas, insignias de Shields.io)
    └─ templates/       PRD, SECURITY_POLICY, QA_LOG, OPEN, DECISIONS, AGENTS, CLAUDE, PROGRESS, REFERENCE, profile, hooks/, claude/, codex/
 ~~~
+
+## Estado del proyecto
+- El autor la usa en varios proyectos (Windows, Claude Code).
+- Las pruebas de hooks pasan en Windows, macOS y Linux en CI.
+- El adaptador de Codex sigue la documentación de Codex, pero aún no se ha ejecutado en Codex.
+- Sigue cambiando. Los proyectos existentes se ponen al día con `/metarche upgrade`.
+
+## Ayuda y contribuciones
+- Preguntas e informes de errores: [GitHub Issues](https://github.com/metapbl/Metarche/issues).
+- Pull requests: abre primero un issue para acordar el cambio. Mantén el texto de la skill en inglés y sin nombres de herramientas personales, y que las pruebas de hooks sigan pasando: `pwsh -NoProfile -File tests/hooks.test.ps1`.
+
+## Seguridad
+Informa de vulnerabilidades en privado mediante el [informe privado de vulnerabilidades de GitHub](https://github.com/metapbl/Metarche/security/advisories/new), no en un issue público.
 
 ## Créditos
 Los proyectos y artículos en los que se basa esta skill están en [`NOTICE`](NOTICE).

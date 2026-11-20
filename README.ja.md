@@ -60,6 +60,17 @@ mkdir -p ~/.agents/skills && ln -s ~/metarche/skill ~/.agents/skills/metarche
 ~~~
 Claude Code または Codex の `/skills` に `metarche` が表示されれば完了です。更新はリポジトリのフォルダーで `git pull` を実行します。
 
+## クイックスタート
+空のフォルダーでエージェントを起動し、スキルを呼び出します（Codex では `$metarche new`）。最初のセッションは次のように進み、metarche はあなたの言語で話します。
+~~~
+> /metarche new
+[metarche] Empty folder, so mode new. Next: stage 0, then the first question on purpose. Go ahead?
+> yes
+What problem should this project solve, and how do you handle it today?
+[metarche] stage 1 Purpose · 3 open · next: success scene, deadline
+~~~
+回答は `docs/discovery/QA_LOG.md` に、決定は `DECISIONS.md` に記録されます。ステップ 5 で `docs/PRD.md` と `docs/SECURITY_POLICY.md` を承認するまで、コードは書きません。
+
 ## 使い方
 | コマンド | いつ使うか |
 |---|---|
@@ -104,6 +115,19 @@ skill/
    ├─ readme.md        公開リポジトリの README 規格（言語行、Shields.io バッジ）
    └─ templates/       PRD・SECURITY_POLICY・QA_LOG・OPEN・DECISIONS・AGENTS・CLAUDE・PROGRESS・REFERENCE・profile、hooks/、claude/、codex/
 ~~~
+
+## プロジェクトの状況
+- 作者が複数のプロジェクトで使っています（Windows、Claude Code）。
+- フックのテストは CI で Windows、macOS、Linux のすべてで通っています。
+- Codex アダプターは Codex の公式ドキュメントに沿って作成しましたが、まだ Codex で実行していません。
+- まだ変わり続けています。既存のプロジェクトは `/metarche upgrade` で追従します。
+
+## サポートと貢献
+- 質問とバグ報告：[GitHub Issues](https://github.com/metapbl/Metarche/issues)。
+- Pull request：まず issue を開いて変更内容を相談してください。スキルの文章は英語で、個人のツール名を含めず、フックのテストを通してください：`pwsh -NoProfile -File tests/hooks.test.ps1`。
+
+## セキュリティ
+脆弱性は公開の issue ではなく、[GitHub の非公開脆弱性報告](https://github.com/metapbl/Metarche/security/advisories/new)で報告してください。
 
 ## クレジット
 このスキルが参考にしたプロジェクトと記事は [`NOTICE`](NOTICE) にあります。

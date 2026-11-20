@@ -60,6 +60,17 @@ mkdir -p ~/.agents/skills && ln -s ~/metarche/skill ~/.agents/skills/metarche
 ~~~
 Claude Code나 Codex의 `/skills`에 `metarche`가 보이면 끝입니다. 갱신은 저장소 폴더에서 `git pull`을 실행합니다.
 
+## 빠른 시작
+빈 폴더에서 에이전트를 실행하고 스킬을 부릅니다(Codex에서는 `$metarche new`). 첫 세션은 아래처럼 진행되고, metarche는 사용자의 언어로 말합니다.
+~~~
+> /metarche new
+[metarche] Empty folder, so mode new. Next: stage 0, then the first question on purpose. Go ahead?
+> yes
+What problem should this project solve, and how do you handle it today?
+[metarche] stage 1 Purpose · 3 open · next: success scene, deadline
+~~~
+답은 `docs/discovery/QA_LOG.md`에, 결정은 `DECISIONS.md`에 기록됩니다. 5단계에서 `docs/PRD.md`와 `docs/SECURITY_POLICY.md`를 승인하기 전에는 코드를 쓰지 않습니다.
+
 ## 사용
 | 명령 | 언제 |
 |---|---|
@@ -104,6 +115,19 @@ skill/
    ├─ readme.md        공개 저장소의 README 규격 (언어 줄, Shields.io 배지)
    └─ templates/       PRD·SECURITY_POLICY·QA_LOG·OPEN·DECISIONS·AGENTS·CLAUDE·PROGRESS·REFERENCE·profile, hooks/, claude/, codex/
 ~~~
+
+## 프로젝트 상태
+- 작성자가 여러 프로젝트에서 쓰고 있습니다(Windows, Claude Code).
+- 훅 시험은 CI에서 Windows, macOS, Linux 모두 통과합니다.
+- Codex 어댑터는 Codex 공식 문서대로 만들었지만 아직 Codex에서 실행해 보지 않았습니다.
+- 계속 바뀌고 있습니다. 기존 프로젝트는 `/metarche upgrade`로 따라옵니다.
+
+## 도움과 기여
+- 질문과 버그 제보: [GitHub Issues](https://github.com/metapbl/Metarche/issues).
+- Pull request: 먼저 이슈를 열어 변경을 협의해 주세요. 스킬 문장은 영어로, 개인 도구 이름 없이 쓰고, 훅 시험이 통과해야 합니다: `pwsh -NoProfile -File tests/hooks.test.ps1`.
+
+## 보안
+취약점은 공개 이슈가 아니라 [GitHub 비공개 취약점 제보](https://github.com/metapbl/Metarche/security/advisories/new)로 알려 주세요.
 
 ## 출처
 이 스킬이 참고한 프로젝트와 글은 [`NOTICE`](NOTICE)에 있습니다.

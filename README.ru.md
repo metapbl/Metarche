@@ -60,6 +60,17 @@ mkdir -p ~/.agents/skills && ln -s ~/metarche/skill ~/.agents/skills/metarche
 ~~~
 Готово, когда `metarche` появится в `/skills` в Claude Code или Codex. Для обновления выполните `git pull` в папке репозитория.
 
+## Быстрый старт
+В пустой папке запустите агента и вызовите навык (`$metarche new` в Codex). Первая сессия выглядит так; metarche общается на вашем языке.
+~~~
+> /metarche new
+[metarche] Empty folder, so mode new. Next: stage 0, then the first question on purpose. Go ahead?
+> yes
+What problem should this project solve, and how do you handle it today?
+[metarche] stage 1 Purpose · 3 open · next: success scene, deadline
+~~~
+Ответы записываются в `docs/discovery/QA_LOG.md`, решения — в `DECISIONS.md`. Пока на шаге 5 вы не утвердите `docs/PRD.md` и `docs/SECURITY_POLICY.md`, код не пишется.
+
 ## Использование
 | Команда | Когда |
 |---|---|
@@ -104,6 +115,19 @@ skill/
    ├─ readme.md        стандарт README для публичных репозиториев (строка языков, значки Shields.io)
    └─ templates/       PRD, SECURITY_POLICY, QA_LOG, OPEN, DECISIONS, AGENTS, CLAUDE, PROGRESS, REFERENCE, profile, hooks/, claude/, codex/
 ~~~
+
+## Состояние проекта
+- Автор использует навык в нескольких проектах (Windows, Claude Code).
+- Тесты хуков проходят в CI на Windows, macOS и Linux.
+- Адаптер для Codex написан по документации Codex, но в Codex ещё не запускался.
+- Навык ещё меняется. Существующие проекты догоняют изменения через `/metarche upgrade`.
+
+## Помощь и участие
+- Вопросы и сообщения об ошибках: [GitHub Issues](https://github.com/metapbl/Metarche/issues).
+- Pull request: сначала откройте issue и согласуйте изменение. Текст навыка — на английском и без названий личных инструментов; тесты хуков должны проходить: `pwsh -NoProfile -File tests/hooks.test.ps1`.
+
+## Безопасность
+Сообщайте об уязвимостях приватно через [приватные отчёты об уязвимостях GitHub](https://github.com/metapbl/Metarche/security/advisories/new), а не в публичном issue.
 
 ## Благодарности
 Проекты и статьи, на которые опирается этот навык, перечислены в [`NOTICE`](NOTICE).

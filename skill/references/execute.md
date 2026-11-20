@@ -8,15 +8,15 @@ Input: the active plan and the PROGRESS head (injected by a hook). Do nothing th
    - If the task touches authentication, permissions, encryption, secrets or data of class sensitive or above, read the relevant section of `docs/SECURITY_POLICY.md` and say that you will follow it.
 3. (When possible) failing test → implementation → test passes.
    - Never make tests pass by disabling or deleting them or by changing expected values. If a test change outside the plan seems needed, stop, show why and ask.
-4. Run the check command, and also the full test command if CLAUDE.md has one; show the output as evidence. If a test from an earlier task broke, fix it before moving on.
+4. Run the check command, and also the full test command if AGENTS.md has one; show the output as evidence. If a test from an earlier task broke, fix it before moving on.
    - Also show how long the full test run took. If it exceeds the PRD §6 baseline, do not stop; add to "open problems" in PROGRESS: `full test N s, over baseline — decide whether to run only related tests per task and the full suite at acceptance`, and say so. If that is decided, change PRD §6 through discover.md §7.
 5. Tick the checkbox and propose a commit message. Commit only after approval.
-   - If step 2 was security work, run `/security-review` before proposing the commit and show the findings and how they were handled.
+   - If step 2 was security work, run a security review of the changes before proposing the commit (agents.md §6) and show the findings and how they were handled.
 
 ## §stop — when to stop
 - If the same check fails twice, stop fixing and switch to the §debug procedure.
 - If a check needs a real device, an external service, the screen or sound, give the items and expected results, add them to "waiting for checks" in PROGRESS, and wait. When the results come, follow §results.
-- A finding that requires changing the PRD goes back to `/metarche discover`. If only the plan changes, show the revised plan and get approval.
+- A finding that requires changing the PRD goes back to metarche `discover`. If only the plan changes, show the revised plan and get approval.
 - New questions go into `docs/discovery/OPEN.md`.
 - Results settled during the build with a separate interview tool are written to DECISIONS. If they touch the PRD, go through discover.md §7; if they touch the plan, revise the plan.
 - If you find a security problem (an exposed secret, a permission bypass), stop the current work and follow security.md §7.
@@ -49,7 +49,7 @@ When copying logs, requests or responses into the conversation or a document, re
 5. If actual behavior or an interface drifted from PRD §3 this session, show the difference and propose a PRD change (discover.md §7). If the documents lag behind the code, the next session trusts wrong documents.
 6. Show the head's line count as evidence:
    `(Get-Content docs/PROGRESS.md | Select-String -Pattern 'head:end').LineNumber`
-7. Say that the next session can start after `/clear`.
+7. Say that the next session can start in a fresh context.
 
 ## §improve — where to stop the same mistake
 Prevent what can be enforced with checks rather than documents. Consider the rows of this table from the top.
@@ -58,10 +58,10 @@ Prevent what can be enforced with checks rather than documents. Consider the row
 |---|---|
 | A machine can judge it (banned imports or calls, types, formatting) | linter or type-check config and rules (ruff, semgrep, import-linter, etc.), run by the check hook on edit |
 | A recurring behavior bug | a regression test that catches it |
-| A recurring judgment mistake in this project (no machine can judge it) | CLAUDE.md "rules for this project" (source T#) |
+| A recurring judgment mistake in this project (no machine can judge it) | AGENTS.md "rules for this project" (source T#) |
 | The cause is an external spec or the environment | REFERENCE trap log |
-| Behavior that must never happen | settings.json permissions or a hook |
-| Recurs across projects | ~/.claude/CLAUDE.md |
-| A recurring multi-step task | a project skill (`.claude/skills/`) |
+| Behavior that must never happen | agent permissions or a hook (agents.md) |
+| Recurs across projects | the global instructions |
+| A recurring multi-step task | a project skill (`.agents/skills/`, or `.claude/skills/` for Claude Code) |
 
-Propose as "what, where, why (T#, commit)" and apply after approval. If CLAUDE.md would exceed 60 lines, move it to REFERENCE instead.
+Propose as "what, where, why (T#, commit)" and apply after approval. If AGENTS.md would exceed 60 lines, move it to REFERENCE instead.

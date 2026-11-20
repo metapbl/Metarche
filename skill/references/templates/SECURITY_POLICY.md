@@ -46,7 +46,7 @@ Status: draft | Level: basic | L1 | L2 | L3 | Updated: YYYY-MM-DD
 - Who to contact and who decides:
 - Procedure: follow the default in security.md §7 | {what differs}
 
-## 10. Applied in Claude Code (filled in the docs stage)
+## 10. Applied in the agents (filled in the docs stage)
 - Deny rules:
-- security-guidance plugin: used | not used (why)
+- security-guidance plugin (Claude Code): used | not used (why)
 - Per-file security checks:

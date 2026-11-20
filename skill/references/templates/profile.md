@@ -1,8 +1,8 @@
 # Global instructions
 
-<!-- Location: ~/.claude/CLAUDE.md. Loaded into every project and every session. -->
+<!-- Location: ~/.claude/CLAUDE.md (Claude Code) or ~/.codex/AGENTS.md (Codex). Loaded into every project and every session. -->
 <!-- Only what is true for every project and task and cannot be learned from code or docs. About 20 lines. -->
-<!-- Leave out: languages and stacks (in project files), commit rules (ask rules in ~/.claude/settings.json), how to call skills. -->
+<!-- Leave out: languages and stacks (in project files), commit rules (the agents' ask rules), how to call skills. -->
 
 ## Communication
 - Language (metarche writes project documents in it), order of answers, how options are presented

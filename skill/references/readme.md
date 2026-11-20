@@ -49,7 +49,7 @@ The README languages are set by the project (PRD §5), independent of the langua
 - Dynamic badges such as stars, downloads and releases only for public repositories (a private one shows "repo not found").
 
 ## §4 Body
-- Contents (GitHub's recommendation): what it does (PRD §1) · why it is useful · install and usage (CLAUDE.md commands, only ones that actually run, in code blocks) · where to get help · maintainers and license.
+- Contents (GitHub's recommendation): what it does (PRD §1) · why it is useful · install and usage (AGENTS.md commands, only ones that actually run, in code blocks) · where to get help · maintainers and license.
 - Link files inside the repository with relative links. Leave no broken links.
 - Put the license section last and give it as an SPDX identifier (e.g. `MIT`, `LGPL-2.1-or-later`).
 - Never include: secrets, real IP addresses, host or device names, personal data, internal paths (docs/SECURITY_POLICY.md §3 and §7).

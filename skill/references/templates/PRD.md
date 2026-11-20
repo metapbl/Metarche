@@ -50,6 +50,7 @@ Status: draft | Stage: 1 Purpose | Updated: YYYY-MM-DD
 - End-of-turn checks — project-wide (commands that take no path, e.g. `cargo clippy`, `tsc --noEmit`):
 - Dangerous commands (ask before running):
 - Version control (commit unit, message format):
+- Agents that will work on the project (Claude Code, Codex, others):
 
 ## 7. Open questions
 → `docs/discovery/OPEN.md`

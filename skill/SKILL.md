@@ -1,8 +1,9 @@
 ---
 name: metarche
-description: "Sets a project's first principles. A Q&A interview settles an approved PRD, then the skill writes Claude Code docs (CLAUDE.md, PROGRESS, REFERENCE) and a plan, and repeats build, verify and record behind approval gates. For starting a project (new), adopting an existing one (adopt), ending a session (wrap), auditing docs (audit) and applying skill revisions (upgrade). State lives in files, so it survives /clear and compaction."
+description: "Sets a project's first principles. A Q&A interview settles an approved PRD, then the skill writes the agent docs (AGENTS.md, PROGRESS, REFERENCE) and a plan, and repeats build, verify and record behind approval gates. For starting a project (new), adopting an existing one (adopt), ending a session (wrap), auditing docs (audit) and applying skill revisions (upgrade). State lives in files, so it survives /clear and compaction."
 argument-hint: "[new|adopt|discover|docs|plan|build|wrap|audit|upgrade|status]"
 disable-model-invocation: true
+compatibility: "Works with any agent that reads Agent Skills and AGENTS.md. Hook adapters for Claude Code and Codex; hooks need PowerShell 7 (pwsh). Other agents run on instructions only."
 ---
 
 # metarche — meta + archē
@@ -11,14 +12,17 @@ For each project, set its first principles (purpose, scope, rules) through an in
 then write the documents and the code by those principles.
 
 ## Language
-- These instructions are in English. Speak to the user, and write every project document (PRD, SECURITY_POLICY, CLAUDE.md, PROGRESS, REFERENCE, plans, discovery files), in the user's language: the language of `~/.claude/CLAUDE.md`, otherwise the language the user writes in. Translate template headings and labels when you create the files.
+- These instructions are in English. Speak to the user, and write every project document (PRD, SECURITY_POLICY, AGENTS.md, PROGRESS, REFERENCE, plans, discovery files), in the user's language: the language of the global instructions (agents.md §1), otherwise the language the user writes in. Translate template headings and labels when you create the files.
 - Keep these markers exactly as written, in any document language, because hooks and stage detection read them: `Status: …` lines, `<!-- metarche -->`, `<!-- metarche:draft -->`, `<!-- head:end -->`, the IDs `Q###` `D###` `F#` `T#` `R§n` `U#`, and the source tags `[U]` `[X]` `[AI]`.
 - Projects created before the English version of this skill use `상태:` instead of `Status:`. Read it the same way; upgrade U7 migrates it.
+
+## Agents
+metarche works with any agent that reads Agent Skills and AGENTS.md. Shared parts and per-agent adapters (Claude Code, Codex, others) are in `references/agents.md`; read it when an instruction names an agent-specific feature (a question tool, clearing context, hooks, permissions, security review).
 
 ## Rules
 1. **Nothing starts before its gate.** Before the PRD is approved: no code, no scaffolding, no dependency installs, no config files. The document set and the plan each move on only after their own approval.
 2. **State lives in files.** Write answers, decisions and errors to files as soon as they come up. A fact that exists only in the conversation is lost after compaction.
-3. **Read first, then ask.** If the code, the docs or the global profile (`~/.claude/CLAUDE.md`) already answers a question, do not ask it; only confirm.
+3. **Read first, then ask.** If the code, the docs or the global instructions (agents.md §1) already answer a question, do not ask it; only confirm.
 4. **Mark the source.** Every decision carries `[U]` (the user said it), `[X]` (taken from existing code or docs) or `[AI]` (a default the AI filled in). Always show `[X]` and `[AI]` items in the read-back.
 5. **Read only what you need.** Read only the references files the current stage needs. Search `QA_LOG.md`; never read it whole.
 6. **No "done" without evidence.** Declare completion only from a check command's output or the user's result on the real device.
@@ -32,11 +36,13 @@ Report the detected state and the next action in one line and get confirmation.
 | Condition | Mode |
 |---|---|
 | `docs/discovery/OPEN.md` exists and the `Status:` of `docs/PRD.md` is not `approved` | discover (resume) |
-| PRD `approved`, and the first line of the root `CLAUDE.md` is not `<!-- metarche -->` (no file, or `<!-- metarche:draft -->`) | docs |
-| `CLAUDE.md` starts with `<!-- metarche -->` and no plan in `docs/plans/` has `Status: active` | plan |
+| PRD `approved`, and the first line of the root `AGENTS.md` is not `<!-- metarche -->` (no file, or `<!-- metarche:draft -->`) | docs |
+| `AGENTS.md` starts with `<!-- metarche -->` and no plan in `docs/plans/` has `Status: active` | plan |
 | `docs/PROGRESS.md` and a plan with `Status: active` exist | build |
 | Code or docs exist but none of the files above | adopt |
 | The folder is empty (nothing but `.git` and `.claude`) | new |
+
+Projects created before the agent-neutral layout keep the marker on the first line of `CLAUDE.md`; treat it the same and suggest upgrade U8.
 
 `status` reports only the detected state, the current stage and the number of open questions, then stops.
 
@@ -50,7 +56,7 @@ Report the detected state and the next action in one line and get confirmation.
 | 3 Features | discover | discover.md §1–3 | PRD §3 | read-back |
 | 4 Approach | discover | discover.md §4, security.md §1–6 | PRD §4–5, SECURITY_POLICY | option choice |
 | 5 Settle | discover | discover.md §5 | PRD and SECURITY_POLICY `approved` | **PRD and security policy approval** |
-| 6 Docs | docs | docs.md, security.md §8 | CLAUDE.md, PROGRESS, REFERENCE, settings | docs approval |
+| 6 Docs | docs | docs.md, agents.md, security.md §8 | AGENTS.md (+ CLAUDE.md bridge), PROGRESS, REFERENCE, hooks, agent adapters | docs approval |
 | 7 Plan | plan | plan.md (readme.md if the repository is public) | `docs/plans/YYYY-MM-DD-*.md` | plan approval |
 | 8 Build | build | execute.md | code, records | per task |
 | 9 Improve | build | execute.md §improve | rule and skill proposals | proposal approval |

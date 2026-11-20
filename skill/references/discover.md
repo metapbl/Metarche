@@ -5,7 +5,7 @@
 Before starting, copy `PRD.md` and `SECURITY_POLICY.md` from `templates/` to `docs/`, and `QA_LOG.md` and `DECISIONS.md` to `docs/discovery/`. Do not overwrite files that already exist. (Both new and adopt.)
 Do not copy `OPEN.md` here; create it in step 4. Once OPEN exists, stage detection goes to discover, so creating it before adopt finishes would skip the adoption on resume.
 
-1. Read the global profile `~/.claude/CLAUDE.md` and mark the items it already answers.
+1. Read the global instructions (agents.md §1) and mark the items it already answers.
 2. Survey the project folder: README, existing docs, dependency files, entry points, folder structure, `git log --oneline -20`.
 3. Write what you learned to `docs/discovery/QA_LOG.md` as `[X]` entries. An entry that is only an answer, with no question, still gets a Q number.
 4. Create the first `docs/discovery/OPEN.md` from `templates/OPEN.md`. From the §2 question bank pick only the questions that apply, drop those exploration already answered, and order them by priority.
@@ -19,7 +19,7 @@ Do not copy `OPEN.md` here; create it in step 4. Once OPEN exists, stage detecti
 - Big questions (purpose, users, success criterion, non-goals) one at a time. Shape the next question from the answer.
 - Group detailed questions 3–6 at a time, numbered. Each item reads `n. question — recommended: X (reason)`.
 - Do not put a question in a group if it depends on another question in that group that has not been answered yet. Move it to the next group.
-- When the options are clear, make it multiple choice. Use the AskUserQuestion tool when available.
+- When the options are clear, make it multiple choice. Use the agent's multiple-choice question tool when it has one (agents.md §6).
 - If an answer is ambiguous, offer one interpretation and ask whether it is right. Never interpret silently.
 - If the user says "I don't know", fill in the recommendation as `[AI]` and leave a `re-check` mark in OPEN.
 - If the user answers with a question, answer it first, then return to the original question.
@@ -54,7 +54,7 @@ Pick only what is needed. Do not ask what the profile or the exploration already
 
 ### 4 Approach
 - Runtime environment (OS, language version, network) and distribution form (exe, web, script).
-- Language skill: if a language skill for the main language is installed (a skill under `~/.claude/skills/` with a `references/metarche.md`), read that file and follow it. Otherwise use this question bank.
+- Language skill: if a language skill for the main language is installed (a skill installed next to this one, with a `references/metarche.md`), read that file and follow it. Otherwise use this question bank.
 - Ask about key technology choices with the §4 comparison form.
 - External dependencies (libraries, APIs, hardware) and alternatives.
 - Where and in what format data is stored; config files.
@@ -66,8 +66,9 @@ Pick only what is needed. Do not ask what the profile or the exploration already
 - The full test command and how long it takes. If there is no test tool, what to use. Also set a baseline time — recommended: 60 seconds (if exceeded, decide again whether to run only the related tests per task).
 - Which check (linter, formatter) runs on each file when it is edited? Only commands that take the edited file's path. This becomes the check hook (docs.md §5).
 - Which project-wide check runs when work ends (commands that take no file path, such as compiling or type checking)? This becomes the finish hook (docs.md §5).
-- Which commands are dangerous (deploy, remote database, mass deletion)? These become ask-first rules in settings.json.
+- Which commands are dangerous (deploy, remote database, mass deletion)? These become ask-first rules in the agent adapters.
 - Version control: commit unit, message format, branches.
+- Which coding agents will work on this project (Claude Code, Codex, others)? — recommended: the one running now. Each gets its adapter in the docs stage (agents.md).
 - Is the repository public? If so, who the README is for (developers or general users) and which languages — recommended: the six in readme.md §1 (English default). This becomes the README task in the plan.
 
 ## §3 Read-back form
@@ -114,14 +115,14 @@ Record the choice in DECISIONS together with the rejected options and why. This 
 ## §5 Settle the PRD
 
 1. Check that every section of `docs/PRD.md` and `docs/SECURITY_POLICY.md` is filled and every decision has a source mark. Delete security policy fields that do not apply.
-2. Start a reviewer subagent. Give it only PRD.md and SECURITY_POLICY.md, no conversation context. Instruction:
+2. Start a reviewer subagent (agents.md §6). Give it only PRD.md and SECURITY_POLICY.md, no conversation context. Instruction:
    > You are an engineer seeing this project for the first time. Read only the attached PRD.md and SECURITY_POLICY.md and answer. List item by item: (1) places where these documents alone are not enough to start implementing, (2) sentences that contradict each other, (3) success criteria with no way to check them, (4) features whose exception behavior is undefined, (5) features with no Given–When–Then acceptance criteria, or criteria that cannot become tests as written, (6) data or components in the PRD missing from the security policy's classification or component tables, and features that involve permissions or sensitive data but have no security acceptance criterion. Do not fill gaps with guesses; if there is nothing, say "none".
 3. Show the findings and how each will be handled. Put only real gaps into OPEN and ask about them.
 4. When there are no gaps, open the gate.
    > [Gate] Do you approve the PRD and the security policy? Until you do, I will not write code, scaffold or install dependencies. If something needs fixing, tell me its number.
 5. On approval, set the `Status:` line at the top of both the PRD and the security policy to `approved (YYYY-MM-DD)`. If git is present, propose a `docs: approve PRD` commit and point to the next stage (docs).
 
-## §6 Resume (new session, /clear, after compaction)
+## §6 Resume (new session, cleared context, after compaction)
 
 1. Read only `OPEN.md` and the head of `PRD.md` (status, stage). If `docs/SECURITY_POLICY.md` is missing, copy it from `templates/` (projects started before the skill had it).
 2. Search `QA_LOG.md` only for the Q numbers you need.

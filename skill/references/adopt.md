@@ -35,7 +35,7 @@ When done, continue from step 4 of discover.md §0 (create OPEN).
 
 ## §4 Existing documents
 - Do not delete them. After approval move them to `docs/legacy/` and keep them for reference until the new documents are approved.
-- The root CLAUDE.md is created anew in the docs stage after the move.
+- The root AGENTS.md (and the CLAUDE.md bridge) is created anew in the docs stage after the move.
 
 ## §5 Next
 After the read-back, with a draft PRD in place, continue from step 4 of discover.md §0 and ask only about the gaps. From there it is the same as a new project.

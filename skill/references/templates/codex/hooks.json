@@ -1,0 +1,34 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          { "type": "command", "command": "pwsh -NoProfile -File .metarche/hooks/progress-head.ps1", "statusMessage": "metarche: loading PROGRESS" }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "^(apply_patch|Edit|Write)$",
+        "hooks": [
+          { "type": "command", "command": "pwsh -NoProfile -File .metarche/hooks/gate.ps1" }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "^(apply_patch|Edit|Write)$",
+        "hooks": [
+          { "type": "command", "command": "pwsh -NoProfile -File .metarche/hooks/check.ps1" }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          { "type": "command", "command": "pwsh -NoProfile -File .metarche/hooks/finish.ps1", "statusMessage": "metarche: end-of-turn checks" }
+        ]
+      }
+    ]
+  }
+}

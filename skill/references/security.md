@@ -1,7 +1,7 @@
 # security — security policy
 
 Ask the security questions in discover stage 4 and approve `docs/SECURITY_POLICY.md` together with the PRD in stage 5.
-The docs stage carries the policy into Claude Code settings; the build and audit stages check against it.
+The docs stage carries the policy into the agent adapters; the build and audit stages check against it.
 The baseline is OWASP ASVS 5.0 (V numbers) and OWASP Top 10:2025 (A numbers). Their text is not copied; only chapter numbers are cited.
 
 ## §1 Questions (discover stage 4)
@@ -97,13 +97,13 @@ When a security problem is found during the build:
 4. Search the whole repository for the same kind of problem.
 5. Record the cause in the trap log (T#), and if a machine can catch it, add a check (check hook, security pattern).
 
-## §8 Carrying it into Claude Code (docs stage)
+## §8 Carrying it into the agents (docs stage)
 | Policy | Goes to |
 |---|---|
-| Secret locations | settings.json `permissions.deny` (`Read`, `Edit`) |
-| Review criteria (this project's lines from §5) | `.claude/claude-security-guidance.md` (under 8 KB) |
-| Banned patterns a machine can catch | `.claude/security-patterns.json`, security linters in the check hook (semgrep, bandit, etc.) |
-| Dependency check command | CLAUDE.md commands section, audit |
+| Secret locations | Claude Code: `.claude/settings.json` `permissions.deny` (`Read`, `Edit`); every agent: the AGENTS.md secret-file rule |
+| Review criteria (this project's lines from §5) | Claude Code with the security-guidance plugin: `.claude/claude-security-guidance.md` (under 8 KB) |
+| Banned patterns a machine can catch | security linters in the check hook; with the plugin also `.claude/security-patterns.json` (semgrep, bandit, etc.) |
+| Dependency check command | AGENTS.md commands section, audit |
 
-- `claude-security-guidance.md` and `security-patterns.json` are read by the official security-guidance plugin. Create them only when the plugin is used (docs.md §5).
+- `claude-security-guidance.md` and `security-patterns.json` are read by the official security-guidance plugin for Claude Code. Create them only when the plugin is used (docs.md §5).
 - Limit: deny rules block commands that name the file, such as `cat .env`, but not indirect reads through `grep -r` or a script. OS-level blocking is the sandbox's job, and native Windows does not support it (WSL2 needed). This is why, from L2, production secrets do not belong on the development machine.

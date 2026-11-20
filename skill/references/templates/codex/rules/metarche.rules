@@ -1,0 +1,4 @@
+# metarche: ask before committing or pushing. Codex rules are experimental; check with
+#   codex execpolicy check --rules .codex/rules/metarche.rules -- git push
+prefix_rule(pattern = ["git", "commit"], decision = "prompt", justification = "metarche: commits need the user's approval")
+prefix_rule(pattern = ["git", "push"], decision = "prompt", justification = "metarche: pushes need the user's approval")

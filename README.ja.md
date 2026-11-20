@@ -14,13 +14,13 @@
 
 <p align="center">
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-blue?style=flat-square"></a>
-  <a href="#インストール"><img alt="Claude Code skill" src="https://img.shields.io/badge/Claude_Code-skill-D97757?style=flat-square&logo=claude&logoColor=white"></a>
+  <a href="#インストール"><img alt="Agent Skill for Claude Code and Codex" src="https://img.shields.io/badge/Agent_Skill-Claude_Code_%7C_Codex-D97757?style=flat-square"></a>
   <a href="#必要環境"><img alt="Platform: Windows, macOS, Linux" src="https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-0078D4?style=flat-square"></a>
   <a href="#必要環境"><img alt="PowerShell 7" src="https://img.shields.io/badge/PowerShell-7-5391FE?style=flat-square"></a>
   <a href="https://github.com/metapbl/Metarche/actions/workflows/hooks.yml"><img alt="Hook tests" src="https://img.shields.io/github/actions/workflow/status/metapbl/Metarche/hooks.yml?branch=main&style=flat-square&label=hook%20tests"></a>
 </p>
 
-meta + archē：質疑応答で PRD・ドキュメント・計画を固め、承認ゲートを通して実装まで進める Claude Code スキル。
+meta + archē：質疑応答で PRD・ドキュメント・計画を固め、承認ゲートを通して実装まで進めるエージェントスキル。
 
 > [!NOTE]
 > スキルの指示文は英語で書かれています。あなたとの会話とプロジェクトのドキュメント（PRD、CLAUDE.md、計画）には、あなたの言語を使います。
@@ -28,13 +28,13 @@ meta + archē：質疑応答で PRD・ドキュメント・計画を固め、承
 ## できること
 - 質疑応答で目的・範囲・機能・方式を決め、PRD の承認を求めます。
 - セキュリティレベルとポリシー（データ分類、クライアントとサーバーの信頼境界、暗号化）を決め、PRD と一緒に承認を受けます。
-- Claude Code に必要なドキュメント（CLAUDE.md、PROGRESS、REFERENCE）と権限ルール・フックを作ります。フックは編集時チェック、ターン終了時のプロジェクトチェック、PRD ゲート、進捗の注入です。
+- プロジェクトのドキュメント（AGENTS.md、PROGRESS、REFERENCE）を作り、エージェントごとにフックと権限を組み込みます。フックは編集時チェック、ターン終了時のプロジェクトチェック、PRD ゲート、進捗の注入です。Claude Code と Codex 用のアダプターがあり、その他のエージェントはフックなしで AGENTS.md に従います。
 - 作業計画を立て、各ステップで承認を得ながら 実装 → 確認 → 記録 を繰り返します。
 - すべての状態をファイルに置くので、`/clear` やコンテキスト圧縮のあとも続けられます。
 
 ## 必要環境
 - Windows、macOS、Linux のいずれかと PowerShell 7（`pwsh`）。フックは PowerShell スクリプトで、3 つの OS すべてで[フックのテスト](tests/hooks.test.ps1)により確認しています。
-- [Claude Code](https://code.claude.com/docs)
+- Agent Skills と AGENTS.md を読むコーディングエージェント：[Claude Code](https://code.claude.com/docs)（テスト済み）または [Codex](https://learn.chatgpt.com/docs/build-skills)（公式ドキュメントに沿ってアダプターを作成、実行は未確認）。その他のエージェントはフックなしで動作します。
 - git（推奨）
 
 ## インストール
@@ -49,7 +49,16 @@ macOS / Linux（先に [PowerShell 7](https://learn.microsoft.com/powershell/scr
 git clone https://github.com/metapbl/Metarche.git ~/metarche
 mkdir -p ~/.claude/skills && ln -s ~/metarche/skill ~/.claude/skills/metarche
 ~~~
-Claude Code の `/skills` に `metarche` が表示されれば完了です。更新はリポジトリのフォルダーで `git pull` を実行します。
+Codex（同じフォルダーを `~/.agents/skills` の下にリンク）、Windows：
+~~~
+New-Item -ItemType Directory -Force "$env:USERPROFILE\.agents\skills" | Out-Null
+New-Item -ItemType Junction -Path "$env:USERPROFILE\.agents\skills\metarche" -Target "$env:USERPROFILE\My Projects\metarche\skill"
+~~~
+macOS / Linux:
+~~~
+mkdir -p ~/.agents/skills && ln -s ~/metarche/skill ~/.agents/skills/metarche
+~~~
+Claude Code または Codex の `/skills` に `metarche` が表示されれば完了です。更新はリポジトリのフォルダーで `git pull` を実行します。
 
 ## 使い方
 | コマンド | いつ使うか |
@@ -64,7 +73,7 @@ Claude Code の `/skills` に `metarche` が表示されれば完了です。更
 | `/metarche upgrade` | スキルの改訂を既存プロジェクトのフック・設定・ドキュメントに反映 |
 | `/metarche status` | 現在の段階と未解決の質問数だけを報告 |
 
-このスキルは自動では呼び出されません（`disable-model-invocation: true`）。呼び出したときだけ動作します。
+このスキルは自動では呼び出されません（`disable-model-invocation: true`）。呼び出したときだけ動作します。Codex では `$metarche` で呼び出します（例：`$metarche new`）。`agents/openai.yaml` が Codex による自動呼び出しを止めます。
 
 ## 言語スキル
 Metarche 自体は特定の言語に依存しません。言語スキルが、ある言語に必要な値を追加します。`~/.claude/skills/` 以下のスキルに `references/metarche.md` があれば、Metarche は質疑応答（ステップ 4）・ドキュメント・計画の段階でそれを読みます。なければ Metarche だけでそのまま進みます。
@@ -81,6 +90,7 @@ Metarche 自体は特定の言語に依存しません。言語スキルが、�
 ~~~
 skill/
 ├─ SKILL.md            入口：原則、状態の判定、段階マップ
+├─ agents/openai.yaml  Codex：呼び出したときだけ実行
 └─ references/
    ├─ discover.md      ステップ 0–5：質疑応答、PRD の確定と変更
    ├─ docs.md          ステップ 6：ドキュメント
@@ -88,10 +98,11 @@ skill/
    ├─ execute.md       ステップ 8–9：実装と改善、wrap
    ├─ audit.md         点検
    ├─ adopt.md         既存プロジェクトの移行
+   ├─ agents.md        共通の核とエージェント別アダプター（Claude Code、Codex、その他）
    ├─ security.md      セキュリティポリシー（レベル、データ分類、信頼境界、暗号化）
    ├─ upgrade.md       スキルの改訂を既存プロジェクトに反映（改訂台帳）
    ├─ readme.md        公開リポジトリの README 規格（言語行、Shields.io バッジ）
-   └─ templates/       PRD・SECURITY_POLICY・QA_LOG・OPEN・DECISIONS・CLAUDE・PROGRESS・REFERENCE・profile、settings.json、hooks/
+   └─ templates/       PRD・SECURITY_POLICY・QA_LOG・OPEN・DECISIONS・AGENTS・CLAUDE・PROGRESS・REFERENCE・profile、hooks/、claude/、codex/
 ~~~
 
 ## クレジット

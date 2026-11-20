@@ -1,6 +1,6 @@
 # Stage 7 — plan
 
-Start after the document set is approved. Input: `docs/PRD.md`, root `CLAUDE.md`, and only the `R§` sections you need.
+Start after the document set is approved. Input: `docs/PRD.md`, root `AGENTS.md`, and only the `R§` sections you need.
 Output: one `docs/plans/YYYY-MM-DD-{slug}.md`. Keep only one plan in progress (`Status: active`) at a time. A plan before approval is `Status: draft`.
 Write the plan in the user's language; keep the `Status:` line and IDs as they are (SKILL.md "Language").
 
@@ -42,7 +42,7 @@ Test seam: {the public interface the acceptance tests use; one, as high as possi
 - Do not split tasks by layer (database, screen). Split them so each one carries one checkable behavior all the way through.
 - A wide change that cannot pass in one step (a rename, say) becomes tasks: add the new form → move callers over in batches → delete the old form. Tests pass after every task.
 - If a task relies on an earlier task's result, mark it `(after: m)`. This is how the next task is picked while a check is pending (execute.md §results 5).
-- The last task is always "Acceptance" (§1 form). Once at the end of the plan, give a subagent with no conversation context this plan file, the PRD's F# sections and `git diff {plan start commit}..`, and have it list what is missing, what was added without being asked and what was implemented wrongly (as in discover.md §5). Show the findings to the user and deal with them.
+- The last task is always "Acceptance" (§1 form). Once at the end of the plan, give a subagent (agents.md §6) with no conversation context this plan file, the PRD's F# sections and `git diff {plan start commit}..`, and have it list what is missing, what was added without being asked and what was implemented wrongly (as in discover.md §5). Show the findings to the user and deal with them.
 - Leave no blanks such as `{later}` or `TBD`. If unknown, put a question in OPEN and hold that task.
 
 ## §3 Procedure

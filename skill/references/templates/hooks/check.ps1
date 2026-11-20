@@ -12,6 +12,8 @@ $cwd = if ($data.cwd) { $data.cwd } else { (Get-Location).Path }
 # Project root: Claude Code sets CLAUDE_PROJECT_DIR; otherwise the git root of the session folder.
 $root = if ($env:CLAUDE_PROJECT_DIR) { $env:CLAUDE_PROJECT_DIR } else { git -C $cwd rev-parse --show-toplevel 2>$null }
 if (-not $root) { $root = $cwd }
+# git reports the resolved root (macOS: /private/var/...) while cwd may use a symlink (/var/...); rebuild cwd on git's root.
+elseif (-not $env:CLAUDE_PROJECT_DIR) { $cwd = Join-Path $root (git -C $cwd rev-parse --show-prefix 2>$null) }
 $ti = $data.tool_input
 $paths = @($ti.file_path, $ti.notebook_path) | Where-Object { $_ }
 if ($ti.command -and $data.tool_name -eq 'apply_patch') {

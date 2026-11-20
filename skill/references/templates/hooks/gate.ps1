@@ -7,6 +7,8 @@ $cwd = if ($data.cwd) { $data.cwd } else { (Get-Location).Path }
 # Project root: Claude Code sets CLAUDE_PROJECT_DIR; otherwise the git root of the session folder.
 $root = if ($env:CLAUDE_PROJECT_DIR) { $env:CLAUDE_PROJECT_DIR } else { git -C $cwd rev-parse --show-toplevel 2>$null }
 if (-not $root) { $root = $cwd }
+# git reports the resolved root (macOS: /private/var/...) while cwd may use a symlink (/var/...); rebuild cwd on git's root.
+elseif (-not $env:CLAUDE_PROJECT_DIR) { $cwd = Join-Path $root (git -C $cwd rev-parse --show-prefix 2>$null) }
 $prd = Join-Path $root 'docs/PRD.md'
 if (-not (Test-Path $prd)) { exit 0 }
 # '상태:' is the marker used by projects created before the English skill (upgrade U7 migrates it).
